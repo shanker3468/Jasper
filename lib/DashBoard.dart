@@ -1,15 +1,21 @@
 
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
+import 'ADMIN Models/WeekUpdateAdminModel.dart';
+import 'AppConstants.dart';
 import 'LoginPage.dart';
 import 'ServiceStation/TicketCreationfinal.dart';
 import 'ServiceStation/WeeklyUpdate.dart';
 import 'ServiceStation/reports.dart';
 import 'String_Values.dart';
 import 'ServiceStation/TicketCreation.dart';
+import 'package:http/http.dart' as http;
 
 class DashBoard extends StatefulWidget {
   const DashBoard({Key? key}) : super(key: key);
@@ -22,6 +28,123 @@ class _DashBoardState extends State<DashBoard> {
   int _current = 0;
 
   var UserName,UserID,branchID,BranchName,DepartmentCode,DepartmentName,Location,EmpGroup;
+
+  bool loading = false;
+
+
+  WeekUpdateAdminModel li2 =WeekUpdateAdminModel(result: []);
+
+  Future showDialogbox(BuildContext context, String message) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text(message),
+          actions: [
+            TextButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+
+  Future<http.Response> getWeeklyTicketCount() async {
+
+    print("getWeeklyTicketCount is called");
+    var headers = {"Content-Type": "application/json"};
+    var body = {
+      "BrachName": BranchName.toString(),
+      "EmpID": UserID.toString(),
+    };
+
+    print(body);
+    setState(() {
+      loading = true;
+    });
+    try {
+      final response = await http.post(
+          Uri.parse(AppConstants.LIVE_URL + 'getWeeklyUpdateUserLock'),
+          body: jsonEncode(body),
+          headers: headers);
+      print(AppConstants.LIVE_URL + 'getWeeklyUpdateUserLock');
+      print(response.body);
+      setState(() {
+        loading = false;
+      });
+      if (response.statusCode == 200) {
+
+        var isdata = json.decode(response.body)["status"] == 0;
+        print(isdata);
+        if (isdata) {
+
+          print('No Records Found!!');
+          // CustomerTicketsModel li2 =CustomerTicketsModel(result: []);
+
+          print("li2.result.length1"+li2.result!.length.toString());
+
+          Navigator.push(context,MaterialPageRoute(builder: (context)=>WeeklyUpdate()));
+
+          li2.result!.clear();
+
+        } else {
+
+          print(AppConstants.LIVE_URL + 'getWipcustTckttoAsignnew');
+          print(body);
+          print(response.body);
+
+
+          ScaffoldMessenger.of(this.context)
+              .showSnackBar(SnackBar(content: Text("Weekly Update already done!!")));
+
+          li2 = WeekUpdateAdminModel.fromJson(jsonDecode(response.body));
+
+          print("li2.result.length"+li2.result!.length.toString());
+
+
+
+
+
+
+
+          setState(() {
+
+
+
+          });
+
+        }
+
+
+      } else {
+        showDialogbox(this.context, "Failed to Login API");
+      }
+      return response;
+    } on SocketException {
+      setState(() {
+        loading = false;
+        showDialog(
+            context: this.context,
+            builder: (_) => AlertDialog(
+                backgroundColor: Colors.black,
+                title: Text(
+                  "No Response!..",
+                  style: TextStyle(color: Colors.purple),
+                ),
+                content: Text(
+                  "Slow Server Response or Internet connection",
+                  style: TextStyle(color: Colors.white),
+                )));
+      });
+      throw Exception('Internet is down');
+    }
+  }
 
 
 
@@ -53,6 +176,8 @@ class _DashBoardState extends State<DashBoard> {
       // FromBranchController.text = sessionfromBranchName;
 
       print(UserName.toString());
+
+      //getWeeklyTicketCount();
 
     });
   }
@@ -605,7 +730,8 @@ class _DashBoardState extends State<DashBoard> {
                                             GestureDetector(
                                               onTap: (){
                                                 Navigator.pop(context);
-                                                Navigator.push(context,MaterialPageRoute(builder: (context)=>WeeklyUpdate()));
+                                                getWeeklyTicketCount();
+                                              //
                                               },
                                               child: Container(
                                                 height: 50,

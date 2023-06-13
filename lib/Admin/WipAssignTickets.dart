@@ -110,7 +110,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
   bool _isAscending = true;
 
   int selectedIndex = 0;
-  bool loading = false;
+   bool loading = false;
 
    int SumQty=0;
 

@@ -1,5 +1,5 @@
+import 'dart:developer';
 import 'dart:io';
-
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +17,16 @@ import '../Model/TicketTypeModel.dart';
 import 'AdminDashBoard.dart';
 import 'AssignTickets_DetailsView.dart';
 
+
+class MuliselectList {
+  final String? type;
+  String? typeCode;
+
+  MuliselectList({
+    this.type,
+    this.typeCode,
+  });
+}
 
 class Assign_Tickets extends StatefulWidget {
    Assign_Tickets({ Key? key, required  String this.status,required String this.Tickettype,required String this.BranchName}) : super(key: key);
@@ -40,6 +50,13 @@ class Assign_TicketsState extends State<Assign_Tickets> {
   TextEditingController RemarksController =new TextEditingController();
   String _searchResult = '';
    List<selectedListModel> selectedDatalist = [];
+
+
+  String dropdownbranch='';
+
+
+
+
 
   late  String UserName,UserID,branchID,BranchName,DepartmentCode,DepartmentName,Location,EmpGroup;
   late bool sessionLoggedIn;
@@ -86,9 +103,14 @@ class Assign_TicketsState extends State<Assign_Tickets> {
   var uUserType = "";
   var uMobileMacID = "";
 
+
+
+
   var page = 1;
   late int totalpages;
   List<String> selectedlist = [];
+
+
   var format = NumberFormat.currency(
     locale: 'HI',
     symbol: "",
@@ -280,8 +302,6 @@ class Assign_TicketsState extends State<Assign_Tickets> {
                   },
                   selectedItem: BranchName1,
                 ),
-
-
 
                 Card(
                   child: new ListTile(
@@ -1189,7 +1209,7 @@ class Assign_TicketsState extends State<Assign_Tickets> {
     print("gettickettype is called");
     var headers = {"Content-Type": "application/json"};
     var body = {
-      "FormID": 4,
+      "FormID": 20,
       "UserID": "",
       "Password": "",
       "Branch": "",
@@ -1305,8 +1325,7 @@ class Assign_TicketsState extends State<Assign_Tickets> {
 
           li5 = BranchMasterModel.fromJson(jsonDecode(response.body));
 
-          for(int i=0;i<li5.result!.length;i++);
-          print(li5.result!.length.toString());
+
 
           setState(() {
             stringlist5.clear();
@@ -2258,4 +2277,14 @@ class selectedListModel {
     data['Extra2'] = this.Extra2;
     return data;
   }
+}
+
+
+class Animal {
+  final int? id;
+  final String? name;
+
+  Animal(this.id, this.name);
+
+
 }

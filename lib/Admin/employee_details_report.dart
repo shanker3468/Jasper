@@ -209,7 +209,7 @@ class EmployeeDetailsReportState extends State<EmployeeDetailsReport> {
                                     showCheckboxColumn: false,
                                     columnSpacing: 15,
                                     columns: [
-                                      /*DataColumn(
+                                      DataColumn(
                                         label: Center(
                                             child: Wrap(
                                           direction: Axis.vertical, //default
@@ -227,8 +227,8 @@ class EmployeeDetailsReportState extends State<EmployeeDetailsReport> {
                                           ],
                                         )),
                                         numeric: false,
-                                      ),*/
-                                     /* DataColumn(
+                                      ),
+                                      DataColumn(
                                         label: Center(
                                             child: Wrap(
                                           direction: Axis.vertical, //default
@@ -246,7 +246,7 @@ class EmployeeDetailsReportState extends State<EmployeeDetailsReport> {
                                           ],
                                         )),
                                         numeric: false,
-                                      ),*/
+                                      ),
                                       DataColumn(
                                         label: Center(
                                           child: Wrap(
@@ -411,7 +411,17 @@ class EmployeeDetailsReportState extends State<EmployeeDetailsReport> {
                                     rows: li8
                                         .map(
                                           (list) => DataRow(cells: [
-                                            /*DataCell(
+                                            DataCell(Center(
+                                                child: Center(
+                                                  child: Wrap(
+                                                      direction:Axis.vertical, //default
+                                                      alignment:WrapAlignment.center,
+                                                      children: [
+                                                        Text((li8.indexOf(list) +1).toString(),
+                                                            textAlign:TextAlign.center)
+                                                      ]),
+                                                ))),
+                                            DataCell(
                                                 Center(
                                                   child: Center(
                                                     child: Wrap(
@@ -527,8 +537,8 @@ class EmployeeDetailsReportState extends State<EmployeeDetailsReport> {
                                                                             height: height / 15,
                                                                             width: width,
                                                                             child: TextField(
-                                                                                enabled: false,
-                                                                                controller: EmpID,
+                                                                                enabled: true,
+                                                                                controller: MobilePassword,
                                                                                 keyboardType: TextInputType.number,
                                                                                 decoration: InputDecoration(
                                                                                   border: OutlineInputBorder(
@@ -921,7 +931,7 @@ class EmployeeDetailsReportState extends State<EmployeeDetailsReport> {
                                               //                     list.empID.toString())),
                                               //   );
                                               //}
-                                            }),*/
+                                            }),
                                             DataCell(
                                                 Center(
                                                     child: Center(

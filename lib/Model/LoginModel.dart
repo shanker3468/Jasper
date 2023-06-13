@@ -44,6 +44,8 @@ class Result {
   String? empStatus;
   String? deviceID;
   String? empGroup;
+  String? empGroupID;
+
 
   Result(
       {this.docNo,
@@ -64,7 +66,8 @@ class Result {
         this.location,
         this.empStatus,
         this.deviceID,
-        this.empGroup
+        this.empGroup,
+        this.empGroupID
       });
 
   Result.fromJson(Map<String, dynamic> json) {
@@ -87,6 +90,7 @@ class Result {
     empStatus = json['EmpStatus'];
     deviceID = json['DeviceID'];
     empGroup = json['EmpGroup'];
+    empGroupID = json['EmpGroupID'];
   }
 
   Map<String, dynamic> toJson() {
@@ -110,6 +114,7 @@ class Result {
     data['EmpStatus'] = this.empStatus;
     data['DeviceID'] = this.deviceID;
     data['EmpGroup'] = this.empGroup;
+    data['EmpGroupID'] = this.empGroupID;
     return data;
   }
 }

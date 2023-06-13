@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'LoginPage.dart';
 import 'ServiceStation/TicketCreationfinal.dart';
+import 'ServiceStation/WeeklyUpdate.dart';
 import 'ServiceStation/reports.dart';
 import 'String_Values.dart';
 import 'ServiceStation/TicketCreation.dart';
@@ -571,7 +572,7 @@ class _DashBoardState extends State<DashBoard> {
 
 
                                                   Navigator.pop(context);
-                                                 Navigator.push(context,MaterialPageRoute(builder: (context)=>TicketCreationFinal()));
+                                                 Navigator.push(context,MaterialPageRoute(builder: (context)=>TicketCreation()));
                                                 },
                                                 child: Container(
                                                   height: 50,
@@ -600,6 +601,32 @@ class _DashBoardState extends State<DashBoard> {
                                               ),
 
                                             SizedBox(height: height/50,),
+
+                                            GestureDetector(
+                                              onTap: (){
+                                                Navigator.pop(context);
+                                                Navigator.push(context,MaterialPageRoute(builder: (context)=>WeeklyUpdate()));
+                                              },
+                                              child: Container(
+                                                height: 50,
+                                                // margin: EdgeInsets.only(left:16,right: 16),
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius: BorderRadius.all(
+                                                        Radius.circular(50))),
+                                                child: Text(
+                                                  "Weekly Update",
+                                                  style: TextStyle(
+                                                      color: String_Values.primarycolor),
+                                                ),
+                                              ),
+                                            ),
+
+                                            SizedBox(
+                                              height: height / 50,
+                                            ),
+
 
 
 

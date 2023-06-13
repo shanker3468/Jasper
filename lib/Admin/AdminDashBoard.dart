@@ -10,6 +10,7 @@ import '../LoginPage.dart';
 import '../ServiceStation/reports.dart';
 import '../String_Values.dart';
 import '../ServiceStation/TicketCreation.dart';
+import 'AllAssignTickets.dart';
 import 'ApprovedAssignTickets.dart';
 import 'AssignTickets.dart';
 
@@ -569,7 +570,7 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                                               height: height / 50,
                                             ),
 
-                                            GestureDetector(
+                                           /* GestureDetector(
 
                                                 onTap: (){
 
@@ -668,7 +669,7 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
 
                                             SizedBox(
                                               height: height / 50,
-                                            ),
+                                            ),*/
 
                                             GestureDetector(
 
@@ -705,7 +706,7 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
 
 
                                                     Text(
-                                                      "WIP Tickets",
+                                                      "Tickets",
                                                       style: TextStyle(
                                                           color: String_Values.primarycolor),
                                                     ),
@@ -761,6 +762,31 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                                                   ),
                                                 ),
                                               ),*/
+
+                                            SizedBox(
+                                              height: height / 50,
+                                            ),
+
+                                            GestureDetector(
+                                              onTap: (){
+                                                Navigator.pop(context);
+                                                    Navigator.push(context,MaterialPageRoute(builder: (context)=>AllAssign_Tickets(status:"1",Tickettype:'',BranchName:'')));
+                                              },
+                                              child: Container(
+                                                height: 50,
+                                                // margin: EdgeInsets.only(left:16,right: 16),
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius: BorderRadius.all(
+                                                        Radius.circular(50))),
+                                                child: Text(
+                                                  "Weekly Updation Report",
+                                                  style: TextStyle(
+                                                      color: String_Values.primarycolor),
+                                                ),
+                                              ),
+                                            ),
 
                                             SizedBox(
                                               height: height / 50,

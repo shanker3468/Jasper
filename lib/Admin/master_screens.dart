@@ -62,44 +62,10 @@ class _MasterScreensState extends State<MasterScreens> {
                 backgroundColor: Colors.blue,
                 elevation: 0.0,
                 title: Text(
-                  'ADMIN PORTAL',
+                  'ADMIN MASTERS PORTAL',
                   style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
-                leading: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(Icons.menu),
-                ),
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(Icons.notifications_none),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        IpAddressState.check().then(
-                          (value) {
-                            if (value) {
-                              ResetStringValuesSF();
-                              // Navigator.pushReplacement(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) => LoginPage()));
-                            } else {
-                              Fluttertoast.showToast(
-                                  msg: "No Internet connection");
-                            }
-                          },
-                        );
-                      },
-                      child: Icon(
-                        Icons.logout,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
+
               ),
               body: Stack(
                 children: [

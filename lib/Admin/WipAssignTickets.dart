@@ -112,11 +112,14 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
   int selectedIndex = 0;
   bool loading = false;
 
+   int SumQty=0;
 
 
 
 
-  var userid = "";
+
+
+   var userid = "";
   var uSERID = "";
   var password = "";
   var uSERCODE = "";
@@ -744,67 +747,84 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text("Select Ticket Status", style: TextStyle(fontWeight:FontWeight.bold)),
+                      Text("Count", style: TextStyle(fontWeight:FontWeight.bold)),
                     ],
                   ),
                 ),
 
 
 
-                DropdownSearch<String>(
-                  mode: Mode.DIALOG,
-                  showSearchBox: true,
-                  // showClearButton: true,
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 8,
+                      child: DropdownSearch<String>(
+                        mode: Mode.DIALOG,
+                        showSearchBox: true,
+                        // showClearButton: true,
 
-                  // label: "Select Screen",
-                  items: stringlist10,
-                  onChanged: (val) {
-                    print(val);
+                        // label: "Select Screen",
+                        items: stringlist10,
+                        onChanged: (val) {
+                          print(val);
 
-                    for (int kk = 0; kk < li13.result!.length; kk++) {
-                      if (li13.result![kk].statusName == val) {
-                        FilterStatusName = li13.result![kk].statusName.toString();
-                        FilterStatusCode = li13.result![kk].statusCode.toString();
-                        setState(() {
-                          print(FilterStatusName);
-                          //GetMyTablRecord();
-                        });
-                      }
-                    }
+                          for (int kk = 0; kk < li13.result!.length; kk++) {
+                            if (li13.result![kk].statusName == val) {
+                              FilterStatusName = li13.result![kk].statusName.toString();
+                              FilterStatusCode = li13.result![kk].statusCode.toString();
+                              setState(() {
+                                print(FilterStatusName);
+                                //GetMyTablRecord();
+                              });
+                            }
+                          }
 
 
 
-                    setState(() {
+                          setState(() {
 
-                      selectedlist.clear();
-                      if (TicketType.isEmpty) {
-                        Fluttertoast.showToast(
-                            msg: "TicketType should not left Empty!!",
-                            toastLength: Toast.LENGTH_LONG,
-                            gravity: ToastGravity.SNACKBAR,
-                            timeInSecForIosWeb: 1,
-                            textColor: Colors.white,
-                            backgroundColor: Colors.red,
-                            fontSize: 16.0);
-                      } else  if (BranchName1.isEmpty) {
-                        Fluttertoast.showToast(
-                            msg: "BranchName should not left Empty!!",
-                            toastLength: Toast.LENGTH_LONG,
-                            gravity: ToastGravity.SNACKBAR,
-                            timeInSecForIosWeb: 1,
-                            textColor: Colors.white,
-                            backgroundColor: Colors.red,
-                            fontSize: 16.0);
-                      } else {
+                            selectedlist.clear();
+                            if (TicketType.isEmpty) {
+                              Fluttertoast.showToast(
+                                  msg: "TicketType should not left Empty!!",
+                                  toastLength: Toast.LENGTH_LONG,
+                                  gravity: ToastGravity.SNACKBAR,
+                                  timeInSecForIosWeb: 1,
+                                  textColor: Colors.white,
+                                  backgroundColor: Colors.red,
+                                  fontSize: 16.0);
+                            } else  if (BranchName1.isEmpty) {
+                              Fluttertoast.showToast(
+                                  msg: "BranchName should not left Empty!!",
+                                  toastLength: Toast.LENGTH_LONG,
+                                  gravity: ToastGravity.SNACKBAR,
+                                  timeInSecForIosWeb: 1,
+                                  textColor: Colors.white,
+                                  backgroundColor: Colors.red,
+                                  fontSize: 16.0);
+                            } else {
 
-                        getTicketList(FilterStatusCode);
+                              getTicketList(FilterStatusCode);
 
-                      }
-                    });
-                  },
-                  selectedItem: FilterStatusName,
+                            }
+                          });
+                        },
+                        selectedItem: FilterStatusName,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            height: height/16,
+                              color:Colors.black12,
+                              child: Center(child: Text(SumQty.toString(), style: TextStyle(fontWeight:FontWeight.bold,color:Colors.red)))),
+                        )),
+                  ],
                 ),
 
                 SizedBox(height: 5,),
@@ -2150,7 +2170,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
     print("gettickettype is called");
     var headers = {"Content-Type": "application/json"};
     var body = {
-      "FormID": 4,
+      "FormID": 20,
       "UserID": "",
       "Password": "",
       "Branch": "",
@@ -2666,6 +2686,8 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
           print('No Records Found!!');
          // CustomerTicketsModel li2 =CustomerTicketsModel(result: []);
 
+          SumQty =0;
+
           li2.result!.clear();
 
         } else {
@@ -2722,11 +2744,18 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                 li2.result![k].assignEmpcontactNo
 
             ));
+
+           li3.length==""?  SumQty =0:  SumQty =li3.length.toInt();
+
           }
 
 
-          // print(li2.result.length);
-          setState(() {});
+           print("SumQty"+SumQty.toString());
+          setState(() {
+
+
+
+          });
 
         }
 

@@ -3,6 +3,7 @@ import 'dart:io';
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -34,6 +35,8 @@ class AssignEmployeeDetailsReportState extends State<AssignEmployeeDetailsReport
   var DepartmentName = "";
   var Location = "";
 
+  bool empStatus = false;
+
   late String Count;
 
   List<itemsearch> li8 = [];
@@ -48,7 +51,9 @@ class AssignEmployeeDetailsReportState extends State<AssignEmployeeDetailsReport
   //TextEditingController mobileNo = new TextEditingController();
   TextEditingController ZipCode = new TextEditingController();
   TextEditingController LandMark = new TextEditingController();
-  TextEditingController MobileNumber = new TextEditingController();
+  TextEditingController EmpID = new TextEditingController();
+  TextEditingController MobileNumber = TextEditingController();
+  TextEditingController MobilePassword = new TextEditingController();
   TextEditingController firstName = new TextEditingController();
   TextEditingController designation = new TextEditingController();
   TextEditingController department = new TextEditingController();
@@ -200,7 +205,7 @@ class AssignEmployeeDetailsReportState extends State<AssignEmployeeDetailsReport
                                     showCheckboxColumn: false,
                                     columnSpacing: 15,
                                     columns: [
-                                      /*DataColumn(
+                                      DataColumn(
                                         label: Center(
                                             child: Wrap(
                                           direction: Axis.vertical, //default
@@ -218,8 +223,8 @@ class AssignEmployeeDetailsReportState extends State<AssignEmployeeDetailsReport
                                           ],
                                         )),
                                         numeric: false,
-                                      ),*/
-                                      /*DataColumn(
+                                      ),
+                                      DataColumn(
                                         label: Center(
                                             child: Wrap(
                                           direction: Axis.vertical, //default
@@ -237,7 +242,7 @@ class AssignEmployeeDetailsReportState extends State<AssignEmployeeDetailsReport
                                           ],
                                         )),
                                         numeric: false,
-                                      ),*/
+                                      ),
                                       DataColumn(
                                         label: Center(
                                           child: Wrap(
@@ -399,6 +404,527 @@ class AssignEmployeeDetailsReportState extends State<AssignEmployeeDetailsReport
                                                 // );
                                               //}
                                             }),*/
+                                            DataCell(Center(
+                                                child: Center(
+                                                  child: Wrap(
+                                                      direction:Axis.vertical, //default
+                                                      alignment:WrapAlignment.center,
+                                                      children: [
+                                                        Text((li8.indexOf(list) +1).toString(),
+                                                            textAlign:TextAlign.center)
+                                                      ]),
+                                                ))),
+                                            DataCell(
+                                                Center(
+                                                  child: Center(
+                                                    child: Wrap(
+                                                        direction: Axis
+                                                            .vertical, //default
+                                                        alignment: WrapAlignment
+                                                            .center,
+                                                        children: [
+                                                          Icon(
+                                                            Icons.edit,
+                                                            color: Colors.indigo
+                                                                .withOpacity(
+                                                                0.8),
+                                                          )
+                                                        ]),
+                                                  ),
+                                                ), onTap: () {
+                                              print(list.empID);
+
+                                              empStatus = list.empStatus == "A" ? true : false;
+                                              EmpID.text= list.empID.toString();
+                                              MobileNumber.text=list.mobileNo.toString();
+                                             // MobilePassword.text=list..toString();
+
+                                              showDialog(
+                                                  context: context,
+                                                  barrierDismissible: false,
+                                                  builder: (BuildContext context) {
+                                                    return Padding(
+                                                      padding:
+                                                      const EdgeInsets.all(1.0),
+                                                      child: AlertDialog(
+                                                        content: StatefulBuilder(
+                                                          builder: (BuildContext
+                                                          context,
+                                                              void Function(
+                                                                  void Function())
+                                                              setState) {
+                                                            return Container(
+                                                              child:
+                                                              SingleChildScrollView(
+                                                                child: Column(
+                                                                  mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .min, // To make the card compact
+                                                                  children: <Widget>[
+                                                                    Text("Do You Want to Update ?"),
+                                                                    SizedBox(height: 5,),
+                                                                    Text("UserName="+list.firstName.toString(),style: TextStyle(fontWeight:FontWeight.bold),),
+
+                                                                    Row(
+                                                                      children: [
+                                                                        Expanded(
+                                                                          flex: 2,
+                                                                          child: Container(
+                                                                            height: height / 15,
+                                                                            width: width,
+                                                                            child: TextField(
+                                                                                enabled: false,
+                                                                                controller: EmpID,
+                                                                                keyboardType: TextInputType.number,
+                                                                                decoration: InputDecoration(
+                                                                                  border: OutlineInputBorder(
+                                                                                      borderSide:
+                                                                                      BorderSide(color: Colors.cyan)),
+                                                                                  labelText: 'Emp ID',
+                                                                                  labelStyle: TextStyle(
+                                                                                      fontWeight: FontWeight.bold,
+                                                                                      color: Colors.grey),
+                                                                                )),
+                                                                          ),
+                                                                        ),
+                                                                        Expanded(
+                                                                          flex: 2,
+                                                                          child: Padding(
+                                                                            padding:
+                                                                            const EdgeInsets.symmetric(horizontal: 15.0),
+                                                                            child: FlutterSwitch(
+                                                                              activeText: "Active",
+                                                                              inactiveText: "InActive",
+                                                                              width: width,
+                                                                              height: 45.0,
+                                                                              valueFontSize: 12.0,
+                                                                              toggleSize: 25.0,
+                                                                              value: empStatus,
+                                                                              borderRadius: 30.0,
+                                                                              showOnOff: true,
+                                                                              onToggle: (val) {
+                                                                                setState(() {
+                                                                                  empStatus = val;
+                                                                                  if (empStatus == false) {
+                                                                                    empStatus == true;
+                                                                                  } else {
+                                                                                    empStatus == false;
+                                                                                  }
+
+                                                                                  print(empStatus);
+                                                                                });
+                                                                              },
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height: 8,
+                                                                    ),
+                                                                    Row(
+                                                                      children: [
+                                                                        Expanded(
+                                                                          flex: 2,
+                                                                          child: Container(
+                                                                            height: height / 15,
+                                                                            width: width,
+                                                                            child: TextField(
+                                                                                enabled: false,
+                                                                                controller: MobilePassword,
+                                                                                keyboardType: TextInputType.number,
+                                                                                decoration: InputDecoration(
+                                                                                  border: OutlineInputBorder(
+                                                                                      borderSide:
+                                                                                      BorderSide(color: Colors.cyan)),
+                                                                                  labelText: 'Mob Password',
+                                                                                  labelStyle: TextStyle(
+                                                                                      fontWeight: FontWeight.bold,
+                                                                                      color: Colors.grey),
+                                                                                )),
+                                                                          ),
+                                                                        ),
+                                                                        Expanded(
+                                                                          flex: 2,
+                                                                          child: Container(
+                                                                            height: height / 15,
+                                                                            width: width,
+                                                                            child: TextField(
+                                                                                enabled: true,
+                                                                                controller: MobileNumber,
+                                                                                keyboardType: TextInputType.number,
+                                                                                decoration: InputDecoration(
+                                                                                  border: OutlineInputBorder(
+                                                                                      borderSide:
+                                                                                      BorderSide(color: Colors.cyan)),
+                                                                                  labelText: 'Mob Number',
+                                                                                  labelStyle: TextStyle(
+                                                                                      fontWeight: FontWeight.bold,
+                                                                                      color: Colors.grey),
+                                                                                )),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+
+
+
+                                                                    /*      Padding(
+                                                                      padding: const EdgeInsets.all(8),
+                                                                      child: Row(
+                                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                                        children: [
+                                                                          Text("Select Status", style: TextStyle(fontWeight:FontWeight.bold)),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+
+
+
+                                                                    DropdownSearch<String>(
+                                                                      mode: Mode.DIALOG,
+                                                                      showSearchBox: true,
+                                                                      // showClearButton: true,
+
+                                                                      // label: "Select Screen",
+                                                                      items: stringlist7,
+                                                                      onChanged: (val) {
+                                                                        print(val);
+                                                                        for (int kk = 0; kk < li10.result!.length; kk++) {
+                                                                          if (li10.result![kk].statusName == val) {
+                                                                            TicketStatus = li10.result![kk].statusName.toString();
+                                                                            TicketStatusCode = li10.result![kk].statusCode.toString();
+                                                                            setState(() {
+                                                                              print(TicketStatus);
+                                                                              //GetMyTablRecord();
+                                                                            });
+                                                                          }
+                                                                        }
+
+                                                                        if(TicketStatus=="Assign"){
+                                                                          getAssignEmployeeDepartment();
+
+                                                                          setState(() {
+                                                                            ItemVisible=true;
+                                                                          });
+
+
+                                                                        }else{
+                                                                          setState(() {
+                                                                            ItemVisible=false;
+                                                                          });
+                                                                        }
+
+                                                                        setState(() {
+
+                                                                        });
+                                                                      },
+                                                                      selectedItem: TicketStatus,
+                                                                    ),
+
+                                                                    Column(
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding: const EdgeInsets.all(8),
+                                                                          child: Row(
+                                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                                            children: [
+                                                                              Text("Select Assign Department", style: TextStyle(fontWeight:FontWeight.bold)),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+
+                                                                        DropdownSearch<String>(
+                                                                          mode: Mode.DIALOG,
+                                                                          showSearchBox: true,
+                                                                          // showClearButton: true,
+
+                                                                          // label: "Select Screen",
+                                                                          items: stringlist8,
+                                                                          onChanged: (val) {
+                                                                            print(val);
+                                                                            for (int kk = 0; kk < li11.result!.length; kk++) {
+                                                                              if (li11.result![kk].departmentName == val) {
+                                                                                AssignDepartment = li11.result![kk].departmentName.toString();
+                                                                                AssignDepartmentCode = li11.result![kk].departmentCode.toString();
+                                                                                setState(() {
+                                                                                  print(AssignDepartment);
+                                                                                  //GetMyTablRecord();
+                                                                                });
+                                                                              }
+                                                                            }
+
+                                                                            setState(() {
+
+                                                                              getAssignEmployeeListBasedOnDepartment(AssignDepartment);
+
+                                                                            });
+                                                                          },
+                                                                          selectedItem: AssignDepartment,
+                                                                        ),
+
+
+                                                                        Padding(
+                                                                          padding: const EdgeInsets.all(8),
+                                                                          child: Row(
+                                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                                            children: [
+                                                                              Text("Select Assign EmpName", style: TextStyle(fontWeight:FontWeight.bold)),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+
+                                                                        DropdownSearch<String>(
+                                                                          mode: Mode.DIALOG,
+                                                                          showSearchBox: true,
+                                                                          // showClearButton: true,
+
+                                                                          // label: "Select Screen",
+                                                                          items: stringlist9,
+                                                                          onChanged: (val) {
+                                                                            print(val);
+                                                                            for (int kk = 0; kk < li12.result!.length; kk++) {
+                                                                              if (li12.result![kk].firstName == val) {
+                                                                                AssignEmpName = li12.result![kk].firstName.toString();
+                                                                                AssignEmpNameCode = li12.result![kk].empID.toString();
+                                                                                setState(() {
+                                                                                  print(AssignEmpName);
+                                                                                  //GetMyTablRecord();
+                                                                                });
+                                                                              }
+                                                                            }
+
+
+                                                                          },
+                                                                          selectedItem: AssignEmpName,
+                                                                        ),
+                                                                      ],
+                                                                    ),*/
+
+                                                                    SizedBox(
+                                                                        height: 15.0),
+                                                                    Row(
+                                                                      children: [
+                                                                        SizedBox(
+                                                                          width: 8,
+                                                                        ),
+                                                                        Expanded(
+                                                                          child:
+                                                                          TextButton
+                                                                              .icon(
+                                                                            onPressed:
+                                                                                () {
+                                                                              // TicketStatusCode="";
+                                                                              // TicketStatus="";
+                                                                              //
+                                                                              // AssignDepartment="";
+                                                                              // AssignDepartmentCode="";
+                                                                              //
+                                                                              // AssignEmpName="";
+                                                                              // AssignEmpNameCode="";
+
+                                                                              Fluttertoast.showToast(
+                                                                                  msg:
+                                                                                  "Update Cancelled!!",
+                                                                                  backgroundColor:
+                                                                                  Colors.red);
+                                                                              Navigator.pop(
+                                                                                  context);
+                                                                              // call();
+                                                                            },
+                                                                            icon:
+                                                                            Icon(
+                                                                              Icons
+                                                                                  .cancel,
+                                                                              color: Colors
+                                                                                  .white,
+                                                                            ),
+                                                                            label:
+                                                                            Text(
+                                                                              'Cancel',
+                                                                              style: TextStyle(
+                                                                                  color:
+                                                                                  Colors.white),
+                                                                            ),
+                                                                            style: TextButton
+                                                                                .styleFrom(
+                                                                              backgroundColor:
+                                                                              Colors.red,
+                                                                              shape:
+                                                                              RoundedRectangleBorder(
+                                                                                borderRadius:
+                                                                                BorderRadius.circular(8.0),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        SizedBox(
+                                                                          width: 8,
+                                                                        ),
+                                                                        Expanded(
+                                                                          child:
+                                                                          TextButton
+                                                                              .icon(
+                                                                            onPressed:
+                                                                                () {
+
+
+                                                                              // if(TicketStatus=="Assign"){
+                                                                              //
+                                                                              //   if (TicketStatus.isEmpty) {
+                                                                              //     Fluttertoast.showToast(
+                                                                              //         msg: "TicketStatus should not left Empty!!",
+                                                                              //         toastLength: Toast.LENGTH_LONG,
+                                                                              //         gravity: ToastGravity.SNACKBAR,
+                                                                              //         timeInSecForIosWeb: 1,
+                                                                              //         textColor: Colors.white,
+                                                                              //         backgroundColor: Colors.red,
+                                                                              //         fontSize: 16.0);
+                                                                              //   }else  if (AssignDepartment.isEmpty) {
+                                                                              //     Fluttertoast.showToast(
+                                                                              //         msg: "AssignDepartment should not left Empty!!",
+                                                                              //         toastLength: Toast.LENGTH_LONG,
+                                                                              //         gravity: ToastGravity.SNACKBAR,
+                                                                              //         timeInSecForIosWeb: 1,
+                                                                              //         textColor: Colors.white,
+                                                                              //         backgroundColor: Colors.red,
+                                                                              //         fontSize: 16.0);
+                                                                              //   }else  if (AssignEmpName.isEmpty) {
+                                                                              //     Fluttertoast.showToast(
+                                                                              //         msg: "AssignEmpName should not left Empty!!",
+                                                                              //         toastLength: Toast.LENGTH_LONG,
+                                                                              //         gravity: ToastGravity.SNACKBAR,
+                                                                              //         timeInSecForIosWeb: 1,
+                                                                              //         textColor: Colors.white,
+                                                                              //         backgroundColor: Colors.red,
+                                                                              //         fontSize: 16.0);
+                                                                              //   }else{
+                                                                              //
+                                                                              //     print("Empty true");
+                                                                              //
+                                                                              //
+                                                                              //     selectedDatalist.clear();
+                                                                              //
+                                                                              //
+                                                                              //     selectedDatalist.add(selectedListModel(
+                                                                              //         int.tryParse(list.docNo.toString()),
+                                                                              //         list.ticketNo,
+                                                                              //         list.brachName,
+                                                                              //         TicketStatusCode,
+                                                                              //         AssignEmpName,
+                                                                              //         AssignEmpNameCode,
+                                                                              //         AssignDepartment,
+                                                                              //         '',
+                                                                              //         ''
+                                                                              //     ));
+                                                                              //
+                                                                              //
+                                                                              //     BulkinsertStatusTickets();
+                                                                              //     Navigator.pop(context);
+                                                                              //
+                                                                              //
+                                                                              //   }
+                                                                              //
+                                                                              //
+                                                                              //
+                                                                              // }else{
+                                                                              //
+                                                                              //
+                                                                              //
+                                                                              //   if (TicketStatus.isEmpty) {
+                                                                              //     Fluttertoast.showToast(
+                                                                              //         msg: "TicketStatus should not left Empty!!",
+                                                                              //         toastLength: Toast.LENGTH_LONG,
+                                                                              //         gravity: ToastGravity.SNACKBAR,
+                                                                              //         timeInSecForIosWeb: 1,
+                                                                              //         textColor: Colors.white,
+                                                                              //         backgroundColor: Colors.red,
+                                                                              //         fontSize: 16.0);
+                                                                              //   }else{
+                                                                              //
+                                                                              //     print("Empty false");
+                                                                              //     selectedDatalist.clear();
+                                                                              //
+                                                                              //
+                                                                              //     selectedDatalist.add(selectedListModel(
+                                                                              //         int.tryParse(list.docNo.toString()),
+                                                                              //         list.ticketNo,
+                                                                              //         list.brachName,
+                                                                              //         TicketStatusCode,
+                                                                              //         '',
+                                                                              //         '',
+                                                                              //         '',
+                                                                              //         '',
+                                                                              //         ''
+                                                                              //     ));
+                                                                              //
+                                                                              //
+                                                                              //     BulkinsertStatusTickets();
+                                                                              //     Navigator.pop(context);
+                                                                              //
+                                                                              //
+                                                                              //   }
+                                                                              //
+                                                                              // }
+
+
+                                                                            },
+                                                                            icon:
+                                                                            Icon(
+                                                                              Icons
+                                                                                  .assignment_turned_in_outlined,
+                                                                              color: Colors
+                                                                                  .white,
+                                                                            ),
+                                                                            label:
+                                                                            Text(
+                                                                              'Update',
+                                                                              style: TextStyle(
+                                                                                  color:
+                                                                                  Colors.white,
+                                                                                  fontSize: 12),
+                                                                            ),
+                                                                            style: TextButton
+                                                                                .styleFrom(
+                                                                              backgroundColor:
+                                                                              Colors.lightGreen,
+                                                                              shape:
+                                                                              RoundedRectangleBorder(
+                                                                                borderRadius:
+                                                                                BorderRadius.circular(8.0),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        SizedBox(
+                                                                          width: 8,
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
+                                                    );
+                                                  });
+                                              // if (widget.ScreenType == "IE") {
+                                              // } else {
+                                              //   setState(() {
+                                              //     EmployeeDetails(list.empID);
+                                              // //   });
+                                              //   Navigator.push(
+                                              //     context,
+                                              //     MaterialPageRoute(
+                                              //         builder: (context) =>
+                                              //             UpdateEmpDetails(
+                                              //                 empid:
+                                              //                     list.empID.toString())),
+                                              //   );
+                                              //}
+                                            }),
                                             DataCell(
                                                 Center(
                                                     child: Center(

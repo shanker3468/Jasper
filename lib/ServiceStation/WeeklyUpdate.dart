@@ -21,14 +21,14 @@ import '../Model/ItemCategoryModel.dart';
 import '../Model/ItemListModel.dart';
 import '../Model/TicketTypeModel.dart';
 
-class TicketCreation extends StatefulWidget {
-  const TicketCreation({Key? key}) : super(key: key);
+class WeeklyUpdate extends StatefulWidget {
+  const WeeklyUpdate({Key? key}) : super(key: key);
 
   @override
-  State<TicketCreation> createState() => TicketCreationState();
+  State<WeeklyUpdate> createState() => WeeklyUpdateState();
 }
 
-class TicketCreationState extends State<TicketCreation> {
+class WeeklyUpdateState extends State<WeeklyUpdate> {
 
   bool loading = false;
 
@@ -132,7 +132,7 @@ class TicketCreationState extends State<TicketCreation> {
 
     getStringValuesSF();
 
-    getticketNo().then((value) => gettickettype().then((value) => getIssueCategory()).then((value) => getIssuetype()));
+
 
 
 
@@ -727,21 +727,11 @@ class TicketCreationState extends State<TicketCreation> {
       "EmployeeCategory": "",
       "BranchName": SessionBranchName,
       "BranchCode": SessionBranchId,
-      "TicketNo": myController.text.toString(),
-      "RequiredDate": datecontroler.text.toString(),
       "Description": descriptioncontroler.text.toString(),
       "AttachFilePath": selectstate,
       "AttachFileName": files.length != 0 ? filepath : "",
-      "TicketType": TicketType,
-      "IssueCategory": issueCategory,
-      "IssueCategoryID": issueCategoryCode,
-      "IssueType": issuetype,
-      "IssueTypeId": issuetypeCode,
-      "ItemName":EmpGroup=="WorkshopUser"?ItemName:"",
-      "ItemCode":EmpGroup=="WorkshopUser"?ItemCode:"",
-      "Priority": selectstate,
-      "Extra1":EmpGroup=="WorkshopUser"?ItemCategory:"",
-      "Extra2":EmpGroup=="WorkshopUser"?ItemCategoryCode:"",
+      "Extra1":EmpGroup,
+      "Extra2":"",
       "Extra3":""
     };
     print(jsonEncode(body));
@@ -751,11 +741,11 @@ class TicketCreationState extends State<TicketCreation> {
 
     final response = await http.post(
 
-      Uri.parse(AppConstants.LIVE_URL+'insertTickets'),
+      Uri.parse(AppConstants.LIVE_URL+'insertWeeklyUpdationTickets'),
       headers: headers,
       body: (jsonEncode(body)),
     );
-    print(AppConstants.LIVE_URL+'insertTickets');
+    print(AppConstants.LIVE_URL+'insertWeeklyUpdationTickets');
     print(body);
     print(response.body);
     print(response.statusCode);
@@ -869,7 +859,7 @@ class TicketCreationState extends State<TicketCreation> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Create Ticket'),
+        title: Text('Weekly status Updation'),
       ),
       body: loading
           ? Center(
@@ -888,457 +878,13 @@ class TicketCreationState extends State<TicketCreation> {
                   child: Column(
                     children: [
 
-                      Container(
-                        width: width,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: TextField(
-                                  controller: myController,
-                                  enabled: false,
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.cyan)),
-                                    labelText: 'Ticket No',
-                                    labelStyle: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey),
-                                  )),
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    _selectDate(context);
-                                    //   myFocusNode.unfocus();
-                                  });
-                                },
-                                child: TextField(
-                                    controller: datecontroler,
-                                    enabled: true,
-                                    //  focusNode: myFocusNode,
-                                    autofocus: false,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.cyan)),
-                                      labelText: 'Required Date',
-                                      labelStyle: TextStyle(
-                                          fontWeight:
-                                          FontWeight.bold,
-                                          color: Colors.grey),
-                                    )),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-
 
                       Padding(
                         padding: const EdgeInsets.all(8),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text("Select Ticket Type", style: TextStyle(fontWeight:FontWeight.bold)),
-                          ],
-                        ),
-                      ),
-
-
-                      DropdownSearch<String>(
-                        mode: Mode.DIALOG,
-                        showSearchBox: true,
-                        // showClearButton: true,
-
-                        // label: "Select Screen",
-                        items: stringlist2,
-                        onChanged: (val) {
-                          print(val);
-                          for (int kk = 0; kk < li2.result!.length; kk++) {
-                            if (li2.result![kk].type == val) {
-                              TicketType = li2.result![kk].type.toString();
-                              Ticketcode = li2.result![kk].typeCode.toString();
-                              setState(() {
-                                print(TicketType);
-                                print(Ticketcode);
-
-                                //GetMyTablRecord();
-                              });
-                            }
-                          }
-
-                          if(Ticketcode=="T03"){
-                            getItemCategory();
-
-                            setState(() {
-                              ItemVisible=true;
-                            });
-
-
-                          }else{
-                            setState(() {
-                              ItemVisible=false;
-                            });
-                          }
-
-                        },
-                        selectedItem: TicketType,
-                      ),
-
-                      /* SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: TypeAheadFormField(
-                                  textFieldConfiguration:
-                                  TextFieldConfiguration(
-                                    textCapitalization:
-                                    TextCapitalization.words,
-                                    enabled: true,
-                                    controller: this.EmpController,
-                                    keyboardType: TextInputType.text,
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(Icons.person),
-                                      labelText: 'Select Employee',
-                                      hintStyle: TextStyle(
-                                        color: Colors.black45,
-                                        fontSize: 16.0,
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderRadius:
-                                        BorderRadius.circular(
-                                            5.0),
-                                      ),
-                                    ),
-                                  ),
-                                  suggestionsCallback: (pattern) {
-                                    return BackendService.getEmployee(
-                                        pattern);
-                                  },
-                                  itemBuilder: (context, suggestion) {
-                                    return ListTile(
-                                      title: Text(suggestion),
-                                    );
-                                  },
-                                  transitionBuilder: (context,
-                                      suggestionsBox, controller) {
-                                    return suggestionsBox;
-                                  },
-                                  onSuggestionSelected: (suggestion) {
-                                    print(suggestion);
-                                    for (int i = 0;
-                                    i < empDataList.result.length;
-                                    i++) {
-                                      if (empDataList
-                                          .result[i].empName
-                                          .toString() ==
-                                          suggestion) {
-                                        mobilenoController.text =
-                                            empDataList
-                                                .result[i].mobileNo
-                                                .toString();
-                                        emailController.text =
-                                            empDataList
-                                                .result[i].emailID
-                                                .toString();
-                                        print("EmpID: " +
-                                            mobilenoController.text);
-                                        print("EmpName: " +
-                                            emailController.text);
-                                        // CustomerEmployeeDataModel(EmpIDController.text);
-                                      }
-                                    }
-                                    print(suggestion);
-
-                                    this.EmpController.text =
-                                        suggestion;
-                                  },
-                                  validator: (value) {
-                                    if (value.isEmpty) {
-                                      return 'Please select Employee';
-                                    } else
-                                      return 'nothing';
-                                  },
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 5.0, vertical: 5),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.blue,
-                                        borderRadius:
-                                        BorderRadius.all(
-                                            Radius.circular(
-                                                8.0))),
-                                    child: TextButton.icon(
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (BuildContext
-                                              context) =>
-                                                  CustomerEmployeeCreation(
-                                                    type: "0",
-                                                  ),
-                                            ),
-                                          );
-                                        },
-                                        icon: Icon(
-                                          Icons.person_add,
-                                          color: Colors.white,
-                                          size: 18,
-                                        ),
-                                        label: Text(
-                                          "Add",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: height / 60),
-                                        )),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),*/
-
-
-                      Visibility(
-                        visible: ItemVisible,
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text("Select Item Category", style: TextStyle(fontWeight:FontWeight.bold)),
-                                ],
-                              ),
-                            ),
-
-                            DropdownSearch<String>(
-                              mode: Mode.DIALOG,
-                              showSearchBox: true,
-                              // showClearButton: true,
-
-                              // label: "Select Screen",
-                              items: stringlist5,
-                              onChanged: (val) {
-                                print(val);
-                                for (int kk = 0; kk < li5.result!.length; kk++) {
-                                  if (li5.result![kk].categoryName == val) {
-                                    ItemCategory = li5.result![kk].categoryName.toString();
-                                    ItemCategoryCode = li5.result![kk].categoryCode.toString();
-                                    setState(() {
-                                      print(ItemCategory);
-                                      //GetMyTablRecord();
-                                    });
-                                  }
-                                }
-
-                                setState(() {
-                                  getItemListCategory(ItemCategoryCode);
-                                });
-                              },
-                              selectedItem: ItemCategory,
-                            ),
-
-
-                            Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text("Select Item", style: TextStyle(fontWeight:FontWeight.bold)),
-                                ],
-                              ),
-                            ),
-
-                            DropdownSearch<String>(
-                              mode: Mode.DIALOG,
-                              showSearchBox: true,
-                              // showClearButton: true,
-
-                              // label: "Select Screen",
-                              items: stringlist7,
-                              onChanged: (val) {
-                                print(val);
-                                for (int kk = 0; kk < li6.result!.length; kk++) {
-                                  if (li6.result![kk].itemName == val) {
-                                    ItemName = li6.result![kk].itemName.toString();
-                                    ItemCode = li6.result![kk].itemCode.toString();
-                                    setState(() {
-                                      print(ItemName);
-                                      //GetMyTablRecord();
-                                    });
-                                  }
-                                }
-
-
-                              },
-                              selectedItem: ItemName,
-                            ),
-                          ],
-                        ),
-
-
-
-
-                      ),
-
-
-
-
-
-
-
-
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text("Select Priority", style: TextStyle(fontWeight:FontWeight.bold)),
-                          ],
-                        ),
-                      ),
-
-                      Container(
-                        width: width,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: Container(
-                                height: 60,
-                                width: width / 2.2,
-                                margin: const EdgeInsets.only(
-                                    left: 0, right: 0.0),
-                                decoration: new BoxDecoration(
-                                    color: Colors.white30,
-                                    borderRadius:
-                                    BorderRadius.all(Radius.circular(5.0)),
-                                    border:
-                                    new Border.all(color: Colors.black38)),
-                                child: DropdownButton<String>(
-                                  isExpanded: true,
-                                  value: selectstate,
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      selectstate = newValue!;
-                                      //print(newValue.toString());
-                                    });
-                                  },
-                                  items: stringlist
-                                      .map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(value),
-                                          ),
-                                        );
-                                      }).toList(),
-                                ),
-
-
-                              ),
-                            ),
-
-                          ],
-                        ),
-                      ),
-
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text("Select IssueCategory", style: TextStyle(fontWeight:FontWeight.bold)),
-                          ],
-                        ),
-                      ),
-
-
-                      DropdownSearch<String>(
-                        mode: Mode.DIALOG,
-                        showSearchBox: true,
-                      // showClearButton: true,
-
-                       // label: "Select Screen",
-                        items: stringlist3,
-                        onChanged: (val) {
-                          print(val);
-                          for (int kk = 0; kk < li3.result!.length; kk++) {
-                            if (li3.result![kk].issue == val) {
-                              issueCategory = li3.result![kk].issue.toString();
-                              issueCategoryCode = li3.result![kk].issueCode.toString();
-                              setState(() {
-                                print(issueCategory);
-                                //GetMyTablRecord();
-                              });
-                            }
-                          }
-                        },
-                        selectedItem: issueCategory,
-                      ),
-
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text("Select IssueType", style: TextStyle(fontWeight:FontWeight.bold)),
-                          ],
-                        ),
-                      ),
-
-
-                      DropdownSearch<String>(
-                        mode: Mode.DIALOG,
-                        showSearchBox: true,
-                        // showClearButton: true,
-
-                        // label: "Select Screen",
-                        items: stringlist4,
-                        onChanged: (val) {
-                          print(val);
-                          for (int kk = 0; kk < li4.result!.length; kk++) {
-                            if (li4.result![kk].issue == val) {
-                              issuetype = li4.result![kk].issue.toString();
-                              issuetypeCode = li4.result![kk].issueCode.toString();
-                              setState(() {
-                                print(issuetype);
-                                //GetMyTablRecord();
-                              });
-                            }
-                          }
-                        },
-                        selectedItem: issuetype,
-                      ),
-
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text("Problem Description", style: TextStyle(fontWeight:FontWeight.bold)),
+                            Text("Remarks", style: TextStyle(fontWeight:FontWeight.bold)),
 
                           ],
                         ),
@@ -1542,43 +1088,7 @@ class TicketCreationState extends State<TicketCreation> {
           child: TextButton.icon(
             onPressed: () {
 
-              if (TicketType.isEmpty) {
-                Fluttertoast.showToast(
-                    msg: "TicketType should not left Empty!!",
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.SNACKBAR,
-                    timeInSecForIosWeb: 1,
-                    textColor: Colors.white,
-                    backgroundColor: Colors.red,
-                    fontSize: 16.0);
-              } else if (selectstate == "Select Priority") {
-                Fluttertoast.showToast(
-                    msg: "Please select Priority!!",
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.SNACKBAR,
-                    timeInSecForIosWeb: 1,
-                    textColor: Colors.white,
-                    backgroundColor: Colors.red,
-                    fontSize: 16.0);
-              }else if (issueCategory.isEmpty) {
-                Fluttertoast.showToast(
-                    msg: "Please select Issue Category!!",
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.SNACKBAR,
-                    timeInSecForIosWeb: 1,
-                    textColor: Colors.white,
-                    backgroundColor: Colors.red,
-                    fontSize: 16.0);
-              }else if (issuetype.isEmpty) {
-                Fluttertoast.showToast(
-                    msg: "Please select Issue Type!!",
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.SNACKBAR,
-                    timeInSecForIosWeb: 1,
-                    textColor: Colors.white,
-                    backgroundColor: Colors.red,
-                    fontSize: 16.0);
-              }else if (descriptioncontroler.text.isEmpty ||
+              if (descriptioncontroler.text.isEmpty ||
                   descriptioncontroler.text == "") {
                 Fluttertoast.showToast(
                     msg: "Please Enter Description!!",

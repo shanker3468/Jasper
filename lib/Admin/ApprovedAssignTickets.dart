@@ -321,6 +321,9 @@ class Approved_Assign_TicketsState extends State<Approved_Assign_Tickets> {
 
                                                   SizedBox(
                                                       height: 15.0),
+
+
+
                                                   Row(
                                                     children: [
                                                       SizedBox(
@@ -2003,7 +2006,7 @@ class Approved_Assign_TicketsState extends State<Approved_Assign_Tickets> {
     print("gettickettype is called");
     var headers = {"Content-Type": "application/json"};
     var body = {
-      "FormID": 4,
+      "FormID": 20,
       "UserID": "",
       "Password": "",
       "Branch": "",

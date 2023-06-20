@@ -927,7 +927,7 @@ class WeeklyUpdateState extends State<WeeklyUpdate> {
                                       return SingleChildScrollView(
                                         child: Column(
                                           children: [
-                                            ListTile(
+                                            /*ListTile(
                                               title:
                                               Text("Gallery"),
                                               onTap: () async {
@@ -997,7 +997,7 @@ class WeeklyUpdateState extends State<WeeklyUpdate> {
                                               },
                                               leading:
                                               Icon(Icons.image),
-                                            ),
+                                            ),*/
                                             ListTile(
                                               leading: Icon(
                                                   Icons.camera_alt),

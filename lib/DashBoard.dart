@@ -31,6 +31,12 @@ class _DashBoardState extends State<DashBoard> {
 
   bool loading = false;
 
+  bool Newticket =false;
+
+  bool WeeklyUpdate1=false;
+
+  bool Reports=false;
+
 
   WeekUpdateAdminModel li2 =WeekUpdateAdminModel(result: []);
 
@@ -89,7 +95,121 @@ class _DashBoardState extends State<DashBoard> {
 
           print("li2.result.length1"+li2.result!.length.toString());
 
-          Navigator.push(context,MaterialPageRoute(builder: (context)=>WeeklyUpdate()));
+
+          setState(() {
+
+            Newticket =false;
+
+            WeeklyUpdate1=true;
+
+            Reports=false;
+
+
+
+          });
+
+
+     //     Navigator.push(context,MaterialPageRoute(builder: (context)=>WeeklyUpdate()));
+
+          li2.result!.clear();
+
+        } else {
+
+          print(AppConstants.LIVE_URL + 'getWipcustTckttoAsignnew');
+          print(body);
+          print(response.body);
+
+          //
+          // ScaffoldMessenger.of(this.context)
+          //     .showSnackBar(SnackBar(content: Text("Weekly Update already done!!")));
+
+          li2 = WeekUpdateAdminModel.fromJson(jsonDecode(response.body));
+
+          print("li2.result.length"+li2.result!.length.toString());
+
+        //  Navigator.push(context,MaterialPageRoute(builder: (context)=>DashBoard()));
+
+
+
+
+
+
+
+          setState(() {
+
+            Newticket =true;
+
+            WeeklyUpdate1=false;
+
+            Reports=true;
+
+
+
+          });
+
+        }
+
+
+      } else {
+        showDialogbox(this.context, "Failed to Login API");
+      }
+      return response;
+    } on SocketException {
+      setState(() {
+        loading = false;
+        showDialog(
+            context: this.context,
+            builder: (_) => AlertDialog(
+                backgroundColor: Colors.black,
+                title: Text(
+                  "No Response!..",
+                  style: TextStyle(color: Colors.purple),
+                ),
+                content: Text(
+                  "Slow Server Response or Internet connection",
+                  style: TextStyle(color: Colors.white),
+                )));
+      });
+      throw Exception('Internet is down');
+    }
+  }
+
+  Future<http.Response> getWeeklyTicketCount1() async {
+
+    print("getWeeklyTicketCount1 is called");
+    var headers = {"Content-Type": "application/json"};
+    var body = {
+      "BrachName": BranchName.toString(),
+      "EmpID": UserID.toString(),
+    };
+
+    print(body);
+    setState(() {
+      loading = true;
+    });
+    try {
+      final response = await http.post(
+          Uri.parse(AppConstants.LIVE_URL + 'getWeeklyUpdateUserLock'),
+          body: jsonEncode(body),
+          headers: headers);
+      print(AppConstants.LIVE_URL + 'getWeeklyUpdateUserLock');
+      print(response.body);
+      setState(() {
+        loading = false;
+      });
+      if (response.statusCode == 200) {
+
+        var isdata = json.decode(response.body)["status"] == 0;
+        print(isdata);
+        if (isdata) {
+
+          print('No Records Found!!');
+          // CustomerTicketsModel li2 =CustomerTicketsModel(result: []);
+
+          print("li2.result.length1"+li2.result!.length.toString());
+
+
+              Navigator.push(context,MaterialPageRoute(builder: (context)=>WeeklyUpdate()));
 
           li2.result!.clear();
 
@@ -114,6 +234,7 @@ class _DashBoardState extends State<DashBoard> {
 
 
           setState(() {
+
 
 
 
@@ -162,6 +283,121 @@ class _DashBoardState extends State<DashBoard> {
     );
   }
 
+
+  Future<http.Response> CheckTicketStatus() async {
+
+    print("CheckTicketStatus is called");
+    var headers = {"Content-Type": "application/json"};
+    var body = {
+      "FormID": 22,
+      "UserID": "",
+      "Password": "",
+      "Branch": "",
+      "DataBase":""
+    };
+
+    print(body);
+    setState(() {
+      loading = true;
+    });
+    try {
+      final response = await http.post(
+          Uri.parse(AppConstants.LIVE_URL + 'JasperLogin'),
+          body: jsonEncode(body),
+          headers: headers);
+      print(AppConstants.LIVE_URL + 'JasperLogin');
+      print(response.body);
+      setState(() {
+        loading = false;
+      });
+      if (response.statusCode == 200) {
+
+        if (jsonDecode(response.body)["status"].toString() == "0") {
+
+        }else if (json.decode(response.body)["status"] == "0" &&
+            jsonDecode(response.body)["result"].toString() == []) {
+
+        } else if (json.decode(response.body)["status"] == 1 &&
+            jsonDecode(response.body)["result"].toString() == "[]") {
+
+        }else{
+
+          String Day1 =
+          jsonDecode(response.body)["result"][0]["Day1"].toString();
+          print("Day1: " + Day1);
+
+
+          String Day =
+          jsonDecode(response.body)["result"][0]["Day"].toString();
+          print("Day: " + Day);
+
+          setState(() {
+
+            if(Day1==Day){
+
+
+
+
+              Newticket =false;
+
+              WeeklyUpdate1=false;
+
+              Reports=false;
+
+              setState(() {
+
+              });
+
+              getWeeklyTicketCount();
+
+
+            }else{
+
+              setState(() {
+
+              });
+
+               Newticket =true;
+
+               WeeklyUpdate1=false;
+
+               Reports=true;
+
+            }
+
+          });
+
+          setState(() {
+            loading = false;
+          });
+
+
+        }
+
+      } else {
+        showDialogbox(context, "Failed to Login API");
+      }
+      return response;
+    } on SocketException {
+      setState(() {
+        loading = false;
+        showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+                backgroundColor: Colors.black,
+                title: Text(
+                  "No Response!..",
+                  style: TextStyle(color: Colors.purple),
+                ),
+                content: Text(
+                  "Slow Server Response or Internet connection",
+                  style: TextStyle(color: Colors.white),
+                )));
+      });
+      throw Exception('Internet is down');
+    }
+  }
+
   void getStringValuesSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -177,6 +413,8 @@ class _DashBoardState extends State<DashBoard> {
 
       print(UserName.toString());
 
+
+      CheckTicketStatus();
       //getWeeklyTicketCount();
 
     });
@@ -201,7 +439,7 @@ class _DashBoardState extends State<DashBoard> {
         child: Column(
           children: [
             Container(
-              height: height/5                                ,
+              height: height/4                                ,
               width: width/2,
               child: Column(
                 children: [
@@ -212,7 +450,7 @@ class _DashBoardState extends State<DashBoard> {
                   Container(
                     color: Colors.white,
                     // padding: EdgeInsets.only(right: 10),
-                    height: 30,
+                    height: 20,
                     width: width,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -284,12 +522,12 @@ class _DashBoardState extends State<DashBoard> {
                             BorderRadius.all(Radius.circular(width / 20)),
                           ),
 
-                        ))
-                            .toList(),
-                        options: CarouselOptions(
                           onPageChanged: (index, reason) {
                             setState(() {
                               _current = index;
+                        ))
+                            .toList(),
+                        options: CarouselOptions(
                             });
                           },
                           initialPage: 0,
@@ -309,7 +547,7 @@ class _DashBoardState extends State<DashBoard> {
                       options: CarouselOptions(
                         enlargeCenterPage: true,
                         enableInfiniteScroll: false,
-                        height: 120,
+                        height: 100,
                         initialPage: 0,
                         autoPlay: true,
                       ),
@@ -628,170 +866,195 @@ class _DashBoardState extends State<DashBoard> {
 
                           InkWell(
                             onTap: () {
+                              //
+                              // Navigator.pushReplacement(context,
+                              //     MaterialPageRoute(builder: (context) => DashBoard()));
+
+                              // setState(() {
+                              //   Newticket =false;
+                              //
+                              //   WeeklyUpdate1=false;
+                              //
+                              //   Reports=false;
+                              // });
 
 
-                              showDialog<void>(
-                                  context: context,
-                                  barrierDismissible: true,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      backgroundColor: Colors.white.withOpacity(0),
-                                      title: SingleChildScrollView(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Container(
-
-                                              child: Image.asset(
-                                                "assets/images/Jasperlogo.png",
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: height / 30,
-                                            ),
-                                            Text(
-                                              "Please Choose",
-                                              style: TextStyle(
-                                                  color: Colors.amber, fontSize: 16),
-                                            ),
-                                            SizedBox(
-                                              height: height / 30,
-                                            ),
-                                            // SizedBox(height: height/50,),
-                                            // FlatButton(
-                                            //   onPressed: () {
-                                            //     QuotaionNameState.Namecontroller.text="";
-                                            //     QuotaionNameState.Emailcontroller.text="";
-                                            //     QuotaionNameState.Mobilecontroller.text="";
-                                            //     QuotaionNameState.Addresscontroller.text="";
-                                            //     QuotaionNameState.GSTcontroller.text="";
-                                            //     QuotaionNameState.Whatsappcontroller.text="";
-                                            //     QuotaionNameState.Pincodecontroller.text="";
-                                            //     Navigator.pop(context);
-                                            //     Navigator.push(context,MaterialPageRoute(builder: (context)=>QuotationDate()));
-                                            //   },
-                                            //   child: Container(
-                                            //     height: 50,
-                                            //     // margin: EdgeInsets.only(left:16,right: 16),
-                                            //     alignment: Alignment.center,
-                                            //     decoration: BoxDecoration(
-                                            //         color: Colors.white,
-                                            //         borderRadius: BorderRadius.all(
-                                            //             Radius.circular(50))),
-                                            //     child: Text(
-                                            //       "New Quotation",
-                                            //       style: TextStyle(
-                                            //           color: String_Values.primarycolor),
-                                            //     ),
-                                            //   ),
-                                            // ),
-                                            SizedBox(
-                                              height: height / 50,
-                                            ),
-
-                                            GestureDetector(
-
-                                                onTap: (){
 
 
-                                                  Navigator.pop(context);
-                                                 Navigator.push(context,MaterialPageRoute(builder: (context)=>TicketCreation()));
-                                                },
-                                                child: Container(
-                                                  height: 50,
-                                                  // margin: EdgeInsets.only(left:16,right: 16),
-                                                  alignment: Alignment.center,
+                             // CheckTicketStatus().then((value) =>
+                                  showDialog<void>(
+                                      context: context,
+                                      barrierDismissible: true,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          backgroundColor: Colors.white.withOpacity(0),
+                                          title: SingleChildScrollView(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Container(
 
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius: BorderRadius.all(
-                                                          Radius.circular(50))),
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                    children: [
+                                                  child: Image.asset(
+                                                    "assets/images/Jasperlogo.png",
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: height / 30,
+                                                ),
+                                                Text(
+                                                  "Please Choose",
+                                                  style: TextStyle(
+                                                      color: Colors.amber, fontSize: 16),
+                                                ),
+                                                SizedBox(
+                                                  height: height / 30,
+                                                ),
+                                                // SizedBox(height: height/50,),
+                                                // FlatButton(
+                                                //   onPressed: () {
+                                                //     QuotaionNameState.Namecontroller.text="";
+                                                //     QuotaionNameState.Emailcontroller.text="";
+                                                //     QuotaionNameState.Mobilecontroller.text="";
+                                                //     QuotaionNameState.Addresscontroller.text="";
+                                                //     QuotaionNameState.GSTcontroller.text="";
+                                                //     QuotaionNameState.Whatsappcontroller.text="";
+                                                //     QuotaionNameState.Pincodecontroller.text="";
+                                                //     Navigator.pop(context);
+                                                //     Navigator.push(context,MaterialPageRoute(builder: (context)=>QuotationDate()));
+                                                //   },
+                                                //   child: Container(
+                                                //     height: 50,
+                                                //     // margin: EdgeInsets.only(left:16,right: 16),
+                                                //     alignment: Alignment.center,
+                                                //     decoration: BoxDecoration(
+                                                //         color: Colors.white,
+                                                //         borderRadius: BorderRadius.all(
+                                                //             Radius.circular(50))),
+                                                //     child: Text(
+                                                //       "New Quotation",
+                                                //       style: TextStyle(
+                                                //           color: String_Values.primarycolor),
+                                                //     ),
+                                                //   ),
+                                                // ),
+                                                SizedBox(
+                                                  height: height / 50,
+                                                ),
+
+                                                Visibility(
+                                                  visible:Newticket ,
+                                                  child: GestureDetector(
+
+                                                    onTap: (){
 
 
-                                                      Text(
-                                                        "New ticket",
+                                                      Navigator.pop(context);
+                                                      Navigator.push(context,MaterialPageRoute(builder: (context)=>TicketCreation()));
+                                                    },
+                                                    child: Container(
+                                                      height: 50,
+                                                      // margin: EdgeInsets.only(left:16,right: 16),
+                                                      alignment: Alignment.center,
+
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.white,
+                                                          borderRadius: BorderRadius.all(
+                                                              Radius.circular(50))),
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                        children: [
+
+
+                                                          Text(
+                                                            "New ticket",
+                                                            style: TextStyle(
+                                                                color: String_Values.primarycolor),
+                                                          ),
+
+
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+
+                                                SizedBox(height: height/50,),
+
+                                                Visibility(
+                                                  visible: WeeklyUpdate1,
+                                                  child: GestureDetector(
+                                                    onTap: (){
+                                                      Navigator.pop(context);
+                                                      getWeeklyTicketCount1();
+                                                      //
+                                                    },
+                                                    child: Container(
+                                                      height: 50,
+                                                      // margin: EdgeInsets.only(left:16,right: 16),
+                                                      alignment: Alignment.center,
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.white,
+                                                          borderRadius: BorderRadius.all(
+                                                              Radius.circular(50))),
+                                                      child: Text(
+                                                        "Weekly Update",
                                                         style: TextStyle(
                                                             color: String_Values.primarycolor),
                                                       ),
-
-
-                                                    ],
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
 
-                                            SizedBox(height: height/50,),
-
-                                            GestureDetector(
-                                              onTap: (){
-                                                Navigator.pop(context);
-                                                getWeeklyTicketCount();
-                                              //
-                                              },
-                                              child: Container(
-                                                height: 50,
-                                                // margin: EdgeInsets.only(left:16,right: 16),
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius: BorderRadius.all(
-                                                        Radius.circular(50))),
-                                                child: Text(
-                                                  "Weekly Update",
-                                                  style: TextStyle(
-                                                      color: String_Values.primarycolor),
+                                                SizedBox(
+                                                  height: height / 50,
                                                 ),
-                                              ),
-                                            ),
-
-                                            SizedBox(
-                                              height: height / 50,
-                                            ),
 
 
 
 
-                                            GestureDetector(
-                                              onTap: (){
-                                                Navigator.pop(context);
-                                                Navigator.push(context,MaterialPageRoute(builder: (context)=>ReportsDashBoard()));
-                                              },
-                                              child: Container(
-                                                  height: 50,
-                                                  // margin: EdgeInsets.only(left:16,right: 16),
-                                                  alignment: Alignment.center,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius: BorderRadius.all(
-                                                          Radius.circular(50))),
-                                                  child: Text(
-                                                    "Reports",
-                                                    style: TextStyle(
-                                                        color: String_Values.primarycolor),
+                                                Visibility(
+                                                  visible:Reports ,
+                                                  child: GestureDetector(
+                                                    onTap: (){
+                                                      Navigator.pop(context);
+                                                      Navigator.push(context,MaterialPageRoute(builder: (context)=>ReportsDashBoard()));
+                                                    },
+                                                    child: Container(
+                                                      height: 50,
+                                                      // margin: EdgeInsets.only(left:16,right: 16),
+                                                      alignment: Alignment.center,
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.white,
+                                                          borderRadius: BorderRadius.all(
+                                                              Radius.circular(50))),
+                                                      child: Text(
+                                                        "Reports",
+                                                        style: TextStyle(
+                                                            color: String_Values.primarycolor),
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
+
+                                                SizedBox(
+                                                  height: height / 50,
+                                                ),
+
+
+
+                                              ],
                                             ),
+                                          ),
+                                        );
+                                      });
+                            //);
 
-                                            SizedBox(
-                                              height: height / 50,
-                                            ),
 
-
-
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  });
 
                               //
-                              // Navigator.push(context,
-                              //     MaterialPageRoute(builder: (context) => HallBooking()));
+
                             },
                             child: Card(
                               shape: RoundedRectangleBorder(

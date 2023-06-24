@@ -1,15 +1,23 @@
 
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:badges/badges.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:jasper/Admin/WipAssignTickets.dart';
 import 'package:jasper/Admin/master_screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
-
+import '../ADMIN Models/AssignEmpListBasedOnDepartmentModel.dart';
+import '../ADMIN Models/CustomerTicketsModel.dart';
+import '../AppConstants.dart';
 import '../LoginPage.dart';
 import '../ServiceStation/reports.dart';
 import '../String_Values.dart';
 import '../ServiceStation/TicketCreation.dart';
+import 'AdminReport_dashboard.dart';
 import 'AllAssignTickets.dart';
 import 'ApprovedAssignTickets.dart';
 import 'AssignTickets.dart';
@@ -25,6 +33,8 @@ class AdminDashBoard extends StatefulWidget {
 class _AdminDashBoardState extends State<AdminDashBoard> {
   int _current = 0;
 
+  int sapbone = 0;
+
   var UserName = "";
   var UserID = "";
   var branchID = "";
@@ -32,6 +42,10 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
   var DepartmentCode = "";
   var DepartmentName = "";
   var Location = "";
+
+  bool loading = false;
+
+  CustomerTicketsModel li2 =CustomerTicketsModel(result: []);
 
 
   static logoutfunction(BuildContext context) async {
@@ -60,9 +74,117 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
       Location = prefs.getString('Location')!;
       // FromBranchController.text = sessionfromBranchName;
 
+      getOpenTickets();
+
       print(UserName.toString());
 
     });
+  }
+
+
+  Future<http.Response> getOpenTickets() async {
+
+    print("getOpenTickets is called");
+    var headers = {"Content-Type": "application/json"};
+    var body = {
+      "TicketCategory": "".toString(),
+      "BrachName": "".toString(),
+    };
+
+    print(body);
+    setState(() {
+      loading = true;
+    });
+    try {
+      final response = await http.post(
+          Uri.parse(AppConstants.LIVE_URL + 'getOpenTickets'),
+          body: jsonEncode(body),
+          headers: headers);
+      print(AppConstants.LIVE_URL + 'getOpenTickets');
+      print(response.body);
+      setState(() {
+        loading = false;
+      });
+      if (response.statusCode == 200) {
+
+        var isdata = json.decode(response.body)["status"] == 0;
+        print(isdata);
+        if (isdata) {
+          ScaffoldMessenger.of(this.context)
+              .showSnackBar(SnackBar(content: Text("No Records Found!!")));
+          print('No Records Found!!');
+          // CustomerTicketsModel li2 =CustomerTicketsModel(result: []);
+
+
+
+        } else {
+
+          print(AppConstants.LIVE_URL + 'getWipcustTckttoAsignnew');
+          print(body);
+          print(response.body);
+
+          li2 = CustomerTicketsModel.fromJson(jsonDecode(response.body));
+
+
+          setState(() {
+
+            sapbone=int.parse(li2.result!.length.toString());
+
+          });
+
+        }
+
+        /* if (jsonDecode(response.body)["status"].toString() == "0") {
+
+        }else if (json.decode(response.body)["status"] == "0" &&
+            jsonDecode(response.body)["result"].toString()=="No Data") {
+
+        } else if (json.decode(response.body)["status"] == 1 &&
+            jsonDecode(response.body)["result"].toString() == "[]") {
+
+        }else{
+
+          li5 = BranchMasterModel.fromJson(jsonDecode(response.body));
+
+          for(int i=0;i<li5.result!.length;i++);
+          print(li5.result!.length.toString());
+
+          setState(() {
+            stringlist5.clear();
+            stringlist5.add("Select Branch");
+            for (int i = 0; i < li5.result!.length; i++)
+              stringlist5.add(li5.result![i].branchName.toString());
+          });
+
+          setState(() {
+            loading = false;
+          });
+
+
+        }*/
+
+      } else {
+        showDialogbox(this.context, "Failed to Login API");
+      }
+      return response;
+    } on SocketException {
+      setState(() {
+        loading = false;
+        showDialog(
+            context: this.context,
+            builder: (_) => AlertDialog(
+                backgroundColor: Colors.black,
+                title: Text(
+                  "No Response!..",
+                  style: TextStyle(color: Colors.purple),
+                ),
+                content: Text(
+                  "Slow Server Response or Internet connection",
+                  style: TextStyle(color: Colors.white),
+                )));
+      });
+      throw Exception('Internet is down');
+    }
   }
 
 
@@ -84,7 +206,7 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
         child: Column(
           children: [
             Container(
-              height: height/5                                ,
+              height: height/4                                ,
               width: width/2,
               child: Column(
                 children: [
@@ -95,7 +217,7 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                   Container(
                     color: Colors.white,
                     // padding: EdgeInsets.only(right: 10),
-                    height: 30,
+                    height: 20,
                     width: width,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -146,7 +268,7 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                     ),
 
 
-                    SizedBox(height: height/20,),
+                    SizedBox(height: height/30,),
                     /*CarouselSlider(
                         items: imgList
                             .map((item) => Container(
@@ -508,8 +630,7 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                           InkWell(
                             onTap: () {
 
-
-                              showDialog<void>(
+                              getOpenTickets().then((value) =>   showDialog<void>(
                                   context: context,
                                   barrierDismissible: true,
                                   builder: (BuildContext context) {
@@ -570,7 +691,7 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                                               height: height / 50,
                                             ),
 
-                                           /* GestureDetector(
+                                            /* GestureDetector(
 
                                                 onTap: (){
 
@@ -704,11 +825,27 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                                                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                   children: [
 
-
                                                     Text(
                                                       "Tickets",
                                                       style: TextStyle(
                                                           color: String_Values.primarycolor),
+                                                    ),
+                                                    Badge(
+                                                      padding: EdgeInsets.all(8),
+                                                      shape: BadgeShape.circle,
+                                                      showBadge:
+                                                      sapbone.toString() == "0"
+                                                          ? false
+                                                          : true,
+                                                      badgeColor: Colors.deepOrange,
+                                                      badgeContent: Text(
+                                                        sapbone.toString(),
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                            FontWeight.bold),
+                                                      ),
+
                                                     ),
 
 
@@ -724,7 +861,7 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                                             GestureDetector(
                                               onTap: (){
                                                 Navigator.pop(context);
-                                                    Navigator.push(context,MaterialPageRoute(builder: (context)=>MasterScreens()));
+                                                Navigator.push(context,MaterialPageRoute(builder: (context)=>MasterScreens()));
                                               },
                                               child: Container(
                                                 height: 50,
@@ -770,7 +907,7 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                                             GestureDetector(
                                               onTap: (){
                                                 Navigator.pop(context);
-                                                    Navigator.push(context,MaterialPageRoute(builder: (context)=>AllAssign_Tickets(status:"1",Tickettype:'',BranchName:'')));
+                                                Navigator.push(context,MaterialPageRoute(builder: (context)=>AllAssign_Tickets(status:"1",Tickettype:'',BranchName:'')));
                                               },
                                               child: Container(
                                                 height: 50,
@@ -792,30 +929,30 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                                               height: height / 50,
                                             ),
 
-                                            GestureDetector(
-                                              onTap: (){
-                                                Navigator.pop(context);
-                                            //    Navigator.push(context,MaterialPageRoute(builder: (context)=>ReportsDashBoard()));
-                                              },
-                                              child: Container(
-                                                  height: 50,
-                                                  // margin: EdgeInsets.only(left:16,right: 16),
-                                                  alignment: Alignment.center,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius: BorderRadius.all(
-                                                          Radius.circular(50))),
-                                                  child: Text(
-                                                    "Reports",
-                                                    style: TextStyle(
-                                                        color: String_Values.primarycolor),
-                                                  ),
-                                                ),
-                                            ),
-
-                                            SizedBox(
-                                              height: height / 50,
-                                            ),
+                                            // GestureDetector(
+                                            //   onTap: (){
+                                            //     Navigator.pop(context);
+                                            //     //    Navigator.push(context,MaterialPageRoute(builder: (context)=>ReportsDashBoard()));
+                                            //   },
+                                            //   child: Container(
+                                            //     height: 50,
+                                            //     // margin: EdgeInsets.only(left:16,right: 16),
+                                            //     alignment: Alignment.center,
+                                            //     decoration: BoxDecoration(
+                                            //         color: Colors.white,
+                                            //         borderRadius: BorderRadius.all(
+                                            //             Radius.circular(50))),
+                                            //     child: Text(
+                                            //       "Reports",
+                                            //       style: TextStyle(
+                                            //           color: String_Values.primarycolor),
+                                            //     ),
+                                            //   ),
+                                            // ),
+                                            //
+                                            // SizedBox(
+                                            //   height: height / 50,
+                                            // ),
 
 
 
@@ -823,7 +960,10 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                                         ),
                                       ),
                                     );
-                                  });
+                                  }));
+
+
+
 
                               //
                               // Navigator.push(context,
@@ -837,6 +977,7 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
                                 children: [
+
                                   Icon(Icons.dashboard_customize,color: String_Values.primarycolor,size: height/12,),
                                   Text(
                                     "Dash Board",
@@ -850,9 +991,9 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                           InkWell(
                             onTap: () {
 
-                              logoutfunction(context);
-                              // Navigator.push(context,
-                              //     MaterialPageRoute(builder: (context) => LoginPage()));
+                              //logoutfunction(context);
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => AdminReportDashboard()));
                             },
                             child: Card(
                               shape: RoundedRectangleBorder(
@@ -862,9 +1003,9 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
                                 children: [
-                                  Icon(Icons.logout,color: String_Values.primarycolor,size: height/12,),
+                                  Icon(Icons.bar_chart_outlined,color: String_Values.primarycolor,size: height/12,),
                                   Text(
-                                    "Log Out",
+                                    "Reports",
                                     style: TextStyle( color: String_Values.primarycolor,fontWeight: FontWeight.w800),
                                     textAlign: TextAlign.center,
                                   ),

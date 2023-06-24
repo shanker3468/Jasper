@@ -100,9 +100,17 @@ class WeeklyUpdateState extends State<WeeklyUpdate> {
   TextEditingController descriptioncontroler = TextEditingController();
   late String selecteddate;
 
-   File? file;
-  var pickedFile;
+  //  File? file;
+  // var pickedFile;
+  // List<String> files = [];
+
+
+
+  late File? file;
   List<String> files = [];
+  List<String> attachmentlist =[];
+  List<File> filelist = [];
+
   late FilePickerResult result;
   late FocusNode myFocusNode;
 
@@ -172,20 +180,6 @@ class WeeklyUpdateState extends State<WeeklyUpdate> {
   }
 
 
-  Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
-
-    setState(() {
-      if (pickedFile != null) {
-        files.clear();
-        files.add(pickedFile.path);
-        file = File(pickedFile.path);
-      } else {
-        print('No image selected.');
-      }
-    });
-  }
-
   Future<http.Response> getticketNo() async {
 
     print("getticketNo is called");
@@ -230,6 +224,110 @@ class WeeklyUpdateState extends State<WeeklyUpdate> {
           setState(() {
             myController = TextEditingController()..text = gettotticks;
             print("set" + myController.text);
+          });
+
+          setState(() {
+            loading = false;
+          });
+
+
+        }
+
+      } else {
+        showDialogbox(context, "Failed to Login API");
+      }
+      return response;
+    } on SocketException {
+      setState(() {
+        loading = false;
+        showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+                backgroundColor: Colors.black,
+                title: Text(
+                  "No Response!..",
+                  style: TextStyle(color: Colors.purple),
+                ),
+                content: Text(
+                  "Slow Server Response or Internet connection",
+                  style: TextStyle(color: Colors.white),
+                )));
+      });
+      throw Exception('Internet is down');
+    }
+  }
+
+
+  Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+
+    setState(() {
+      if (pickedFile != null) {
+        files.clear();
+        files.add(pickedFile.path);
+        file = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  Future<http.Response> CheckTicketStatus() async {
+
+    print("CheckTicketStatus is called");
+    var headers = {"Content-Type": "application/json"};
+    var body = {
+      "FormID": 22,
+      "UserID": "",
+      "Password": "",
+      "Branch": "",
+      "DataBase":""
+    };
+
+    print(body);
+    setState(() {
+      loading = true;
+    });
+    try {
+      final response = await http.post(
+          Uri.parse(AppConstants.LIVE_URL + 'JasperLogin'),
+          body: jsonEncode(body),
+          headers: headers);
+      print(AppConstants.LIVE_URL + 'JasperLogin');
+      print(response.body);
+      setState(() {
+        loading = false;
+      });
+      if (response.statusCode == 200) {
+
+        if (jsonDecode(response.body)["status"].toString() == "0") {
+
+        }else if (json.decode(response.body)["status"] == "0" &&
+            jsonDecode(response.body)["result"].toString() == []) {
+
+        } else if (json.decode(response.body)["status"] == 1 &&
+            jsonDecode(response.body)["result"].toString() == "[]") {
+
+        }else{
+
+          String Day1 =
+          jsonDecode(response.body)["result"][0]["Day1"].toString();
+          print("Day1: " + Day1);
+
+
+          String Day =
+          jsonDecode(response.body)["result"][0]["Day"].toString();
+          print("Day: " + Day);
+
+          setState(() {
+
+            if(Day1==Day){
+
+
+            }else{
+
+            }
+
           });
 
           setState(() {
@@ -676,7 +774,7 @@ class WeeklyUpdateState extends State<WeeklyUpdate> {
   Future Photoupload() async {
     print("Photoupload");
     var url;
-    url = Uri.parse(AppConstants.LIVE_URL +'upload');
+    url = Uri.parse(AppConstants.LIVE_URL +'upload1');
 
     setState(() {
       loading = true;
@@ -915,7 +1013,7 @@ class WeeklyUpdateState extends State<WeeklyUpdate> {
                         ),
                       ),
 
-                      Container(
+                     /* Container(
                         child: Row(
                           children: [
                             GestureDetector(
@@ -1010,7 +1108,7 @@ class WeeklyUpdateState extends State<WeeklyUpdate> {
 
                                                 setState(() {
                                                   if (pickedFile != null) {
-                                                    files.clear();
+                                                   // files.clear();
                                                     files.add(pickedFile.path);
                                                     file = File(pickedFile.path);
                                                     print("filefile"+file!.path.toString());
@@ -1038,15 +1136,120 @@ class WeeklyUpdateState extends State<WeeklyUpdate> {
                             SizedBox(
                               width: 10,
                             ),
+                            
+                           /* ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              itemCount: 10,
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  // key: ObjectKey(itemsL[index]),
+                                  child: Card(
+                                      child: Container(
+                                        height: 100,
+                                        width: 90,
+                                        child: Image.file(File(file![i].path),height:height/2, width: width/2,
+                                      )
+                                  ),
+                                );
+                              },
+                            ),*/
+
+
+
+                            /////
+                            //////
+
+
 
                             file!=null ? Image.file(File(file!.path),height:height/2, width: width/2,):Container(child: Text("No image selected."),),
 
                           ],
                         ),
+                      ),*/
+
+
+                      InkWell(
+                        onTap: () async {
+
+                          if(files.length>3){
+
+                            Fluttertoast.showToast(msg: "Four Images Only Allowed");
+
+
+                          }else{
+
+                          final picker = ImagePicker();
+                          final pickedFile =
+                              await picker.getImage(
+                            source: ImageSource.camera,
+                            imageQuality: 50,
+                          );
+                          setState(() {
+                            if (pickedFile != null) {
+                              filelist.add(File(pickedFile.path));
+                              attachmentlist.add(pickedFile.path
+                                  .toString()
+                                  .split("/")
+                                  .last);
+                              //files.clear();
+                              files.add(pickedFile.path);
+                              print(files.length);
+
+                              // getImage();
+
+                            } else {
+                              print('No image selected.');
+                            }
+                          });
+
+                                    }
+                        },
+                        child: Padding(padding: EdgeInsets.all(10),
+                            child: Row(
+                              children: [
+                                Icon(Icons.attach_file),
+                              ],
+                            )),
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
+                      SizedBox(height: 5,),
+                      if(files.length>0)
+                        Row(
+                          children: [
+                            for (int i = 0; i < filelist.length; i++)
+                              Stack(
+                                alignment: Alignment.topRight,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return Image.file(filelist[i]);
+                                        },
+                                      );
+                                    },
+                                    child: Container(
+                                        height: 100,
+                                        width: 100,
+                                        child: Image.file(filelist[i])),
+                                  ),
+                                  InkWell(
+                                    child: Icon(
+                                      Icons.cancel,color: Colors.red,),
+                                    onTap: () {
+                                      setState(() {
+                                        filelist.removeAt(i);
+                                        files.removeAt(i);
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                          ],
+                        ),
+
+
                     ],
                   ),
                 )
@@ -1127,6 +1330,8 @@ class WeeklyUpdateState extends State<WeeklyUpdate> {
   }
 }
 
+
+
 Future showDialogbox(BuildContext context, String message) {
   return showDialog(
     context: context,
@@ -1145,4 +1350,6 @@ Future showDialogbox(BuildContext context, String message) {
     },
   );
 }
+
+
 

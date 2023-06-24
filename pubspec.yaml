@@ -57,6 +57,9 @@ dependencies:
   blinking_text: ^1.0.1+2
   url_launcher: ^6.0.17
   flutter_switch: ^0.3.2
+  badges: ^2.0.2
+  pie_chart: ^5.3.2
+  syncfusion_flutter_charts:
 
 
 

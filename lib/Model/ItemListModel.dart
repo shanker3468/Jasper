@@ -31,8 +31,8 @@ class Result {
   String? itemCategory;
   String? itemCategoryCode;
   String? status;
-  Null? branchName;
-  Null? branchCode;
+  String? branchName;
+  String? branchCode;
 
   Result(
       {this.docNo,

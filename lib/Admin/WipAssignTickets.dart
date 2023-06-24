@@ -661,11 +661,17 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                     }
 
                     setState(() {
-                     if (BranchName1.isNotEmpty&&FilterStatusName.isNotEmpty){
-                       getTicketList(FilterStatusCode);
-                      } else {
+                     if (TicketType.isNotEmpty&&BranchName1.isEmpty&&FilterStatusName.isEmpty){
+                       print("TicketType.isNotEmpty");
+                       getTicketListBasedOnTicketCategory();
+                      } else if(BranchName1.isNotEmpty&&TicketType.isNotEmpty&&FilterStatusName.isEmpty){
+                       print("BranchName1.isNotEmpty&&FilterStatusName"
+                           ".isNotEmpty");
+                       getTicketListBasedOnTicketCategoryandBranch();
 
+                     }else {
 
+                       print("Else");
                        getTicketList(FilterStatusCode);
 
 
@@ -716,24 +722,9 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                       selectedlist.clear();
 
 
-                      if (TicketType.isEmpty) {
-                        Fluttertoast.showToast(
-                            msg: "TicketType should not left Empty!!",
-                            toastLength: Toast.LENGTH_LONG,
-                            gravity: ToastGravity.SNACKBAR,
-                            timeInSecForIosWeb: 1,
-                            textColor: Colors.white,
-                            backgroundColor: Colors.red,
-                            fontSize: 16.0);
-                      } else if (FilterStatusName.isEmpty) {
-                        Fluttertoast.showToast(
-                            msg: "Select Ticket Status should not left Empty!!",
-                            toastLength: Toast.LENGTH_LONG,
-                            gravity: ToastGravity.SNACKBAR,
-                            timeInSecForIosWeb: 1,
-                            textColor: Colors.white,
-                            backgroundColor: Colors.red,
-                            fontSize: 16.0);
+                      if (TicketType.isNotEmpty&&BranchName1.isNotEmpty) {
+                        print("TicketType.isNotEmpty");
+                        getTicketListBasedOnTicketCategoryandBranch();
                       } else {
 
                         getTicketList(FilterStatusCode);
@@ -867,6 +858,14 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                   li2.result![k].priority
                                       .toString()
                                       .toLowerCase()
+                                      .contains(value)||
+                                  li2.result![k].category
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(value)||
+                                  li2.result![k].brachName
+                                      .toString()
+                                      .toLowerCase()
                                       .contains(value)
 
                               )
@@ -979,10 +978,22 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
+                      if(FilterStatusName=="")DataColumn(
+                        label: Text(
+                          'TicketType',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
 
                       DataColumn(
                         label: Text(
                           'Ticket No',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Branch Name',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -1112,8 +1123,14 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                 ),
                               ),
                             ),
+                            if(FilterStatusName=="")DataCell(Text(
+                                list.category.toString(),
+                                textAlign: TextAlign.center)),
                             DataCell(Text(
                                 list.ticketNo.toString(),
+                                textAlign: TextAlign.center)),
+                            DataCell(Text(
+                                list.brachName.toString(),
                                 textAlign: TextAlign.center)),
                             DataCell(Text(
                                 style: TextStyle(fontWeight:FontWeight.bold,color:list.priority.toString()=="High"?Colors.red:list.priority.toString()=="Medium"?Colors.orangeAccent:Colors.green,),
@@ -1322,7 +1339,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                                             children: <Widget>[
                                                               Text("Do You Want to Proceed ?"),
                                                               SizedBox(height: 5,),
-                                                              Text("TicketStatus="+FilterStatusName.toString(),style: TextStyle(fontWeight:FontWeight.bold),),
+                                                              FilterStatusName.isNotEmpty?Text("TicketStatus="+FilterStatusName.toString(),style: TextStyle(fontWeight:FontWeight.bold),):Text(list.status!.toLowerCase().toString()=='o'?"TicketStatus=Open".toString():list.status!.toLowerCase().toString()=='p'?"TicketStatus=Work IN Progress":"TicketStatus=Work IN Progress"),
 
 
 
@@ -2160,6 +2177,8 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
       Location = prefs.getString('Location').toString();
       EmpGroup=prefs.getString('EmpGroup').toString();
 
+      getOpenTickets();
+
       gettickettype().then((value) => getBranchList()).then((value) => getTicketStatusList()).then((value) => getTicketStatusfilterList());
     });
   }
@@ -2811,6 +2830,479 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
       throw Exception('Internet is down');
     }
   }
+
+
+   Future<http.Response> getTicketListBasedOnTicketCategory() async {
+
+     print("getTicketListBasedOnTicketCategory is called");
+     var headers = {"Content-Type": "application/json"};
+     var body = {
+       "TicketCategory": TicketType.toString(),
+     };
+
+     print(body);
+     setState(() {
+       loading = true;
+     });
+     try {
+       final response = await http.post(
+           Uri.parse(AppConstants.LIVE_URL + 'getOpenTicketsBasedOnCategory'),
+           body: jsonEncode(body),
+           headers: headers);
+       print(AppConstants.LIVE_URL + 'getOpenTicketsBasedOnCategory');
+       print(response.body);
+       setState(() {
+         loading = false;
+       });
+       if (response.statusCode == 200) {
+
+         var isdata = json.decode(response.body)["status"] == 0;
+         print(isdata);
+         if (isdata) {
+           ScaffoldMessenger.of(this.context)
+               .showSnackBar(SnackBar(content: Text("No Records Found!!")));
+           print('No Records Found!!');
+           // CustomerTicketsModel li2 =CustomerTicketsModel(result: []);
+
+           SumQty =0;
+
+           li2.result!.clear();
+
+         } else {
+
+           print(AppConstants.LIVE_URL + 'getWipcustTckttoAsignnew');
+           print(body);
+           print(response.body);
+
+           li2 = CustomerTicketsModel.fromJson(jsonDecode(response.body));
+
+           if (li2.result!.length % 20 == 0)
+             totalpages = (li2.result!.length / 20).floor();
+           else
+             totalpages = (li2.result!.length / 20).floor() + 1;
+           print(totalpages);
+
+           li3.removeRange(0, li3.length);
+
+           for (int k = 0; k < li2.result!.length; k++) {
+             li3.add(FilterList2(
+
+                 li2.result![k].createdDate,
+                 li2.result![k].docNo,
+                 li2.result![k].brachName,
+                 li2.result![k].branchCode,
+                 li2.result![k].issueCatrgory,
+                 li2.result![k].issueCategoryId,
+                 li2.result![k].itemName,
+                 li2.result![k].itemCode,
+                 li2.result![k].issueType,
+                 li2.result![k].requiredDate,
+                 li2.result![k].description,
+                 li2.result![k].attachFilePath,
+                 li2.result![k].attachFileName,
+                 li2.result![k].status,
+                 li2.result![k].closedDate,
+                 li2.result![k].empName,
+                 li2.result![k].empContactNo,
+                 li2.result![k].empMailid,
+                 li2.result![k].rejectRemarks,
+                 li2.result![k].createdAt,
+                 li2.result![k].updatedAt,
+                 li2.result![k].priority,
+                 li2.result![k].category,
+                 li2.result![k].modifiedDate,
+                 li2.result![k].assignStatus,
+                 li2.result![k].ticketNo,
+                 li2.result![k].assignEmpName,
+                 li2.result![k].assignEmpId,
+                 li2.result![k].assignEmpDept,
+                 li2.result![k].solutionProvided,
+                 li2.result![k].endDate,
+                 li2.result![k].startDate,
+                 li2.result![k].assignEmpcontactNo
+
+             ));
+
+             li3.length==""?  SumQty =0:  SumQty =li3.length.toInt();
+
+           }
+
+
+           print("SumQty"+SumQty.toString());
+           setState(() {
+
+           });
+
+         }
+
+         /* if (jsonDecode(response.body)["status"].toString() == "0") {
+
+        }else if (json.decode(response.body)["status"] == "0" &&
+            jsonDecode(response.body)["result"].toString()=="No Data") {
+
+        } else if (json.decode(response.body)["status"] == 1 &&
+            jsonDecode(response.body)["result"].toString() == "[]") {
+
+        }else{
+
+          li5 = BranchMasterModel.fromJson(jsonDecode(response.body));
+
+          for(int i=0;i<li5.result!.length;i++);
+          print(li5.result!.length.toString());
+
+          setState(() {
+            stringlist5.clear();
+            stringlist5.add("Select Branch");
+            for (int i = 0; i < li5.result!.length; i++)
+              stringlist5.add(li5.result![i].branchName.toString());
+          });
+
+          setState(() {
+            loading = false;
+          });
+
+
+        }*/
+
+       } else {
+         showDialogbox(this.context, "Failed to Login API");
+       }
+       return response;
+     } on SocketException {
+       setState(() {
+         loading = false;
+         showDialog(
+             context: this.context,
+             builder: (_) => AlertDialog(
+                 backgroundColor: Colors.black,
+                 title: Text(
+                   "No Response!..",
+                   style: TextStyle(color: Colors.purple),
+                 ),
+                 content: Text(
+                   "Slow Server Response or Internet connection",
+                   style: TextStyle(color: Colors.white),
+                 )));
+       });
+       throw Exception('Internet is down');
+     }
+   }
+
+
+   Future<http.Response> getTicketListBasedOnTicketCategoryandBranch() async {
+
+     print("getTicketListBasedOnTicketCategoryandBranch is called");
+     var headers = {"Content-Type": "application/json"};
+     var body = {
+       "TicketCategory": TicketType.toString(),
+       "BrachName": BranchName1.toString(),
+     };
+
+     print(body);
+     setState(() {
+       loading = true;
+     });
+     try {
+       final response = await http.post(
+           Uri.parse(AppConstants.LIVE_URL + 'getOpenTicketsBasedOnCategoryandBranch'),
+           body: jsonEncode(body),
+           headers: headers);
+       print(AppConstants.LIVE_URL + 'getOpenTicketsBasedOnCategoryandBranch');
+       print(response.body);
+       setState(() {
+         loading = false;
+       });
+       if (response.statusCode == 200) {
+
+         var isdata = json.decode(response.body)["status"] == 0;
+         print(isdata);
+         if (isdata) {
+           ScaffoldMessenger.of(this.context)
+               .showSnackBar(SnackBar(content: Text("No Records Found!!")));
+           print('No Records Found!!');
+           // CustomerTicketsModel li2 =CustomerTicketsModel(result: []);
+
+           SumQty =0;
+
+           li2.result!.clear();
+
+         } else {
+
+           print(AppConstants.LIVE_URL + 'getWipcustTckttoAsignnew');
+           print(body);
+           print(response.body);
+
+           li2 = CustomerTicketsModel.fromJson(jsonDecode(response.body));
+
+           if (li2.result!.length % 20 == 0)
+             totalpages = (li2.result!.length / 20).floor();
+           else
+             totalpages = (li2.result!.length / 20).floor() + 1;
+           print(totalpages);
+
+           li3.removeRange(0, li3.length);
+
+           for (int k = 0; k < li2.result!.length; k++) {
+             li3.add(FilterList2(
+
+                 li2.result![k].createdDate,
+                 li2.result![k].docNo,
+                 li2.result![k].brachName,
+                 li2.result![k].branchCode,
+                 li2.result![k].issueCatrgory,
+                 li2.result![k].issueCategoryId,
+                 li2.result![k].itemName,
+                 li2.result![k].itemCode,
+                 li2.result![k].issueType,
+                 li2.result![k].requiredDate,
+                 li2.result![k].description,
+                 li2.result![k].attachFilePath,
+                 li2.result![k].attachFileName,
+                 li2.result![k].status,
+                 li2.result![k].closedDate,
+                 li2.result![k].empName,
+                 li2.result![k].empContactNo,
+                 li2.result![k].empMailid,
+                 li2.result![k].rejectRemarks,
+                 li2.result![k].createdAt,
+                 li2.result![k].updatedAt,
+                 li2.result![k].priority,
+                 li2.result![k].category,
+                 li2.result![k].modifiedDate,
+                 li2.result![k].assignStatus,
+                 li2.result![k].ticketNo,
+                 li2.result![k].assignEmpName,
+                 li2.result![k].assignEmpId,
+                 li2.result![k].assignEmpDept,
+                 li2.result![k].solutionProvided,
+                 li2.result![k].endDate,
+                 li2.result![k].startDate,
+                 li2.result![k].assignEmpcontactNo
+
+             ));
+
+             li3.length==""?  SumQty =0:  SumQty =li3.length.toInt();
+
+           }
+
+
+           print("SumQty"+SumQty.toString());
+           setState(() {
+
+           });
+
+         }
+
+         /* if (jsonDecode(response.body)["status"].toString() == "0") {
+
+        }else if (json.decode(response.body)["status"] == "0" &&
+            jsonDecode(response.body)["result"].toString()=="No Data") {
+
+        } else if (json.decode(response.body)["status"] == 1 &&
+            jsonDecode(response.body)["result"].toString() == "[]") {
+
+        }else{
+
+          li5 = BranchMasterModel.fromJson(jsonDecode(response.body));
+
+          for(int i=0;i<li5.result!.length;i++);
+          print(li5.result!.length.toString());
+
+          setState(() {
+            stringlist5.clear();
+            stringlist5.add("Select Branch");
+            for (int i = 0; i < li5.result!.length; i++)
+              stringlist5.add(li5.result![i].branchName.toString());
+          });
+
+          setState(() {
+            loading = false;
+          });
+
+
+        }*/
+
+       } else {
+         showDialogbox(this.context, "Failed to Login API");
+       }
+       return response;
+     } on SocketException {
+       setState(() {
+         loading = false;
+         showDialog(
+             context: this.context,
+             builder: (_) => AlertDialog(
+                 backgroundColor: Colors.black,
+                 title: Text(
+                   "No Response!..",
+                   style: TextStyle(color: Colors.purple),
+                 ),
+                 content: Text(
+                   "Slow Server Response or Internet connection",
+                   style: TextStyle(color: Colors.white),
+                 )));
+       });
+       throw Exception('Internet is down');
+     }
+   }
+
+
+   Future<http.Response> getOpenTickets() async {
+
+     print("getOpenTickets is called");
+     var headers = {"Content-Type": "application/json"};
+     var body = {
+       "TicketCategory": TicketType.toString(),
+       "BrachName": BranchName1.toString(),
+     };
+
+     print(body);
+     setState(() {
+       loading = true;
+     });
+     try {
+       final response = await http.post(
+           Uri.parse(AppConstants.LIVE_URL + 'getOpenTickets'),
+           body: jsonEncode(body),
+           headers: headers);
+       print(AppConstants.LIVE_URL + 'getOpenTickets');
+       print(response.body);
+       setState(() {
+         loading = false;
+       });
+       if (response.statusCode == 200) {
+
+         var isdata = json.decode(response.body)["status"] == 0;
+         print(isdata);
+         if (isdata) {
+           ScaffoldMessenger.of(this.context)
+               .showSnackBar(SnackBar(content: Text("No Records Found!!")));
+           print('No Records Found!!');
+           // CustomerTicketsModel li2 =CustomerTicketsModel(result: []);
+
+           SumQty =0;
+
+           li2.result!.clear();
+
+         } else {
+
+           print(AppConstants.LIVE_URL + 'getWipcustTckttoAsignnew');
+           print(body);
+           print(response.body);
+
+           li2 = CustomerTicketsModel.fromJson(jsonDecode(response.body));
+
+           if (li2.result!.length % 20 == 0)
+             totalpages = (li2.result!.length / 20).floor();
+           else
+             totalpages = (li2.result!.length / 20).floor() + 1;
+           print(totalpages);
+
+           li3.removeRange(0, li3.length);
+
+           for (int k = 0; k < li2.result!.length; k++) {
+             li3.add(FilterList2(
+
+                 li2.result![k].createdDate,
+                 li2.result![k].docNo,
+                 li2.result![k].brachName,
+                 li2.result![k].branchCode,
+                 li2.result![k].issueCatrgory,
+                 li2.result![k].issueCategoryId,
+                 li2.result![k].itemName,
+                 li2.result![k].itemCode,
+                 li2.result![k].issueType,
+                 li2.result![k].requiredDate,
+                 li2.result![k].description,
+                 li2.result![k].attachFilePath,
+                 li2.result![k].attachFileName,
+                 li2.result![k].status,
+                 li2.result![k].closedDate,
+                 li2.result![k].empName,
+                 li2.result![k].empContactNo,
+                 li2.result![k].empMailid,
+                 li2.result![k].rejectRemarks,
+                 li2.result![k].createdAt,
+                 li2.result![k].updatedAt,
+                 li2.result![k].priority,
+                 li2.result![k].category,
+                 li2.result![k].modifiedDate,
+                 li2.result![k].assignStatus,
+                 li2.result![k].ticketNo,
+                 li2.result![k].assignEmpName,
+                 li2.result![k].assignEmpId,
+                 li2.result![k].assignEmpDept,
+                 li2.result![k].solutionProvided,
+                 li2.result![k].endDate,
+                 li2.result![k].startDate,
+                 li2.result![k].assignEmpcontactNo
+
+             ));
+
+             li3.length==""?  SumQty =0:  SumQty =li3.length.toInt();
+
+           }
+
+
+           print("SumQty"+SumQty.toString());
+           setState(() {
+
+           });
+
+         }
+
+         /* if (jsonDecode(response.body)["status"].toString() == "0") {
+
+        }else if (json.decode(response.body)["status"] == "0" &&
+            jsonDecode(response.body)["result"].toString()=="No Data") {
+
+        } else if (json.decode(response.body)["status"] == 1 &&
+            jsonDecode(response.body)["result"].toString() == "[]") {
+
+        }else{
+
+          li5 = BranchMasterModel.fromJson(jsonDecode(response.body));
+
+          for(int i=0;i<li5.result!.length;i++);
+          print(li5.result!.length.toString());
+
+          setState(() {
+            stringlist5.clear();
+            stringlist5.add("Select Branch");
+            for (int i = 0; i < li5.result!.length; i++)
+              stringlist5.add(li5.result![i].branchName.toString());
+          });
+
+          setState(() {
+            loading = false;
+          });
+
+
+        }*/
+
+       } else {
+         showDialogbox(this.context, "Failed to Login API");
+       }
+       return response;
+     } on SocketException {
+       setState(() {
+         loading = false;
+         showDialog(
+             context: this.context,
+             builder: (_) => AlertDialog(
+                 backgroundColor: Colors.black,
+                 title: Text(
+                   "No Response!..",
+                   style: TextStyle(color: Colors.purple),
+                 ),
+                 content: Text(
+                   "Slow Server Response or Internet connection",
+                   style: TextStyle(color: Colors.white),
+                 )));
+       });
+       throw Exception('Internet is down');
+     }
+   }
 
 
    Future<http.Response> updateTicketStatus(int formID,int DocNo,String BranchName) async {

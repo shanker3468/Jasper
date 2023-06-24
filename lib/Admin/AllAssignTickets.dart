@@ -298,6 +298,12 @@ class AllAssign_TicketsState extends State<AllAssign_Tickets> {
 
 
                     columns: <DataColumn>[
+                      DataColumn(
+                        label: Text(
+                          'BranchName',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
 
                       DataColumn(
                         label: Text(
@@ -323,28 +329,401 @@ class AllAssign_TicketsState extends State<AllAssign_Tickets> {
                           (list) => DataRow(
                           selected: selectedlist.contains(
                               list.docNo.toString()),
-                          onSelectChanged: (value) {
-                            // if (value == true) {
-                            //   setState(() {
-                            //     selectedlist.add(
-                            //         list.docNo.toString());
-                            //
-                            //   });
-                            // } else {
-                            //   setState(() {
-                            //     selectedlist.remove(
-                            //         list.docNo.toString());
-                            //   });
-                            // }
-                          },
+                          // onSelectChanged: (value) {
+                          //   // if (value == true) {
+                          //   //   setState(() {
+                          //   //     selectedlist.add(
+                          //   //         list.docNo.toString());
+                          //   //
+                          //   //   });
+                          //   // } else {
+                          //   //   setState(() {
+                          //   //     selectedlist.remove(
+                          //   //         list.docNo.toString());
+                          //   //   });
+                          //   // }
+                          // },
                           cells: [
+                            DataCell(Text(
+                                list.brachName.toString(),
+                                textAlign: TextAlign.center)),
                             DataCell(list.attachFileName.toString()!=null
                                 &&
                                 list.attachFileName.toString().isNotEmpty?Column(
                               children: [
-                                new TextButton.icon(
+                                TextButton.icon(
                                   onPressed: () {
-                                    showDialog(
+
+                                    List<String> imglist =
+                                    list.attachFileName!.split(',');
+                                    print("sizeimglist" + imglist.length.toString());
+
+                                    showModalBottomSheet(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Row(
+                                            children: [
+                                              for (int i = 0; i < imglist.length; i++)
+                                                InkWell(
+                                                  onTap: () {
+                                                    imglist[i].endsWith(".jpg")
+                                                        ? showDialog(
+                                                      context: context,
+                                                      builder:
+                                                          (BuildContext context) {
+                                                        return Center(
+                                                          child: Container(
+                                                            padding:
+                                                            EdgeInsets.all(8),
+                                                            color: Colors
+                                                                .transparent,
+                                                            child:
+                                                            SingleChildScrollView(
+                                                              child: Column(
+                                                                children: [
+                                                                  imglist[i].endsWith(
+                                                                      ".jpg")
+                                                                      ? InteractiveViewer(
+                                                                    boundaryMargin:
+                                                                    const EdgeInsets.all(20.0),
+                                                                    minScale:
+                                                                    0.1,
+                                                                    maxScale:
+                                                                    2.5,
+                                                                    child: Image
+                                                                        .network(
+                                                                      AppConstants.LIVE_URL + imglist[i],
+                                                                      fit: BoxFit
+                                                                          .fill,
+                                                                      // loadingBuilder: (BuildContext context,
+                                                                      //     Widget child,
+                                                                      //     ImageChunkEvent loadingProgress) {
+                                                                      //   if (loadingProgress ==
+                                                                      //       null)
+                                                                      //     return child;
+                                                                      //   return Center(
+                                                                      //     child: CircularProgressIndicator(
+                                                                      //       value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes : null,
+                                                                      //     ),
+                                                                      //   );
+                                                                      // },
+                                                                    ),
+                                                                  )
+                                                                      : imglist[i].endsWith(
+                                                                      ".pdf")
+                                                                      ? Image
+                                                                      .asset(
+                                                                    "assets/images/pdf.png",
+                                                                    width:
+                                                                    24,
+                                                                    height:
+                                                                    24,
+                                                                  )
+                                                                      : Image
+                                                                      .asset(
+                                                                    "assets/images/docs.png",
+                                                                    width:
+                                                                    24,
+                                                                    height:
+                                                                    24,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: 10,
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                        .symmetric(
+                                                                        vertical:
+                                                                        8.0,
+                                                                        horizontal:
+                                                                        15),
+                                                                    child:
+                                                                    TextButton
+                                                                        .icon(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      },
+                                                                      icon: Icon(
+                                                                        Icons
+                                                                            .cancel_presentation,
+                                                                        color: Colors
+                                                                            .white,
+                                                                      ),
+                                                                      label: Text(
+                                                                        'Close',
+                                                                        style: TextStyle(
+                                                                            color: Colors
+                                                                                .white,
+                                                                            fontSize:
+                                                                            12),
+                                                                      ),
+                                                                      style: TextButton
+                                                                          .styleFrom(
+                                                                        backgroundColor:
+                                                                        Colors
+                                                                            .red,
+                                                                        shape:
+                                                                        RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(8.0),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
+                                                    )
+                                                        : Container();
+                                                  },
+                                                  child: Container(
+                                                    padding: EdgeInsets.all(16),
+                                                    height: 100,
+                                                    width: 100,
+                                                    child: imglist[i].endsWith(".jpg")
+                                                        ? Image.network(
+                                                      AppConstants.LIVE_URL +
+
+                                                          imglist[i],
+                                                      // loadingBuilder: (BuildContext
+                                                      // context,
+                                                      //     Widget child,
+                                                      //     ImageChunkEvent
+                                                      //     loadingProgress) {
+                                                      //   if (loadingProgress ==
+                                                      //       null) return child;
+                                                      //   return Center(
+                                                      //     child:
+                                                      //     CircularProgressIndicator(
+                                                      //       value: loadingProgress
+                                                      //           .expectedTotalBytes !=
+                                                      //           null
+                                                      //           ? loadingProgress
+                                                      //           .cumulativeBytesLoaded /
+                                                      //           loadingProgress
+                                                      //               .expectedTotalBytes
+                                                      //           : null,
+                                                      //     ),
+                                                      //   );
+                                                      // },
+                                                    ):
+                                                      Icon(
+                                                          Icons.list_alt),
+                                                    ),
+                                                  ),
+
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                    print("attachement viewed");
+
+
+
+                                    /*Expanded(
+                                      flex: 2,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 8.0, right: 8, top: 2, bottom: 2),
+                                        child: TextButton.icon(
+                                          onPressed: () {
+                                            List<String> imglist =
+                                            list.attachFileName!.split(',');
+                                            print("sizeimglist" + imglist.length.toString());
+
+                                            showModalBottomSheet(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return SingleChildScrollView(
+                                                  scrollDirection: Axis.horizontal,
+                                                  child: Row(
+                                                    children: [
+                                                      for (int i = 0; i < imglist.length; i++)
+                                                        InkWell(
+                                                          onTap: () {
+                                                            imglist[i].endsWith(".jpg")
+                                                                ? showDialog(
+                                                              context: context,
+                                                              builder:
+                                                                  (BuildContext context) {
+                                                                return Center(
+                                                                  child: Container(
+                                                                    padding:
+                                                                    EdgeInsets.all(8),
+                                                                    color: Colors
+                                                                        .transparent,
+                                                                    child:
+                                                                    SingleChildScrollView(
+                                                                      child: Column(
+                                                                        children: [
+                                                                          imglist[i].endsWith(
+                                                                              ".jpg")
+                                                                              ? InteractiveViewer(
+                                                                            boundaryMargin:
+                                                                            const EdgeInsets.all(20.0),
+                                                                            minScale:
+                                                                            0.1,
+                                                                            maxScale:
+                                                                            2.5,
+                                                                            child: Image
+                                                                                .network(
+                                                                              AppConstants.LIVE_URL +
+                                                                                  '/' +
+                                                                                  imglist[i],
+                                                                              fit: BoxFit
+                                                                                  .fill,
+
+                                                                            ),
+                                                                          )
+                                                                              : imglist[i].endsWith(
+                                                                              ".pdf")
+                                                                              ? Image
+                                                                              .asset(
+                                                                            "assets/images/pdf.png",
+                                                                            width:
+                                                                            24,
+                                                                            height:
+                                                                            24,
+                                                                          )
+                                                                              : Image
+                                                                              .asset(
+                                                                            "assets/images/docs.png",
+                                                                            width:
+                                                                            24,
+                                                                            height:
+                                                                            24,
+                                                                          ),
+                                                                          SizedBox(
+                                                                            height: 10,
+                                                                          ),
+                                                                          Padding(
+                                                                            padding: const EdgeInsets
+                                                                                .symmetric(
+                                                                                vertical:
+                                                                                8.0,
+                                                                                horizontal:
+                                                                                15),
+                                                                            child:
+                                                                            TextButton
+                                                                                .icon(
+                                                                              onPressed:
+                                                                                  () {
+                                                                                Navigator.pop(
+                                                                                    context);
+                                                                              },
+                                                                              icon: Icon(
+                                                                                Icons
+                                                                                    .cancel_presentation,
+                                                                                color: Colors
+                                                                                    .white,
+                                                                              ),
+                                                                              label: Text(
+                                                                                'Close',
+                                                                                style: TextStyle(
+                                                                                    color: Colors
+                                                                                        .white,
+                                                                                    fontSize:
+                                                                                    12),
+                                                                              ),
+                                                                              style: TextButton
+                                                                                  .styleFrom(
+                                                                                backgroundColor:
+                                                                                Colors
+                                                                                    .red,
+                                                                                shape:
+                                                                                RoundedRectangleBorder(
+                                                                                  borderRadius:
+                                                                                  BorderRadius.circular(8.0),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              },
+                                                            )
+                                                                : Container();
+                                                          },
+                                                          child: Container(
+                                                            padding: EdgeInsets.all(16),
+                                                            height: 100,
+                                                            width: 100,
+                                                            child: imglist[i].endsWith(".jpg")
+                                                                ? Image.network(
+                                                              AppConstants.LIVE_URL+
+                                                                  '/' +
+                                                                  imglist[i],
+                                                              // loadingBuilder: (BuildContext
+                                                              // context,
+                                                              //     Widget child,
+                                                              //     ImageChunkEvent
+                                                              //     loadingProgress) {
+                                                              //   if (loadingProgress ==
+                                                              //       null) return child;
+                                                              //   return Center(
+                                                              //     child:
+                                                              //     CircularProgressIndicator(
+                                                              //       value: loadingProgress
+                                                              //           .expectedTotalBytes !=
+                                                              //           null
+                                                              //           ? loadingProgress
+                                                              //           .cumulativeBytesLoaded /
+                                                              //           loadingProgress
+                                                              //               .expectedTotalBytes
+                                                              //           : null,
+                                                              //     ),
+                                                              //   );
+                                                              // },
+                                                            )
+                                                                : InkWell(
+                                                              onTap: () async {
+                                                                launch(AppConstants.LIVE_URL+
+                                                                    '/' +
+                                                                    imglist[i]);
+                                                              },
+                                                              child: Icon(
+                                                                  Icons.list_alt),
+                                                            ),
+                                                          ),
+                                                        )
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                            print("attachement viewed");
+                                          },
+                                          icon: Icon(
+                                            Icons.attach_file,
+                                            color: Colors.white,
+                                            size: 18,
+                                          ),
+                                          label: Text(
+                                            'View Attachment',
+                                            style: TextStyle(color: Colors.white, fontSize: 10),
+                                          ),
+                                          style: TextButton.styleFrom(
+                                            backgroundColor: Colors.blueGrey,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(8.0),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );*/
+                                   /*showDialog(
+
                                       context: context,
                                       builder:
                                           (BuildContext context) {
@@ -356,13 +735,42 @@ class AllAssign_TicketsState extends State<AllAssign_Tickets> {
                                                 .transparent,
                                             child:
                                             SingleChildScrollView(
+
                                               child: Column(
                                                 children: [
-                                                  Image
-                                                      .network(
-                                                    AppConstants.LIVE_URL+
-                                                        list.attachFileName.toString(),
-                                                  ),
+                                              imglist[i].endsWith(".jpg")
+                                                  ? Image.network(
+                                                AppConstants.LIVE_URL+
+                                                    '/' +
+                                                    imglist[i],
+                                                // loadingBuilder: (BuildContext
+                                                // context,
+                                                //     Widget child,
+                                                //     ImageChunkEvent
+                                                //     loadingProgress) {
+                                                //   if (loadingProgress ==
+                                                //       null) return child;
+                                                //   return Center(
+                                                //     child:
+                                                //     CircularProgressIndicator(
+                                                //       value: loadingProgress
+                                                //           .expectedTotalBytes !=
+                                                //           null
+                                                //           ? loadingProgress
+                                                //           .cumulativeBytesLoaded /
+                                                //           loadingProgress
+                                                //               .expectedTotalBytes
+                                                //           : null,
+                                                //     ),
+                                                //   );
+                                                // },
+                                              )
+                                                  : InkWell(
+                                                onTap: () async {
+                                                  launch(AppConstants.LIVE_URL+
+                                                      '/' +
+                                                      imglist[i]);
+                                                },
                                                   SizedBox(
                                                     height: 10,
                                                   ),
@@ -414,7 +822,7 @@ class AllAssign_TicketsState extends State<AllAssign_Tickets> {
                                           ),
                                         );
                                       },
-                                    );
+                                    );*/
                                     print("attachement viewed");
                                   },
                                   icon: Icon(
@@ -744,6 +1152,8 @@ class AllAssign_TicketsState extends State<AllAssign_Tickets> {
       DepartmentName = prefs.getString('DepartmentName').toString();
       Location = prefs.getString('Location').toString();
       EmpGroup=prefs.getString('EmpGroup').toString();
+
+      getTicketListforAllBranch();
 
       gettickettype().then((value) => getBranchList());
     });
@@ -1120,6 +1530,136 @@ class AllAssign_TicketsState extends State<AllAssign_Tickets> {
       throw Exception('Internet is down');
     }
   }
+
+   Future<http.Response> getTicketListforAllBranch() async {
+
+     print("getTicketListforAllBranch is called");
+     var headers = {"Content-Type": "application/json"};
+     var body = {
+     //  "BrachName": BranchName1.toString(),
+     };
+
+     print(body);
+     setState(() {
+       loading = true;
+     });
+     try {
+       final response = await http.post(
+           Uri.parse(AppConstants.LIVE_URL + 'getcustTckttoAsignnewoneall'),
+           body: jsonEncode(body),
+           headers: headers);
+       print(AppConstants.LIVE_URL + 'getcustTckttoAsignnewoneall');
+       print(response.body);
+       setState(() {
+         loading = false;
+       });
+       if (response.statusCode == 200) {
+
+         var isdata = json.decode(response.body)["status"] == 0;
+         print(isdata);
+         if (isdata) {
+           ScaffoldMessenger.of(this.context)
+               .showSnackBar(SnackBar(content: Text("No Records Found!!")));
+           print('No Records Found!!');
+           // CustomerTicketsModel li2 =CustomerTicketsModel(result: []);
+
+           li2.result!.clear();
+
+         } else {
+
+           print(AppConstants.LIVE_URL + 'getcustTckttoAsignnew');
+           print(body);
+           print(response.body);
+
+           li2 = WeekUpdateAdminModel.fromJson(jsonDecode(response.body));
+
+           if (li2.result!.length % 20 == 0)
+             totalpages = (li2.result!.length / 20).floor();
+           else
+             totalpages = (li2.result!.length / 20).floor() + 1;
+           print(totalpages);
+
+           li3.removeRange(0, li3.length);
+
+           for (int k = 0; k < li2.result!.length; k++) {
+             li3.add(FilterList(
+
+                 li2.result![k].createdDate,
+                 li2.result![k].docNo,
+                 li2.result![k].brachName,
+                 li2.result![k].branchCode,
+                 li2.result![k].description,
+                 li2.result![k].attachFilePath,
+                 li2.result![k].attachFileName,
+                 li2.result![k].empName,
+                 li2.result![k].empContactNo,
+                 li2.result![k].empMailid,
+                 li2.result![k].modifiedDate,
+                 li2.result![k].empGroup,
+                 li2.result![k].empID
+
+
+             ));
+           }
+
+
+           // print(li2.result.length);
+           setState(() {});
+
+         }
+
+         /* if (jsonDecode(response.body)["status"].toString() == "0") {
+
+        }else if (json.decode(response.body)["status"] == "0" &&
+            jsonDecode(response.body)["result"].toString()=="No Data") {
+
+        } else if (json.decode(response.body)["status"] == 1 &&
+            jsonDecode(response.body)["result"].toString() == "[]") {
+
+        }else{
+
+          li5 = BranchMasterModel.fromJson(jsonDecode(response.body));
+
+          for(int i=0;i<li5.result!.length;i++);
+          print(li5.result!.length.toString());
+
+          setState(() {
+            stringlist5.clear();
+            stringlist5.add("Select Branch");
+            for (int i = 0; i < li5.result!.length; i++)
+              stringlist5.add(li5.result![i].branchName.toString());
+          });
+
+          setState(() {
+            loading = false;
+          });
+
+
+        }*/
+
+       } else {
+         showDialogbox(this.context, "Failed to Login API");
+       }
+       return response;
+     } on SocketException {
+       setState(() {
+         loading = false;
+         showDialog(
+             context: this.context,
+             builder: (_) => AlertDialog(
+                 backgroundColor: Colors.black,
+                 title: Text(
+                   "No Response!..",
+                   style: TextStyle(color: Colors.purple),
+                 ),
+                 content: Text(
+                   "Slow Server Response or Internet connection",
+                   style: TextStyle(color: Colors.white),
+                 )));
+       });
+       throw Exception('Internet is down');
+     }
+   }
 
 
 

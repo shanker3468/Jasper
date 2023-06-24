@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 
+import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -38,6 +39,8 @@ class _ReportsDashBoardState extends State<ReportsDashBoard> {
   int ApprovedTickets = 0;
   int ThirdPartyTickets =0;
 
+  int sapbone = 8;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -67,11 +70,12 @@ class _ReportsDashBoardState extends State<ReportsDashBoard> {
               color: Colors.white,
               child: ListView(
                 children: [
-                  babyCard("Quotation", "Q", QuotationTickets),
-                  babyCard("Pending for Approvals", "O", openTickets),
+                  babyCard("openTickets", "O", openTickets),
                   babyCard("Approved Tickets", "A", ApprovedTickets),
                   babyCard("Third Party", "T", ThirdPartyTickets),
+                  babyCard("Quotation", "Q", QuotationTickets),
                   babyCard("WIP Tickets", "P", wipTickets),
+
                   babyCard("Resolved Tickets", "S", solProvidTickets),
                   babyCard("Reject Tickets", "R", rejectTickets),
                   babyCard("Deleted Tickets", "D", deleteTickets),
@@ -168,9 +172,40 @@ class _ReportsDashBoardState extends State<ReportsDashBoard> {
                       ),
                     ),
                   ),
-                  title: Text(
-                    ' ${name}',
-                    style: TextStyle(color: Colors.black),
+                  title: Row(
+
+                    children: [
+                      Text(
+                        ' ${name}',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 15.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Badge(
+                              padding: EdgeInsets.all(8),
+                              shape: BadgeShape.circle,
+                              showBadge:
+                              sapbone.toString() == "0"
+                                  ? false
+                                  : true,
+                              badgeColor: Colors.deepOrange,
+                              badgeContent: Text(
+                                sapbone.toString(),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight:
+                                    FontWeight.bold),
+                              ),
+
+                            ),
+                          ],
+                        ),
+                      ),
+
+                    ],
                   ),
                 ),
               ),

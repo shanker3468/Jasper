@@ -694,12 +694,12 @@ class ReportListState extends State<ReportList> {
                                                                         .all(
                                                                             0)),
                                                         const SizedBox(
-                                                          height: 10,
+                                                          height: 5,
                                                         ),
                                                         Row(
                                                           mainAxisAlignment:
                                                           MainAxisAlignment
-                                                              .spaceBetween,
+                                                              .spaceAround,
                                                           children: [
                                                             Container(
                                                                 width: SW / 2,
@@ -738,7 +738,46 @@ class ReportListState extends State<ReportList> {
                                                                     fontSize: SH / 60),
                                                               ),*/
                                                             ),
-                                                            Container(),
+                                                            Container(
+                                                              //width: SW / 2,
+                                                                child: RichText(
+                                                                    text:
+                                                                    TextSpan(
+                                                                      children: [
+                                                                        TextSpan(
+                                                                          text:
+                                                                          'Ageing Days :',
+                                                                          style: TextStyle(
+                                                                              fontSize:
+                                                                              SH /
+                                                                                  60,
+                                                                              color: Colors
+                                                                                  .black,
+                                                                              fontWeight:
+                                                                              FontWeight
+                                                                                  .bold),
+                                                                        ),
+                                                                        TextSpan(
+                                                                          text: widget.ticketType !=
+                                                                              "C"
+                                                                              ? '${DateTime.now().difference(DateFormat("yyyy-MM-dd").parse(custTicketStatuslist.result![index].createdDate.toString())).inDays.toString()}'
+                                                                              : '${DateFormat("yyyy-MM-dd").parse(custTicketStatuslist.result![index].closedDate.toString()).difference(DateFormat("yyyy-MM-dd").parse(custTicketStatuslist.result![index].createdDate.toString())).inDays.toString()}',
+                                                                          style: TextStyle(
+                                                                              fontSize:
+                                                                              SH /
+                                                                                  60,
+                                                                              color: Colors
+                                                                                  .black),
+                                                                        ),
+                                                                      ],
+                                                                    )) /*Text(
+                                                                "Ageing Days : ${custTicketStatuslist.result[index].ticketNo.toString()}",
+                                                                style: TextStyle(
+                                                                    fontSize: SH / 60,
+                                                                    color: Colors.black),
+                                                              ),*/
+                                                            ),
+
                                                           ],
                                                         ),
                                                         const SizedBox(
@@ -938,6 +977,55 @@ class ReportListState extends State<ReportList> {
                                                                     FontWeight.bold),
                                                           ),*/
                                                             ),
+
+
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                          children: [
+                                                            Container(
+                                                              width: SW / 2,
+                                                                child: RichText(
+                                                                    text:
+                                                                    TextSpan(
+                                                                      children: [
+                                                                        TextSpan(
+                                                                          text:
+                                                                          'Created Date :',
+                                                                          style: TextStyle(
+                                                                              fontSize:
+                                                                              SH /
+                                                                                  60,
+                                                                              color: Colors
+                                                                                  .black,
+                                                                              fontWeight:
+                                                                              FontWeight
+                                                                                  .bold),
+                                                                        ),
+                                                                        TextSpan(
+                                                                          text: DateFormat("dd-MM-yyyy").format(DateTime.parse(custTicketStatuslist.result![index].createdDate.toString())).toString(),
+                                                                          style: TextStyle(
+                                                                              fontSize:
+                                                                              SH /
+                                                                                  60,
+                                                                              color: Colors
+                                                                                  .black),
+                                                                        ),
+                                                                      ],
+                                                                    )) /*Text(
+                                                                "Ageing Days : ${custTicketStatuslist.result[index].ticketNo.toString()}",
+                                                                style: TextStyle(
+                                                                    fontSize: SH / 60,
+                                                                    color: Colors.black),
+                                                              ),*/
+                                                            ),
+
+                                                          ],
+                                                        ),
                                                         const SizedBox(
                                                           height: 5,
                                                         ),
@@ -1323,52 +1411,6 @@ class ReportListState extends State<ReportList> {
                                                           ],
                                                         ),
 
-                                                        const SizedBox(
-                                                          height: 5,
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                            Container(
-                                                                //width: SW / 2,
-                                                                child: RichText(
-                                                                    text:
-                                                                        TextSpan(
-                                                              children: [
-                                                                TextSpan(
-                                                                  text:
-                                                                      'Ageing Days :',
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          SH /
-                                                                              60,
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
-                                                                ),
-                                                                TextSpan(
-                                                                  text: widget.ticketType !=
-                                                                          "C"
-                                                                      ? '${DateTime.now().difference(DateFormat("yyyy-MM-dd").parse(custTicketStatuslist.result![index].createdDate.toString())).inDays.toString()}'
-                                                                      : '${DateFormat("yyyy-MM-dd").parse(custTicketStatuslist.result![index].closedDate.toString()).difference(DateFormat("yyyy-MM-dd").parse(custTicketStatuslist.result![index].createdDate.toString())).inDays.toString()}',
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          SH /
-                                                                              60,
-                                                                      color: Colors
-                                                                          .black),
-                                                                ),
-                                                              ],
-                                                            )) /*Text(
-                                                                "Ageing Days : ${custTicketStatuslist.result[index].ticketNo.toString()}",
-                                                                style: TextStyle(
-                                                                    fontSize: SH / 60,
-                                                                    color: Colors.black),
-                                                              ),*/
-                                                                ),
-                                                          ],
-                                                        ),
 
                                                       
                                                         const SizedBox(

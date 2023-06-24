@@ -1008,7 +1008,7 @@ class EmployeeDetailsReportState extends State<EmployeeDetailsReport> {
                                                           TextAlign.center,
                                                     )
                                                   ]),
-            .                                ))),
+                                            ))),
                                             DataCell(
                                               Wrap(
                                                   direction:

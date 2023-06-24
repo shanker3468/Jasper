@@ -34,6 +34,8 @@ class TicketCreationState extends State<TicketCreation> {
 
   bool ItemVisible =false;
 
+  bool IssueCategory= false;
+
   bool ItemListVisible= false;
 
   late String SessionEmpID, SessionEmpName, SessionBranchId, SessionBranchName,SessionAdminUser,SessionDepartmentCode,SessionDepartmentName,SessionLocation,EmpGroup;
@@ -130,6 +132,8 @@ class TicketCreationState extends State<TicketCreation> {
     selecteddate = DateFormat('dd-MM-yyyy').format(DateTime.now());
     datecontroler.text = selecteddate.toString();
 
+    selectstate="Medium";
+
     getStringValuesSF();
 
     getticketNo().then((value) => gettickettype().then((value) => getIssueCategory()).then((value) => getIssuetype()));
@@ -173,7 +177,8 @@ class TicketCreationState extends State<TicketCreation> {
 
 
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    final pickedFile = await picker.getImage(source: ImageSource.camera,);
+
 
     setState(() {
       if (pickedFile != null) {
@@ -977,14 +982,17 @@ class TicketCreationState extends State<TicketCreation> {
                           if(Ticketcode=="T03"){
                             getItemCategory();
 
+
                             setState(() {
                               ItemVisible=true;
+                              IssueCategory=false;
                             });
 
 
                           }else{
                             setState(() {
                               ItemVisible=false;
+                              IssueCategory=true;
                             });
                           }
 
@@ -1265,39 +1273,49 @@ class TicketCreationState extends State<TicketCreation> {
                         ),
                       ),
 
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                      Visibility(
+                        visible:IssueCategory ,
+                        child: Column(
                           children: [
-                            Text("Select IssueCategory", style: TextStyle(fontWeight:FontWeight.bold)),
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text("Select IssueCategory", style: TextStyle(fontWeight:FontWeight.bold)),
+                                ],
+                              ),
+                            ),
+                            DropdownSearch<String>(
+                              mode: Mode.DIALOG,
+                              showSearchBox: true,
+                              // showClearButton: true,
+
+                              // label: "Select Screen",
+                              items: stringlist3,
+                              onChanged: (val) {
+                                print(val);
+                                for (int kk = 0; kk < li3.result!.length; kk++) {
+                                  if (li3.result![kk].issue == val) {
+                                    issueCategory = li3.result![kk].issue.toString();
+                                    issueCategoryCode = li3.result![kk].issueCode.toString();
+                                    setState(() {
+                                      print(issueCategory);
+                                      //GetMyTablRecord();
+                                    });
+                                  }
+                                }
+                              },
+                              selectedItem: issueCategory,
+                            ),
                           ],
                         ),
                       ),
 
 
-                      DropdownSearch<String>(
-                        mode: Mode.DIALOG,
-                        showSearchBox: true,
-                      // showClearButton: true,
 
-                       // label: "Select Screen",
-                        items: stringlist3,
-                        onChanged: (val) {
-                          print(val);
-                          for (int kk = 0; kk < li3.result!.length; kk++) {
-                            if (li3.result![kk].issue == val) {
-                              issueCategory = li3.result![kk].issue.toString();
-                              issueCategoryCode = li3.result![kk].issueCode.toString();
-                              setState(() {
-                                print(issueCategory);
-                                //GetMyTablRecord();
-                              });
-                            }
-                          }
-                        },
-                        selectedItem: issueCategory,
-                      ),
+
+
 
                       Padding(
                         padding: const EdgeInsets.all(8),
@@ -1381,7 +1399,7 @@ class TicketCreationState extends State<TicketCreation> {
                                       return SingleChildScrollView(
                                         child: Column(
                                           children: [
-                                            ListTile(
+                                            /*istTile(
                                               title:
                                               Text("Gallery"),
                                               onTap: () async {
@@ -1451,7 +1469,7 @@ class TicketCreationState extends State<TicketCreation> {
                                               },
                                               leading:
                                               Icon(Icons.image),
-                                            ),
+                                            ),*/
                                             ListTile(
                                               leading: Icon(
                                                   Icons.camera_alt),
@@ -1461,6 +1479,7 @@ class TicketCreationState extends State<TicketCreation> {
                                                     context);
                                                 // getImage();
                                                 pickedFile = await picker.getImage(source: ImageSource.camera);
+
 
                                                 setState(() {
                                                   if (pickedFile != null) {
@@ -1600,7 +1619,7 @@ class TicketCreationState extends State<TicketCreation> {
 
 
 
-              print(result);
+             // print(result);
             },
             icon: Icon(
               Icons.save,

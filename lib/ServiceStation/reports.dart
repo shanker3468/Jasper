@@ -179,7 +179,7 @@ class _ReportsDashBoardState extends State<ReportsDashBoard> {
                         ' ${name}',
                         style: TextStyle(color: Colors.black),
                       ),
-                      Padding(
+                      /*Padding(
                         padding: const EdgeInsets.only(bottom: 15.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -203,7 +203,7 @@ class _ReportsDashBoardState extends State<ReportsDashBoard> {
                             ),
                           ],
                         ),
-                      ),
+                      ),*/
 
                     ],
                   ),

@@ -60,6 +60,9 @@ dependencies:
   badges: ^2.0.2
   pie_chart: ^5.3.2
   syncfusion_flutter_charts:
+  excel: ^2.0.0-null-safety
+  path_provider: ^2.0.15
+
 
 
 

@@ -11,6 +11,7 @@ import 'package:pie_chart/pie_chart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../IpAddress.dart';
+import '../AdminReports/WipAssignTickets.dart';
 import '../AppConstants.dart';
 import '../LoginPage.dart';
 
@@ -191,51 +192,51 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            centerTitle: true,
-            backgroundColor: Colors.blue,
-            elevation: 0.0,
-            flexibleSpace: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.blue.shade500, Colors.blue.shade300],
-                  stops: [0.1, 1.0],
-                ),
-              ),
-            ),
+            // centerTitle: true,
+            // backgroundColor: Colors.blue,
+            // elevation: 0.0,
+            // flexibleSpace: Container(
+            //   decoration: BoxDecoration(
+            //     gradient: LinearGradient(
+            //       colors: [Colors.blue.shade500, Colors.blue.shade300],
+            //       stops: [0.1, 1.0],
+            //     ),
+            //   ),
+            // ),
             title: Text(
               'ADMIN PORTAL',
               style: TextStyle(color: Colors.white, fontSize: 18),
             ),
-            leading: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(Icons.menu),
-            ),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(Icons.notifications_none),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    IpAddressState.check().then(
-                      (value) {
-                        if (value) {
-                          ResetStringValuesSF();
-                        } else {
-                          Fluttertoast.showToast(msg: "No Internet connection");
-                        }
-                      },
-                    );
-                  },
-                  child: Icon(
-                    Icons.logout,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
+            // leading: Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: Icon(Icons.menu),
+            // ),
+            // actions: [
+            //   Padding(
+            //     padding: const EdgeInsets.all(8.0),
+            //     child: Icon(Icons.notifications_none),
+            //   ),
+            //   Padding(
+            //     padding: const EdgeInsets.all(8.0),
+            //     child: GestureDetector(
+            //       onTap: () {
+            //         IpAddressState.check().then(
+            //           (value) {
+            //             if (value) {
+            //               ResetStringValuesSF();
+            //             } else {
+            //               Fluttertoast.showToast(msg: "No Internet connection");
+            //             }
+            //           },
+            //         );
+            //       },
+            //       child: Icon(
+            //         Icons.logout,
+            //         color: Colors.white,
+            //       ),
+            //     ),
+            //   ),
+            // ],
           ),
           body: Stack(
             children: [
@@ -407,14 +408,14 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
                                           myController = TextEditingController()
                                             ..text = "Open Tickets";
                                           print(myController);
-                                          // Navigator.push(
-                                          //     context,
-                                          //     MaterialPageRoute(
-                                          //         builder: (context) =>
-                                          //             OpenTicketCustomerList(
-                                          //               getScreenName:
-                                          //                   myController.text,
-                                          //             )));
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      AdminTicketReports(
+                                                        getScreenName:
+                                                            myController.text,
+                                                      )));
                                         },
                                         child: Card(
                                           elevation: 5,

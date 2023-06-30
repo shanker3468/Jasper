@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Admin/AdminDashBoard.dart';
+import 'Admin/SuperAdminDashBoard.dart';
+import 'BranchAdminScreens/BranchAdminDashBoard.dart';
 import 'DashBoard.dart';
 import 'LoginPage.dart';
 
@@ -40,7 +41,7 @@ class _SplashscreenState extends State<Splashscreen> {
     Timer(
         Duration(seconds: 2),
             () =>
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>islogged == true ?SessionAdminUser.trim()=='S'?AdminDashBoard():DashBoard():LoginPage())));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>islogged == true ?(SessionAdminUser.trim()=='SA'?SuperAdminDashBoard():SessionAdminUser.trim()=='S'?BranchAdminDashBoard():DashBoard()):LoginPage())));
 
     // Timer(
     //     Duration(seconds: 4),

@@ -6,7 +6,7 @@ import 'package:jasper/LoginPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../IpAddress.dart';
-import 'AdminDashBoard.dart';
+import 'SuperAdminDashBoard.dart';
 import 'Assignemployee_details_report.dart';
 import 'employee_details_report.dart';
 
@@ -533,7 +533,7 @@ class _MasterScreensState extends State<MasterScreens> {
   Future<bool> _willPopCallback() async {
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => AdminDashBoard()),
+        MaterialPageRoute(builder: (context) => SuperAdminDashBoard()),
         (Route<dynamic> route) => false);
     return Future.value(true);
   }

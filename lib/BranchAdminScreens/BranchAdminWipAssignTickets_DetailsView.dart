@@ -9,13 +9,14 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'dart:convert';
 
+import '../Admin/AssignTickets.dart';
 import '../AppConstants.dart';
-import 'AssignTickets.dart';
-import 'WipAssignTickets.dart';
+import 'BranchAdminWipAssignTickets.dart';
 
 
 
-class WipAssignTicketsDetailsView extends StatefulWidget {
+
+class BranchAdminWipAssignTicketsDetailsView extends StatefulWidget {
   final int draftno;
   final String TicketType;
   String Branch1;
@@ -23,21 +24,21 @@ class WipAssignTicketsDetailsView extends StatefulWidget {
  final int id;
 
 
-  List<FilterList3> list2;
+  List<FilterList4> list2;
 
 
   // Function callback;
-  WipAssignTicketsDetailsView({Key? key, required this.draftno ,required this.TicketType,required this.list2,required this.id,required this.Branch1/*, this.callback*/})
+  BranchAdminWipAssignTicketsDetailsView({Key? key, required this.draftno ,required this.TicketType,required this.list2,required this.id,required this.Branch1/*, this.callback*/})
       : super(key: key);
 
   /* final String text;
   PurchaseOrderApprovalItem({Key?key, required this.text}) : super(key: key);*/
   @override
-  _WipAssignTicketsDetailsViewState createState() =>
-      _WipAssignTicketsDetailsViewState();
+  _BranchAdminWipAssignTicketsDetailsViewState createState() =>
+      _BranchAdminWipAssignTicketsDetailsViewState();
 }
 
-class _WipAssignTicketsDetailsViewState extends State<WipAssignTicketsDetailsView> {
+class _BranchAdminWipAssignTicketsDetailsViewState extends State<BranchAdminWipAssignTicketsDetailsView> {
   //EmployeeDataSource employeeDataSource;
 
   TextEditingController searchcontroller = new TextEditingController();
@@ -1359,3 +1360,5 @@ class _WipAssignTicketsDetailsViewState extends State<WipAssignTicketsDetailsVie
     }).toList());
   }
 }*/
+
+

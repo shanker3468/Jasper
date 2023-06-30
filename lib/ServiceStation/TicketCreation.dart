@@ -15,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../AppConstants.dart';
 import '../DashBoard.dart';
+import '../Model/AssetMasterModel.dart';
 import '../Model/IssueCategoryModel.dart';
 import '../Model/IssueTypeModel.dart';
 import '../Model/ItemCategoryModel.dart';
@@ -36,6 +37,8 @@ class TicketCreationState extends State<TicketCreation> {
 
   bool IssueCategory= false;
 
+  bool AssetVisible =false;
+
   bool ItemListVisible= false;
 
   late String SessionEmpID, SessionEmpName, SessionBranchId, SessionBranchName,SessionAdminUser,SessionDepartmentCode,SessionDepartmentName,SessionLocation,EmpGroup;
@@ -51,6 +54,8 @@ class TicketCreationState extends State<TicketCreation> {
   late ItemCategoryModel li5;
 
   late ItemListModel li6;
+
+  late AssetMasterModel li7;
 
 
   final picker = ImagePicker();
@@ -75,6 +80,9 @@ class TicketCreationState extends State<TicketCreation> {
 
   var issuetypeCode="";
 
+  var assetCode="";
+  var assetName="";
+
 
   var stringlist = [
     "Select Priority",
@@ -96,6 +104,8 @@ class TicketCreationState extends State<TicketCreation> {
 
   var dropdownValue7 = "Select Item";
   var stringlist7 = ["Select Item"];
+
+  var stringlist8 = ["Select Asset"];
 
   TextEditingController datecontroler = TextEditingController();
   TextEditingController myController = TextEditingController();
@@ -126,6 +136,9 @@ class TicketCreationState extends State<TicketCreation> {
     }
   }
 
+
+
+
   @override
   void initState() {
     // TODO: implement initState
@@ -136,12 +149,96 @@ class TicketCreationState extends State<TicketCreation> {
 
     getStringValuesSF();
 
+    getAssetCategory();
+
     getticketNo().then((value) => gettickettype().then((value) => getIssueCategory()).then((value) => getIssuetype()));
 
 
 
 
     super.initState();
+  }
+
+
+  Future<http.Response> getAssetCategory() async {
+
+    print("getAssetCategory is called");
+    var headers = {"Content-Type": "application/json"};
+    var body = {
+      "FormID": 23,
+      "UserID": "",
+      "Password": "",
+      "Branch": SessionBranchId,
+      "DataBase":""
+    };
+
+    print(body);
+    setState(() {
+      loading = true;
+    });
+    try {
+      final response = await http.post(
+          Uri.parse(AppConstants.LIVE_URL + 'JasperLogin'),
+          body: jsonEncode(body),
+          headers: headers);
+      print(AppConstants.LIVE_URL + 'JasperLogin');
+      print(response.body);
+      setState(() {
+        loading = false;
+      });
+      if (response.statusCode == 200) {
+
+        if (jsonDecode(response.body)["status"].toString() == "0") {
+
+        }else if (json.decode(response.body)["status"] == "0" &&
+            jsonDecode(response.body)["result"].toString() == []) {
+
+        } else if (json.decode(response.body)["status"] == 1 &&
+            jsonDecode(response.body)["result"].toString() == "[]") {
+
+        }else{
+
+          li7 = AssetMasterModel.fromJson(jsonDecode(response.body));
+
+          for(int i=0;i<li7.result!.length;i++);
+          print(li7.result!.length.toString());
+
+          setState(() {
+            stringlist8.clear();
+            stringlist8.add("Select Asset");
+            for (int i = 0; i < li7.result!.length; i++)
+              stringlist8.add(li7.result![i].assetName.toString());
+          });
+
+          setState(() {
+            loading = false;
+          });
+
+
+        }
+
+      } else {
+        showDialogbox(context, "Failed to Login API");
+      }
+      return response;
+    } on SocketException {
+      setState(() {
+        loading = false;
+        showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+                backgroundColor: Colors.black,
+                title: Text(
+                  "No Response!..",
+                  style: TextStyle(color: Colors.purple),
+                ),
+                content: Text(
+                  "Slow Server Response or Internet connection",
+                  style: TextStyle(color: Colors.white),
+                )));
+      });
+      throw Exception('Internet is down');
+    }
   }
 
 
@@ -165,6 +262,35 @@ class TicketCreationState extends State<TicketCreation> {
 
 
       print(EmpGroup+EmpGroup.toString());
+
+
+      if(EmpGroup=="Tools"){
+        getItemCategory();
+
+        setState(() {
+          ItemVisible=true;
+          AssetVisible=false;
+
+        });
+
+
+      }else if(EmpGroup=="Assets"){
+
+        getAssetCategory();
+
+        setState(() {
+          ItemVisible=false;
+          AssetVisible=true;
+        });
+
+
+
+      }else{
+        setState(() {
+          ItemVisible=false;
+          AssetVisible=false;
+        });
+      }
 
 
 
@@ -729,7 +855,7 @@ class TicketCreationState extends State<TicketCreation> {
     var body = {
       "EmployeeName": SessionEmpName.toString(),
       "EmployeeCode": SessionEmpID,
-      "EmployeeCategory": "",
+      "EmployeeCategory": TicketType=="Assets"?assetName:"",
       "BranchName": SessionBranchName,
       "BranchCode": SessionBranchId,
       "TicketNo": myController.text.toString(),
@@ -742,12 +868,12 @@ class TicketCreationState extends State<TicketCreation> {
       "IssueCategoryID": issueCategoryCode,
       "IssueType": issuetype,
       "IssueTypeId": issuetypeCode,
-      "ItemName":EmpGroup=="WorkshopUser"?ItemName:"",
-      "ItemCode":EmpGroup=="WorkshopUser"?ItemCode:"",
+      "ItemName":TicketType=="Tools"?ItemName:"",
+      "ItemCode":TicketType=="Tools"?ItemCode:"",
       "Priority": selectstate,
-      "Extra1":EmpGroup=="WorkshopUser"?ItemCategory:"",
-      "Extra2":EmpGroup=="WorkshopUser"?ItemCategoryCode:"",
-      "Extra3":""
+      "Extra1":TicketType=="Tools"?ItemCategory:"",
+      "Extra2":TicketType=="Tools"?ItemCategoryCode:"",
+      "Extra3":TicketType=="Assets"?assetCode:""
     };
     print(jsonEncode(body));
     setState(() {
@@ -986,15 +1112,41 @@ class TicketCreationState extends State<TicketCreation> {
                             setState(() {
                               ItemVisible=true;
                               IssueCategory=false;
+                              AssetVisible=false;
                             });
 
 
+                          }else if (Ticketcode=="T02"){
+
+                            getAssetCategory();
+                            setState(() {
+                              ItemVisible=false;
+                              IssueCategory=false;
+                              AssetVisible=true;
+                            });
                           }else{
                             setState(() {
                               ItemVisible=false;
                               IssueCategory=true;
+                              AssetVisible=false;
                             });
                           }
+
+                          setState(() {
+
+                            selectstate="Medium";
+                            descriptioncontroler.text="";
+                             issueCategory="";
+                             issueCategoryCode="";
+                             ItemCategory="";
+                             ItemCategoryCode="";
+                             ItemName="";
+                             ItemCode="";
+                             issuetype="";
+                             issuetypeCode="";
+                             assetCode="";
+                             assetName="";
+                          });
 
                         },
                         selectedItem: TicketType,
@@ -1123,6 +1275,57 @@ class TicketCreationState extends State<TicketCreation> {
                             ],
                           ),
                         ),*/
+
+                      Visibility(
+                        visible: AssetVisible,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text("Select Asset", style: TextStyle(fontWeight:FontWeight.bold)),
+                                ],
+                              ),
+                            ),
+
+                            DropdownSearch<String>(
+                              mode: Mode.DIALOG,
+                              showSearchBox: true,
+                              // showClearButton: true,
+
+                              // label: "Select Screen",
+                              items: stringlist8,
+                              onChanged: (val) {
+                                print(val);
+                                for (int kk = 0; kk < li7.result!.length; kk++) {
+                                  if (li7.result![kk].assetName == val) {
+                                    assetName = li7.result![kk].assetName.toString();
+                                    assetCode = li7.result![kk].assetCode.toString();
+                                    setState(() {
+                                      print(assetCode);
+                                      //GetMyTablRecord();
+                                    });
+                                  }
+                                }
+
+                                // setState(() {
+                                //   getItemListCategory(ItemCategoryCode);
+                                // });
+                              },
+                              selectedItem: assetName,
+                            ),
+
+
+
+                          ],
+                        ),
+
+
+
+
+                      ),
 
 
                       Visibility(
@@ -1561,7 +1764,7 @@ class TicketCreationState extends State<TicketCreation> {
           child: TextButton.icon(
             onPressed: () {
 
-              if (TicketType.isEmpty) {
+             /* if (TicketType.isEmpty) {
                 Fluttertoast.showToast(
                     msg: "TicketType should not left Empty!!",
                     toastLength: Toast.LENGTH_LONG,
@@ -1613,6 +1816,171 @@ class TicketCreationState extends State<TicketCreation> {
 
                 if (files.length != 0) Photoupload();
                 insertticket();
+
+
+              }*/
+
+              if(TicketType=="Admin") {
+                if (selectstate == "Select Priority") {
+                  Fluttertoast.showToast(
+                      msg: "Please select Priority!!",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.SNACKBAR,
+                      timeInSecForIosWeb: 1,
+                      textColor: Colors.white,
+                      backgroundColor: Colors.red,
+                      fontSize: 16.0);
+                } else if (issueCategory.isEmpty) {
+                  Fluttertoast.showToast(
+                      msg: "Please select Issue Category!!",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.SNACKBAR,
+                      timeInSecForIosWeb: 1,
+                      textColor: Colors.white,
+                      backgroundColor: Colors.red,
+                      fontSize: 16.0);
+                } else if (issuetype.isEmpty) {
+                  Fluttertoast.showToast(
+                      msg: "Please select Issue Type!!",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.SNACKBAR,
+                      timeInSecForIosWeb: 1,
+                      textColor: Colors.white,
+                      backgroundColor: Colors.red,
+                      fontSize: 16.0);
+                } else if (descriptioncontroler.text.isEmpty ||
+                    descriptioncontroler.text == "") {
+                  Fluttertoast.showToast(
+                      msg: "Please Enter Description!!",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.SNACKBAR,
+                      timeInSecForIosWeb: 1,
+                      textColor: Colors.white,
+                      backgroundColor: Colors.red,
+                      fontSize: 16.0);
+                } else {
+                  if (files.length != 0) Photoupload();
+                  insertticket();
+                }
+              }else if (TicketType=="Assets"){
+
+                print("Group==Tools");
+
+              if (assetName.isEmpty) {
+                  Fluttertoast.showToast(
+                      msg: "Please select AssetName!!",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.SNACKBAR,
+                      timeInSecForIosWeb: 1,
+                      textColor: Colors.white,
+                      backgroundColor: Colors.red,
+                      fontSize: 16.0);
+                } else if (selectstate == "Select Priority") {
+                  Fluttertoast.showToast(
+                      msg: "Please select Priority!!",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.SNACKBAR,
+                      timeInSecForIosWeb: 1,
+                      textColor: Colors.white,
+                      backgroundColor: Colors.red,
+                      fontSize: 16.0);
+                }
+
+
+             else   if (selectstate == "Select Priority") {
+                  Fluttertoast.showToast(
+                      msg: "Please select Priority!!",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.SNACKBAR,
+                      timeInSecForIosWeb: 1,
+                      textColor: Colors.white,
+                      backgroundColor: Colors.red,
+                      fontSize: 16.0);
+                }
+
+                else if (issuetype.isEmpty) {
+                   Fluttertoast.showToast(
+                       msg: "Please select issuetype!!",
+                       toastLength: Toast.LENGTH_LONG,
+                       gravity: ToastGravity.SNACKBAR,
+                       timeInSecForIosWeb: 1,
+                       textColor: Colors.white,
+                       backgroundColor: Colors.red,
+                       fontSize: 16.0);
+                 }
+
+                else if (descriptioncontroler.text.isEmpty ||
+                    descriptioncontroler.text == "") {
+                  Fluttertoast.showToast(
+                      msg: "Please Enter Description!!",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.SNACKBAR,
+                      timeInSecForIosWeb: 1,
+                      textColor: Colors.white,
+                      backgroundColor: Colors.red,
+                      fontSize: 16.0);
+                } else {
+                  if (files.length != 0) Photoupload();
+                  insertticket();
+                }
+
+
+
+              }else{
+
+                print("Group==Tools");
+
+                if (ItemCategory.isEmpty) {
+                  Fluttertoast.showToast(
+                      msg: "Please select ItemCategory!!",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.SNACKBAR,
+                      timeInSecForIosWeb: 1,
+                      textColor: Colors.white,
+                      backgroundColor: Colors.red,
+                      fontSize: 16.0);
+                }else if (ItemName.isEmpty) {
+                  Fluttertoast.showToast(
+                      msg: "Please select ItemName!!",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.SNACKBAR,
+                      timeInSecForIosWeb: 1,
+                      textColor: Colors.white,
+                      backgroundColor: Colors.red,
+                      fontSize: 16.0);
+                } else if (selectstate == "Select Priority") {
+                  Fluttertoast.showToast(
+                      msg: "Please select Priority!!",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.SNACKBAR,
+                      timeInSecForIosWeb: 1,
+                      textColor: Colors.white,
+                      backgroundColor: Colors.red,
+                      fontSize: 16.0);
+                } else if (issuetype.isEmpty) {
+                  Fluttertoast.showToast(
+                      msg: "Please select issuetype!!",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.SNACKBAR,
+                      timeInSecForIosWeb: 1,
+                      textColor: Colors.white,
+                      backgroundColor: Colors.red,
+                      fontSize: 16.0);
+                 } else if (descriptioncontroler.text.isEmpty ||
+                    descriptioncontroler.text == "") {
+                  Fluttertoast.showToast(
+                      msg: "Please Enter Description!!",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.SNACKBAR,
+                      timeInSecForIosWeb: 1,
+                      textColor: Colors.white,
+                      backgroundColor: Colors.red,
+                      fontSize: 16.0);
+                } else {
+                  if (files.length != 0) Photoupload();
+                  insertticket();
+                }
+
 
 
               }

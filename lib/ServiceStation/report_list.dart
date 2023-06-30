@@ -305,7 +305,7 @@ class ReportListState extends State<ReportList> {
 
                                                         // Navigator.of(context).pop();
                                                       },
-                                                      text: 'Approve',
+                                                      text: 'Accept',
                                                       iconData: Icons.check,
                                                       color: Colors.lightGreen,
                                                       textStyle: TextStyle(
@@ -783,6 +783,55 @@ class ReportListState extends State<ReportList> {
                                                         const SizedBox(
                                                           height: 5,
                                                         ),
+                                                        custTicketStatuslist.result![index].assetName.toString().isNotEmpty&&custTicketStatuslist.result![index].assetName.toString()!=null?Row(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                          children: [
+                                                            Container(
+                                                                width: SW / 2,
+                                                                child: RichText(
+                                                                    text:
+                                                                    TextSpan(
+                                                                      children: [
+                                                                        TextSpan(
+                                                                          text:
+                                                                          'Asset Name :',
+                                                                          style: TextStyle(
+                                                                              fontSize: SH /
+                                                                                  60,
+                                                                              color: Colors
+                                                                                  .black,
+                                                                              fontWeight:
+                                                                              FontWeight.bold),
+                                                                        ),
+                                                                        TextSpan(
+                                                                          text:
+                                                                          '  ${custTicketStatuslist.result![index].assetName.toString()}',
+                                                                          style: TextStyle(
+                                                                              fontSize: SH /
+                                                                                  60,
+                                                                              color:
+                                                                              Colors.black),
+                                                                        ),
+                                                                      ],
+                                                                    ))
+                                                              /*Text(
+                                                                "RequiredDate : ${custTicketStatuslist.result[index].requiredDate.toString()}",
+                                                                overflow:
+                                                                    TextOverflow.ellipsis,
+                                                                softWrap: true,
+                                                                style: TextStyle(
+                                                                    fontSize: SH / 60),
+                                                              ),*/
+                                                            ),
+                                                            Container(),
+                                                          ],
+                                                        ):Container(),
+
+                                              custTicketStatuslist.result![index].assetName.toString().isNotEmpty?const SizedBox(
+                                                          height: 5,
+                                                        ):Container(),
                                                         custTicketStatuslist.result![index].itemName.toString().isNotEmpty?Row(
                                                           mainAxisAlignment:
                                                           MainAxisAlignment
@@ -829,10 +878,10 @@ class ReportListState extends State<ReportList> {
                                                           ],
                                                         ):Container(),
 
-                                                        const SizedBox(
+                                                        custTicketStatuslist.result![index].itemName.toString().isNotEmpty?const SizedBox(
                                                           height: 5,
-                                                        ),
-                                                        custTicketStatuslist.result![index].issueCatrgory.toString().isNotEmpty&&custTicketStatuslist.result![index].issueType.toString().isNotEmpty?Row(
+                                                        ):Container(),
+                                                        custTicketStatuslist.result![index].issueCatrgory.toString().isNotEmpty?Row(
                                                           mainAxisAlignment:
                                                           MainAxisAlignment
                                                               .spaceBetween,
@@ -878,10 +927,10 @@ class ReportListState extends State<ReportList> {
                                                           ],
                                                         ):Container(),
 
-                                                        const SizedBox(
+                                                        custTicketStatuslist.result![index].issueCatrgory.toString().isNotEmpty?const SizedBox(
                                                           height: 5,
-                                                        ),
-                                                        custTicketStatuslist.result![index].issueCatrgory.toString().isNotEmpty&&custTicketStatuslist.result![index].issueType.toString().isNotEmpty?Row(
+                                                        ):Container(),
+                                                        custTicketStatuslist.result![index].issueType.toString().isNotEmpty?Row(
                                                           mainAxisAlignment:
                                                           MainAxisAlignment
                                                               .spaceBetween,
@@ -928,9 +977,9 @@ class ReportListState extends State<ReportList> {
                                                           ],
                                                         ):Container(),
 
-                                                        const SizedBox(
+                                                        custTicketStatuslist.result![index].issueType.toString().isNotEmpty? SizedBox(
                                                           height: 5,
-                                                        ),
+                                                        ):Container(),
                                                         Container(
                                                             width: SW,
                                                             child: RichText(

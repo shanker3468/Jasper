@@ -15,19 +15,19 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../IpAddress.dart';
 import '../ADMIN Models/ChartCountModel.dart';
 import '../ADMIN Models/ChartCountModel.dart';
+import '../AdminReports/AdminWipAssignTickets.dart';
 
 import '../AppConstants.dart';
 import '../LoginPage.dart';
-import '../SuperAdminReports/WipAssignTickets.dart';
 
-class AdminReportDashboard extends StatefulWidget {
-  AdminReportDashboard({Key? key}) : super(key: key);
+class BranchAdminReportDashboard extends StatefulWidget {
+  BranchAdminReportDashboard({Key? key}) : super(key: key);
 
   @override
-  AdminReportDashboardState createState() => AdminReportDashboardState();
+  BranchAdminReportDashboardState createState() => BranchAdminReportDashboardState();
 }
 
-class AdminReportDashboardState extends State<AdminReportDashboard> {
+class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> {
 
 
   TextEditingController remarksController = new TextEditingController();
@@ -109,20 +109,20 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
       const Color.fromRGBO(254, 154, 92, 1),
     ],
     [
-      const Color.fromRGBO(108, 92, 231, 1.0),
-      const Color.fromRGBO(216, 218, 234, 1.0),
-    ],
-    [
-      const Color.fromRGBO(96, 218, 25, 1.0),
-      const Color.fromRGBO(150, 211, 121, 1.0),
-    ]
+    const Color.fromRGBO(108, 92, 231, 1.0),
+    const Color.fromRGBO(216, 218, 234, 1.0),
+  ],
+  [
+  const Color.fromRGBO(96, 218, 25, 1.0),
+  const Color.fromRGBO(150, 211, 121, 1.0),
+  ]
   ];
 
 
   int key = 0;
 
   List<_ChartData> data=[];
-  late TooltipBehavior _tooltip;
+   late TooltipBehavior _tooltip;
 
 
 
@@ -151,7 +151,7 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
 
     remarksController.text="";
     IpAddressState.check().then(
-          (value) {
+      (value) {
         if (value) {
           getStringValuesSF();
         } else {
@@ -201,7 +201,7 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
     return Container(
       decoration: BoxDecoration(
           gradient:
-          LinearGradient(colors: [Color(0xff3A9BDC), Color(0xff3A9BDC)])),
+              LinearGradient(colors: [Color(0xff3A9BDC), Color(0xff3A9BDC)])),
       child: SafeArea(
         child: Scaffold(
           backgroundColor: Colors.white,
@@ -275,7 +275,7 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
                             flex: 2,
                             child: Padding(
                               padding:
-                              const EdgeInsets.only(bottom: 20.0, left: 10),
+                                  const EdgeInsets.only(bottom: 20.0, left: 10),
                               child: Container(
                                 child: Image.asset(
                                   'assets/images/avataricon.png',
@@ -365,44 +365,44 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
                             ],
                           ),
                           Container(
-                            height: height/5,
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: PieChart(
-                                dataMap: dataMap!,
-                                chartType: ChartType.ring,
-                                baseChartColor: Colors.grey[50]!.withOpacity(0.15),
-                                colorList: colorList,
+                        height: height/5,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: PieChart(
+                          dataMap: dataMap!,
+                          chartType: ChartType.ring,
+                          baseChartColor: Colors.grey[50]!.withOpacity(0.15),
+                          colorList: colorList,
 
-                                chartValuesOptions: const ChartValuesOptions(
-                                  showChartValuesInPercentage: true,
-                                  showChartValues: true,
+                          chartValuesOptions: const ChartValuesOptions(
+                            showChartValuesInPercentage: true,
+                            showChartValues: true,
 
-                                  //  showChartValuesOutside: true
+                          //  showChartValuesOutside: true
 
-                                ),
-                                totalValue: chartcount
-                            ),
                           ),
+                          totalValue: chartcount
+                        ),
+                      ),
 
-                          Container(
-                            height: height/5,
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: SfCartesianChart(
-                                primaryXAxis: CategoryAxis(),
-                                primaryYAxis: NumericAxis(minimum: 0, maximum: 50, interval: 10),
-                                tooltipBehavior: _tooltip!,
-                                series: <ChartSeries<_ChartData, String>>[
-                                  BarSeries<_ChartData, String>(
-                                      dataSource: data,
-                                      xValueMapper: (_ChartData data, _) => data.x,
-                                      yValueMapper: (_ChartData data, _) => data.y,
-                                      name: 'Count',
-                                      gradient: LinearGradient(
-                                        colors: [Colors.red,Colors.redAccent],
-                                      ),
-                                      color: Color.fromRGBO(8, 142, 255, 1))
-                                ]),
-                          ),
+                        Container(
+                          height: height/5,
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: SfCartesianChart(
+                              primaryXAxis: CategoryAxis(),
+                              primaryYAxis: NumericAxis(minimum: 0, maximum: 50, interval: 10),
+                              tooltipBehavior: _tooltip!,
+                              series: <ChartSeries<_ChartData, String>>[
+                                BarSeries<_ChartData, String>(
+                                    dataSource: data,
+                                    xValueMapper: (_ChartData data, _) => data.x,
+                                    yValueMapper: (_ChartData data, _) => data.y,
+                                    name: 'Count',
+                                    gradient: LinearGradient(
+                                      colors: [Colors.red,Colors.redAccent],
+                                    ),
+                                    color: Color.fromRGBO(8, 142, 255, 1))
+                              ]),
+                        ),
 
                           Expanded(
                             child: Center(
@@ -417,79 +417,79 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
                                   crossAxisCount: 3,
                                   children: <Widget>[
 
-                                    GestureDetector(
-                                      onTap: () {
-                                        myController = TextEditingController()
-                                          ..text = "Open Tickets";
-                                        print(myController);
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    AdminTicketReports(
-                                                      getScreenName:
-                                                      myController.text,
-                                                      getTicketType:
-                                                      "O",
-                                                    )));
-                                      },
-                                      child: Card(
-                                        elevation: 5,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(10),
-                                        ),
-                                        child: Container(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                            children: [
-                                              Badge(
-                                                padding: EdgeInsets.all(8),
-                                                shape: BadgeShape.circle,
-                                                showBadge:
-                                                OpenTickets.toString() == "0"
-                                                    ? false
-                                                    : true,
-                                                badgeColor: Colors.deepOrange,
-                                                badgeContent: Text(
-                                                  OpenTickets.toString(),
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                      FontWeight.bold),
+                                      GestureDetector(
+                                        onTap: () {
+                                          myController = TextEditingController()
+                                            ..text = "Open Tickets";
+                                          print(myController);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      BranchAdminTicketReports(
+                                                        getScreenName:
+                                                        myController.text,
+                                                        getTicketType:
+                                                        "O",
+                                                      )));
+                                        },
+                                        child: Card(
+                                          elevation: 5,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Container(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Badge(
+                                                  padding: EdgeInsets.all(8),
+                                                  shape: BadgeShape.circle,
+                                                  showBadge:
+                                                  OpenTickets.toString() == "0"
+                                                          ? false
+                                                          : true,
+                                                  badgeColor: Colors.deepOrange,
+                                                  badgeContent: Text(
+                                                    OpenTickets.toString(),
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  child: Padding(
+                                                    padding: EdgeInsets.all(5),
+                                                    child: Image.asset(
+                                                        "assets/images/OpenTicket.png",
+                                                        fit: BoxFit.fill,
+                                                        height: 60,
+                                                        width: 60),
+                                                  ),
                                                 ),
-                                                child: Padding(
-                                                  padding: EdgeInsets.all(5),
-                                                  child: Image.asset(
-                                                      "assets/images/OpenTicket.png",
-                                                      fit: BoxFit.fill,
-                                                      height: 60,
-                                                      width: 60),
+                                                SizedBox(
+                                                  height: 7,
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                height: 7,
-                                              ),
-                                              Container(
-                                                  padding: EdgeInsets.all(3),
-                                                  width: double.infinity,
-                                                  child: Center(
-                                                    child: Text(
-                                                      "Open Tickets",
-                                                      textAlign:
-                                                      TextAlign.center,
-                                                      style: TextStyle(
-                                                          color: Color(
-                                                              0xFF002D58),
-                                                          fontSize: 15),
-                                                    ),
-                                                  )),
-                                            ],
+                                                Container(
+                                                    padding: EdgeInsets.all(3),
+                                                    width: double.infinity,
+                                                    child: Center(
+                                                      child: Text(
+                                                        "Open Tickets",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            color: Color(
+                                                                0xFF002D58),
+                                                            fontSize: 15),
+                                                      ),
+                                                    )),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
                                     GestureDetector(
                                       onTap: () {
                                         myController = TextEditingController()
@@ -499,7 +499,7 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    AdminTicketReports(
+                                                    BranchAdminTicketReports(
                                                       getScreenName:
                                                       myController.text,
                                                       getTicketType:
@@ -562,292 +562,292 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
                                       ),
                                     ),
 
-                                    GestureDetector(
-                                      onTap: () {
-                                        myController = TextEditingController()
-                                          ..text = "Work IN Progress";
-                                        print(myController);
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    AdminTicketReports(
-                                                      getScreenName:
-                                                      myController.text,
-                                                      getTicketType:
-                                                      "P",
-                                                    )));
-                                      },
-                                      child: Card(
-                                        elevation: 5,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(10),
-                                        ),
-                                        child: Container(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                            children: [
-                                              Badge(
-                                                padding: EdgeInsets.all(8),
-                                                shape: BadgeShape.circle,
-                                                showBadge:
-                                                WIP.toString() ==
-                                                    "0"
-                                                    ? false
-                                                    : true,
-                                                badgeColor: Colors.deepOrange,
-                                                badgeContent: Text(
-                                                  WIP.toString(),
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                      FontWeight.bold),
+                                      GestureDetector(
+                                        onTap: () {
+                                          myController = TextEditingController()
+                                            ..text = "Work IN Progress";
+                                          print(myController);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      BranchAdminTicketReports(
+                                                        getScreenName:
+                                                        myController.text,
+                                                        getTicketType:
+                                                        "P",
+                                                      )));
+                                        },
+                                        child: Card(
+                                          elevation: 5,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Container(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Badge(
+                                                  padding: EdgeInsets.all(8),
+                                                  shape: BadgeShape.circle,
+                                                  showBadge:
+                                                      WIP.toString() ==
+                                                              "0"
+                                                          ? false
+                                                          : true,
+                                                  badgeColor: Colors.deepOrange,
+                                                  badgeContent: Text(
+                                                    WIP.toString(),
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  child: Image.asset(
+                                                      "assets/images/WorkInProgress.png",
+                                                      fit: BoxFit.fill,
+                                                      height: 70,
+                                                      width: 70),
                                                 ),
-                                                child: Image.asset(
-                                                    "assets/images/WorkInProgress.png",
-                                                    fit: BoxFit.fill,
-                                                    height: 70,
-                                                    width: 70),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Container(
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Container(
+                                                    padding: EdgeInsets.all(3),
+                                                    width: double.infinity,
+                                                    child: Center(
+                                                      child: Text(
+                                                        "WIP",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            color: Color(
+                                                                0xFF002D58),
+                                                            fontSize: 15),
+                                                      ),
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+
+                                      GestureDetector(
+                                        onTap: () {
+                                          myController = TextEditingController()
+                                            ..text = "Third Party";
+                                          print(myController);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      BranchAdminTicketReports(
+                                                        getScreenName:
+                                                        myController.text,
+                                                        getTicketType:
+                                                        "T",
+                                                      )));
+                                        },
+                                        child: Card(
+                                          elevation: 5,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Container(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Badge(
+                                                  padding: EdgeInsets.all(8),
+                                                  shape: BadgeShape.circle,
+                                                  badgeColor: Colors.deepOrange,
+                                                  showBadge:
+                                                      ThirdParty.toString() == "0"
+                                                          ? false
+                                                          : true,
+                                                  badgeContent: Text(
+                                                    ThirdParty.toString(),
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  child: Image.asset(
+                                                      "assets/images/ThirdParty.png",
+                                                      fit: BoxFit.fill,
+                                                      height: 70,
+                                                      width: 70),
+                                                ),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Container(
                                                   padding: EdgeInsets.all(3),
                                                   width: double.infinity,
                                                   child: Center(
                                                     child: Text(
-                                                      "WIP",
+                                                      "Third Party",
                                                       textAlign:
-                                                      TextAlign.center,
+                                                          TextAlign.center,
                                                       style: TextStyle(
-                                                          color: Color(
-                                                              0xFF002D58),
+                                                          color:
+                                                              Color(0xFF002D58),
                                                           fontSize: 15),
                                                     ),
-                                                  )),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-
-                                    GestureDetector(
-                                      onTap: () {
-                                        myController = TextEditingController()
-                                          ..text = "Third Party";
-                                        print(myController);
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    AdminTicketReports(
-                                                      getScreenName:
-                                                      myController.text,
-                                                      getTicketType:
-                                                      "T",
-                                                    )));
-                                      },
-                                      child: Card(
-                                        elevation: 5,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(10),
-                                        ),
-                                        child: Container(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                            children: [
-                                              Badge(
-                                                padding: EdgeInsets.all(8),
-                                                shape: BadgeShape.circle,
-                                                badgeColor: Colors.deepOrange,
-                                                showBadge:
-                                                ThirdParty.toString() == "0"
-                                                    ? false
-                                                    : true,
-                                                badgeContent: Text(
-                                                  ThirdParty.toString(),
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                      FontWeight.bold),
-                                                ),
-                                                child: Image.asset(
-                                                    "assets/images/ThirdParty.png",
-                                                    fit: BoxFit.fill,
-                                                    height: 70,
-                                                    width: 70),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Container(
-                                                padding: EdgeInsets.all(3),
-                                                width: double.infinity,
-                                                child: Center(
-                                                  child: Text(
-                                                    "Third Party",
-                                                    textAlign:
-                                                    TextAlign.center,
-                                                    style: TextStyle(
-                                                        color:
-                                                        Color(0xFF002D58),
-                                                        fontSize: 15),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
 
-                                    GestureDetector(
-                                      onTap: () {
-                                        myController = TextEditingController()
-                                          ..text = "Quotation";
-                                        print(myController);
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    AdminTicketReports(
-                                                      getScreenName:
-                                                      myController.text,
-                                                      getTicketType:
-                                                      "Q",
-                                                    )));
-                                      },
-                                      child: Card(
-                                        elevation: 5,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(10),
-                                        ),
-                                        child: Container(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                            children: [
-                                              Badge(
-                                                padding: EdgeInsets.all(8),
-                                                shape: BadgeShape.circle,
-                                                badgeColor: Colors.deepOrange,
-                                                showBadge:
-                                                Quotation.toString() == "0"
-                                                    ? false
-                                                    : true,
-                                                badgeContent: Text(
-                                                  Quotation.toString(),
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                      FontWeight.bold),
+                                      GestureDetector(
+                                        onTap: () {
+                                          myController = TextEditingController()
+                                            ..text = "Quotation";
+                                          print(myController);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      BranchAdminTicketReports(
+                                                        getScreenName:
+                                                        myController.text,
+                                                        getTicketType:
+                                                        "Q",
+                                                      )));
+                                        },
+                                        child: Card(
+                                          elevation: 5,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Container(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Badge(
+                                                  padding: EdgeInsets.all(8),
+                                                  shape: BadgeShape.circle,
+                                                  badgeColor: Colors.deepOrange,
+                                                  showBadge:
+                                                  Quotation.toString() == "0"
+                                                          ? false
+                                                          : true,
+                                                  badgeContent: Text(
+                                                    Quotation.toString(),
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  child: Image.asset(
+                                                      "assets/images/Quotation.jpg",
+                                                      fit: BoxFit.fill,
+                                                      height: 70,
+                                                      width: 70),
                                                 ),
-                                                child: Image.asset(
-                                                    "assets/images/Quotation.jpg",
-                                                    fit: BoxFit.fill,
-                                                    height: 70,
-                                                    width: 70),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Container(
-                                                  padding: EdgeInsets.all(3),
-                                                  width: double.infinity,
-                                                  child: Center(
-                                                    child: Text(
-                                                      "Quotation",
-                                                      textAlign:
-                                                      TextAlign.center,
-                                                      style: TextStyle(
-                                                          color: Color(
-                                                              0xFF002D58),
-                                                          fontSize: 15),
-                                                    ),
-                                                  )),
-                                            ],
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Container(
+                                                    padding: EdgeInsets.all(3),
+                                                    width: double.infinity,
+                                                    child: Center(
+                                                      child: Text(
+                                                        "Quotation",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            color: Color(
+                                                                0xFF002D58),
+                                                            fontSize: 15),
+                                                      ),
+                                                    )),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
 
-                                    GestureDetector(
-                                      onTap: () {
-                                        myController = TextEditingController()
-                                          ..text = "ReSolved";
-                                        print(myController);
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    AdminTicketReports(
-                                                      getScreenName:
-                                                      myController.text,
-                                                      getTicketType:
-                                                      "S",
-                                                    )));
-                                      },
-                                      child: Card(
-                                        elevation: 5,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(10),
-                                        ),
-                                        child: Container(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                            children: [
-                                              Badge(
-                                                padding: EdgeInsets.all(8),
-                                                shape: BadgeShape.circle,
-                                                badgeColor: Colors.deepOrange,
-                                                showBadge:
-                                                ReSolved.toString() ==
-                                                    "0"
-                                                    ? false
-                                                    : true,
-                                                badgeContent: Text(
-                                                  ReSolved.toString(),
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                      FontWeight.bold),
+                                      GestureDetector(
+                                        onTap: () {
+                                          myController = TextEditingController()
+                                            ..text = "ReSolved";
+                                          print(myController);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      BranchAdminTicketReports(
+                                                        getScreenName:
+                                                        myController.text,
+                                                        getTicketType:
+                                                        "S",
+                                                      )));
+                                        },
+                                        child: Card(
+                                          elevation: 5,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Container(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Badge(
+                                                  padding: EdgeInsets.all(8),
+                                                  shape: BadgeShape.circle,
+                                                  badgeColor: Colors.deepOrange,
+                                                  showBadge:
+                                                  ReSolved.toString() ==
+                                                              "0"
+                                                          ? false
+                                                          : true,
+                                                  badgeContent: Text(
+                                                    ReSolved.toString(),
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  child: Image.asset(
+                                                      "assets/images/SollutionProvided.png",
+                                                      fit: BoxFit.fill,
+                                                      height: 70,
+                                                      width: 70),
                                                 ),
-                                                child: Image.asset(
-                                                    "assets/images/SollutionProvided.png",
-                                                    fit: BoxFit.fill,
-                                                    height: 70,
-                                                    width: 70),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Container(
-                                                  padding: EdgeInsets.all(3),
-                                                  width: double.infinity,
-                                                  child: Center(
-                                                    child: Text(
-                                                      "Resolved",
-                                                      textAlign:
-                                                      TextAlign.center,
-                                                      style: TextStyle(
-                                                          color: Color(
-                                                              0xFF002D58),
-                                                          fontSize: 15),
-                                                    ),
-                                                  )),
-                                            ],
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Container(
+                                                    padding: EdgeInsets.all(3),
+                                                    width: double.infinity,
+                                                    child: Center(
+                                                      child: Text(
+                                                        "Resolved",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            color: Color(
+                                                                0xFF002D58),
+                                                            fontSize: 15),
+                                                      ),
+                                                    )),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
 
                                   ],
                                 ),
@@ -888,14 +888,14 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
                     child: SingleChildScrollView(
                       child: Column(
                           mainAxisSize:
-                          MainAxisSize.min, // To make the card compact
+                              MainAxisSize.min, // To make the card compact
                           children: <Widget>[
                             Column(
                               children: [
                                 Container(
                                   width: MediaQuery.of(context).size.width / 7,
                                   child:
-                                  Image.asset("assets/images/logalert.png"),
+                                      Image.asset("assets/images/logalert.png"),
                                 ),
                                 SizedBox(
                                   height: 10,
@@ -930,7 +930,7 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
                                       backgroundColor: Colors.red,
                                       shape: RoundedRectangleBorder(
                                         borderRadius:
-                                        BorderRadius.circular(8.0),
+                                            BorderRadius.circular(8.0),
                                       ),
                                     ),
                                   ),
@@ -960,7 +960,7 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
                                       backgroundColor: Colors.lightGreen,
                                       shape: RoundedRectangleBorder(
                                         borderRadius:
-                                        BorderRadius.circular(8.0),
+                                            BorderRadius.circular(8.0),
                                       ),
                                     ),
                                   ),
@@ -1021,7 +1021,7 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
 
 
 
-  /* Future prodCustCountData() async {
+ /* Future prodCustCountData() async {
 
 
     print("prodCustCountData was called");
@@ -1091,10 +1091,10 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
     print("postRequest1 is called");
     var headers = {"Content-Type": "application/json"};
     var body = {
-      "FormID": 24,
+      "FormID": 25,
       "UserID": "",
       "Password": "",
-      "Branch": "",
+      "Branch": branchID,
       "DataBase":""
     };
 

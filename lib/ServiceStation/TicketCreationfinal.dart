@@ -15,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../AppConstants.dart';
 import '../DashBoard.dart';
+import '../Model/AssetMasterModel.dart';
 import '../Model/IssueCategoryModel.dart';
 import '../Model/IssueTypeModel.dart';
 import '../Model/ItemCategoryModel.dart';
@@ -34,6 +35,9 @@ class TicketCreationFinalState extends State<TicketCreationFinal> {
 
   bool ItemVisible =false;
 
+  bool AssetVisible =false;
+
+
   bool ItemListVisible= false;
 
  late String SessionEmpID, SessionEmpName, SessionBranchId, SessionBranchName,SessionAdminUser,SessionDepartmentCode,SessionDepartmentName,SessionLocation,EmpGroup;
@@ -45,6 +49,8 @@ class TicketCreationFinalState extends State<TicketCreationFinal> {
   late TicketTypeModel li2;
 
   late ItemCategoryModel li5;
+
+  late AssetMasterModel li7;
 
   late ItemListModel li6;
 
@@ -71,6 +77,9 @@ class TicketCreationFinalState extends State<TicketCreationFinal> {
 
   var issuetypeCode="";
 
+  var assetCode="";
+  var assetName="";
+
 
   var stringlist = [
     "Select Priority",
@@ -92,6 +101,8 @@ class TicketCreationFinalState extends State<TicketCreationFinal> {
 
   var dropdownValue7 = "Select Item";
   var stringlist7 = ["Select Item"];
+
+  var stringlist8 = ["Select Asset"];
 
   TextEditingController datecontroler = TextEditingController();
   TextEditingController myController = TextEditingController();
@@ -395,6 +406,90 @@ class TicketCreationFinalState extends State<TicketCreationFinal> {
                             ],
                           ),
                         ),*/
+
+                      Visibility(
+                        visible: AssetVisible,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text("Select Asset", style: TextStyle(fontWeight:FontWeight.bold)),
+                                ],
+                              ),
+                            ),
+
+                            DropdownSearch<String>(
+                              mode: Mode.DIALOG,
+                              showSearchBox: true,
+                              // showClearButton: true,
+
+                              // label: "Select Screen",
+                              items: stringlist8,
+                              onChanged: (val) {
+                                print(val);
+                                for (int kk = 0; kk < li7.result!.length; kk++) {
+                                  if (li7.result![kk].assetName == val) {
+                                    assetName = li7.result![kk].assetName.toString();
+                                    assetCode = li7.result![kk].assetCode.toString();
+                                    setState(() {
+                                      print(assetCode);
+                                      //GetMyTablRecord();
+                                    });
+                                  }
+                                }
+
+                                // setState(() {
+                                //   getItemListCategory(ItemCategoryCode);
+                                // });
+                              },
+                              selectedItem: assetCode,
+                            ),
+
+
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text("Select Item", style: TextStyle(fontWeight:FontWeight.bold)),
+                                ],
+                              ),
+                            ),
+
+                            DropdownSearch<String>(
+                              mode: Mode.DIALOG,
+                              showSearchBox: true,
+                              // showClearButton: true,
+
+                              // label: "Select Screen",
+                              items: stringlist7,
+                              onChanged: (val) {
+                                print(val);
+                                for (int kk = 0; kk < li6.result!.length; kk++) {
+                                  if (li6.result![kk].itemName == val) {
+                                    ItemName = li6.result![kk].itemName.toString();
+                                    ItemCode = li6.result![kk].itemCode.toString();
+                                    setState(() {
+                                      print(ItemName);
+                                      //GetMyTablRecord();
+                                    });
+                                  }
+                                }
+
+
+                              },
+                              selectedItem: ItemName,
+                            ),
+                          ],
+                        ),
+
+
+
+
+                      ),
 
 
                       Visibility(
@@ -895,25 +990,30 @@ class TicketCreationFinalState extends State<TicketCreationFinal> {
                       textColor: Colors.white,
                       backgroundColor: Colors.red,
                       fontSize: 16.0);
-                } else if (issueCategory.isEmpty) {
-                  Fluttertoast.showToast(
-                      msg: "Please select Issue Category!!",
-                      toastLength: Toast.LENGTH_LONG,
-                      gravity: ToastGravity.SNACKBAR,
-                      timeInSecForIosWeb: 1,
-                      textColor: Colors.white,
-                      backgroundColor: Colors.red,
-                      fontSize: 16.0);
-                } else if (issueCategory.isEmpty) {
-                  Fluttertoast.showToast(
-                      msg: "Please select Issue Category!!",
-                      toastLength: Toast.LENGTH_LONG,
-                      gravity: ToastGravity.SNACKBAR,
-                      timeInSecForIosWeb: 1,
-                      textColor: Colors.white,
-                      backgroundColor: Colors.red,
-                      fontSize: 16.0);
-                } else if (descriptioncontroler.text.isEmpty ||
+                }
+
+
+               // else if (issueCategory.isEmpty) {
+               //    Fluttertoast.showToast(
+               //        msg: "Please select Issue Category!!",
+               //        toastLength: Toast.LENGTH_LONG,
+               //        gravity: ToastGravity.SNACKBAR,
+               //        timeInSecForIosWeb: 1,
+               //        textColor: Colors.white,
+               //        backgroundColor: Colors.red,
+               //        fontSize: 16.0);
+               //  } else if (issueCategory.isEmpty) {
+               //    Fluttertoast.showToast(
+               //        msg: "Please select Issue Category!!",
+               //        toastLength: Toast.LENGTH_LONG,
+               //        gravity: ToastGravity.SNACKBAR,
+               //        timeInSecForIosWeb: 1,
+               //        textColor: Colors.white,
+               //        backgroundColor: Colors.red,
+               //        fontSize: 16.0);
+               //  }
+
+               else if (descriptioncontroler.text.isEmpty ||
                     descriptioncontroler.text == "") {
                   Fluttertoast.showToast(
                       msg: "Please Enter Description!!",
@@ -954,8 +1054,6 @@ class TicketCreationFinalState extends State<TicketCreationFinal> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
 
-
-
       SessionEmpID = prefs.getString('UserID').toString();
       SessionEmpName = prefs.getString('UserName').toString();
       SessionBranchId = prefs.getString('BranchID').toString();
@@ -976,12 +1074,26 @@ class TicketCreationFinalState extends State<TicketCreationFinal> {
 
         setState(() {
           ItemVisible=true;
+          AssetVisible=false;
+
         });
+
+
+      }else if(EmpGroup=="Assets"){
+
+        getAssetCategory();
+
+        setState(() {
+          ItemVisible=false;
+          AssetVisible=true;
+        });
+
 
 
       }else{
         setState(() {
           ItemVisible=false;
+          AssetVisible=false;
         });
       }
 
@@ -1377,6 +1489,88 @@ class TicketCreationFinalState extends State<TicketCreationFinal> {
             stringlist5.add("Select Item Category");
             for (int i = 0; i < li5.result!.length; i++)
               stringlist5.add(li5.result![i].categoryName.toString());
+          });
+
+          setState(() {
+            loading = false;
+          });
+
+
+        }
+
+      } else {
+        showDialogbox(context, "Failed to Login API");
+      }
+      return response;
+    } on SocketException {
+      setState(() {
+        loading = false;
+        showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+                backgroundColor: Colors.black,
+                title: Text(
+                  "No Response!..",
+                  style: TextStyle(color: Colors.purple),
+                ),
+                content: Text(
+                  "Slow Server Response or Internet connection",
+                  style: TextStyle(color: Colors.white),
+                )));
+      });
+      throw Exception('Internet is down');
+    }
+  }
+
+
+  Future<http.Response> getAssetCategory() async {
+
+    print("getAssetCategory is called");
+    var headers = {"Content-Type": "application/json"};
+    var body = {
+      "FormID": 23,
+      "UserID": "",
+      "Password": "",
+      "Branch": "",
+      "DataBase":""
+    };
+
+    print(body);
+    setState(() {
+      loading = true;
+    });
+    try {
+      final response = await http.post(
+          Uri.parse(AppConstants.LIVE_URL + 'JasperLogin'),
+          body: jsonEncode(body),
+          headers: headers);
+      print(AppConstants.LIVE_URL + 'JasperLogin');
+      print(response.body);
+      setState(() {
+        loading = false;
+      });
+      if (response.statusCode == 200) {
+
+        if (jsonDecode(response.body)["status"].toString() == "0") {
+
+        }else if (json.decode(response.body)["status"] == "0" &&
+            jsonDecode(response.body)["result"].toString() == []) {
+
+        } else if (json.decode(response.body)["status"] == 1 &&
+            jsonDecode(response.body)["result"].toString() == "[]") {
+
+        }else{
+
+          li7 = AssetMasterModel.fromJson(jsonDecode(response.body));
+
+          for(int i=0;i<li7.result!.length;i++);
+          print(li7.result!.length.toString());
+
+          setState(() {
+            stringlist8.clear();
+            stringlist8.add("Select Asset");
+            for (int i = 0; i < li7.result!.length; i++)
+              stringlist8.add(li7.result![i].assetName.toString());
           });
 
           setState(() {

@@ -1,15 +1,12 @@
 import 'dart:io';
 
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:excel/excel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:open_file/open_file.dart';
+import 'package:jasper/Admin/WipAssignTickets_DetailsView.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
@@ -23,31 +20,32 @@ import '../ADMIN Models/TicketStatusFilterModel.dart';
 import '../ADMIN Models/TicketStatusModel.dart';
 import '../AppConstants.dart';
 import '../Model/TicketTypeModel.dart';
-import '../String_Values.dart';
+import 'BranchAdminWipAssignTickets_DetailsView.dart';
 
 
 
-class AdminTicketReports extends StatefulWidget {
-   AdminTicketReports({ Key? key, required  String this.getScreenName}) : super(key: key);
+class BranchAdminWIP_Assign_Tickets extends StatefulWidget {
+   BranchAdminWIP_Assign_Tickets({ Key? key, required  String this.status,required String this.Tickettype,required String this.BranchName}) : super(key: key);
 
-  String getScreenName;
-
+  String status;
+  String BranchName;
+   String Tickettype;
 
   @override
-  AdminTicketReportsState createState() => AdminTicketReportsState();
+  BranchAdminWIP_Assign_TicketsState createState() => BranchAdminWIP_Assign_TicketsState();
 }
 
-class AdminTicketReportsState extends State<AdminTicketReports> {
+class BranchAdminWIP_Assign_TicketsState extends State<BranchAdminWIP_Assign_Tickets> {
  // ApprovalPendingModel li2;
 
    TicketTypeModel li4=TicketTypeModel(result: []);
    CustomerTicketsModel li2 =CustomerTicketsModel(result: []);
-  BranchMasterModel li5=BranchMasterModel(result: []);
+
    TicketStatusModel li10 =TicketStatusModel(result :[]);
    AssignEmpDepartmentModel li11=AssignEmpDepartmentModel(result :[]);
    TicketStatusFilterModel li13 =TicketStatusFilterModel(result :[]);
    AssignEmpListBasedOnDepartmentModel li12=AssignEmpListBasedOnDepartmentModel(result :[]);
-  List<FilterList2> li3 = [];
+  List<FilterList4> li3 = [];
   TextEditingController searchcontroller = new TextEditingController();
   TextEditingController RemarksController =new TextEditingController();
   String _searchResult = '';
@@ -143,220 +141,6 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
     locale: 'HI',
     symbol: "",
   );
-
-   var selectdate = DateFormat("dd-MM-yyyy").format(DateTime.now());
-
-   var excel = Excel.createExcel();
-
-   late Directory tempDir;
-
-   late Directory path;
-
-
-
-   Future<void> attendanceReport() async {
-     CellStyle headercellStyle = CellStyle(
-       backgroundColorHex: "#bec4c0",
-       bold: true,
-       italic: false,
-       fontSize: 12,
-       textWrapping: TextWrapping.WrapText,
-       fontFamily: getFontFamily(FontFamily.Comic_Sans_MS),
-       rotation: 0,
-     );
-
-     var currentDaySheet = excel['Sheet1'];
-     // var monthlySheet = excel['MonthlySheet'];
-
-     List<String> dataList = [
-       'S.No',
-       'Date',
-       'EmpName',
-       'TicketNo',
-       'TicketType',
-       'Description',
-       'priority',
-       'Status',
-       'Branch'
-     ];
-
-     int colIndex = 0;
-     dataList.forEach((colValue) {
-       currentDaySheet.cell(
-         CellIndex.indexByColumnRow(
-           rowIndex: colIndex,
-           columnIndex: currentDaySheet.maxCols,
-         ),
-       )
-         ..value = colValue
-         ..cellStyle = headercellStyle;
-     });
-
-     //todo:detail insert datas IN ROW
-     //TODO:S.No DATA
-
-     int colIndex1 = 0;
-     int sno = 1;
-     li2.result!.forEach((colValue) {
-       currentDaySheet.cell(CellIndex.indexByColumnRow(
-         rowIndex: currentDaySheet.maxRows,
-         columnIndex: colIndex1,
-       ))
-         ..value = sno;
-
-
-       sno++;
-     });
-
-// TODO:DATE DATA IN LIST
-     int colIndex2 = 1;
-     currentDaySheet.cell(CellIndex.indexByString("B1"));
-     int i = 1;
-     li2.result!.forEach((colValue) {
-       print(colValue);
-       currentDaySheet.cell(CellIndex.indexByColumnRow(
-         rowIndex: i,
-         columnIndex: colIndex2,
-       ))
-         ..value = DateFormat("dd-MM-yyyy").format(DateTime.parse(colValue.createdDate.toString()));
-       i++;
-     });
-
-     // TODO:EMPLOYYEID DATA IN LIST
-     int colIndex3 = 2;
-     currentDaySheet.cell(CellIndex.indexByString("C1"));
-     i = 1;
-     li2.result!.forEach((colValue) {
-       print(colValue);
-       currentDaySheet.cell(CellIndex.indexByColumnRow(
-         rowIndex: i,
-         columnIndex: colIndex3,
-       ))
-         ..value = colValue.empName;
-       i++;
-     });
-
-     // TODO:EMPLOYYENAME DATA IN LIST
-     int colIndex4 = 3;
-     currentDaySheet.cell(CellIndex.indexByString("D1"));
-     i = 1;
-     li2.result!.forEach((colValue) {
-       print(colValue);
-       currentDaySheet.cell(CellIndex.indexByColumnRow(
-         rowIndex: i,
-         columnIndex: colIndex4,
-       ))
-         ..value = colValue.ticketNo;
-       i++;
-     });
-
-     // TODO:LOCATION TYPE DATA IN LIST
-     int colIndex5 = 4;
-     currentDaySheet.cell(CellIndex.indexByString("E1"));
-     i = 1;
-     li2.result!.forEach((colValue) {
-       print(colValue);
-       currentDaySheet.cell(CellIndex.indexByColumnRow(
-         rowIndex: i,
-         columnIndex: colIndex5,
-       ))
-         ..value = colValue.category;
-       i++;
-     });
-
-     // TODO:LOCATION NAME DATA IN LIST
-     int colIndex6 = 5;
-     currentDaySheet.cell(CellIndex.indexByString("F1"));
-     i = 1;
-     li2.result!.forEach((colValue) {
-       print(colValue);
-       currentDaySheet.cell(CellIndex.indexByColumnRow(
-         rowIndex: i,
-         columnIndex: colIndex6,
-       ))
-         ..value = colValue.description;
-       i++;
-     });
-
-     // TODO:FROM TIME DATA IN LIST
-     int colIndex7 = 6;
-     currentDaySheet.cell(CellIndex.indexByString("G1"));
-     i = 1;
-     li2.result!.forEach((colValue) {
-       print(colValue);
-       currentDaySheet.cell(CellIndex.indexByColumnRow(
-         rowIndex: i,
-         columnIndex: colIndex7,
-       ))
-         ..value = colValue.priority;
-       i++;
-     });
-
-     // TODO:STATUS DATA IN LIST
-     int colIndex8 = 7;
-     currentDaySheet.cell(CellIndex.indexByString("H1"));
-     i = 1;
-     li2.result!.forEach((colValue) {
-       print(colValue);
-       currentDaySheet.cell(CellIndex.indexByColumnRow(
-         rowIndex: i,
-         columnIndex: colIndex8,
-       ))
-         ..value = colValue.status=='O'?"Open Tickets":colValue.status=='Q'?"Quotation":colValue.status=='T'?"ThirdParty":colValue.status=='P'?"Work IN Progress":colValue.status=='S'?"Resolved":colValue.status=='R'?"Reject":"Approved";
-       i++;
-     });
-
-     // TODO:PLACE DATA IN LIST
-     int colIndex9 = 8;
-     currentDaySheet.cell(CellIndex.indexByString("H1"));
-     i = 1;
-     li2.result!.forEach((colValue) {
-       print(colValue);
-       currentDaySheet.cell(CellIndex.indexByColumnRow(
-         rowIndex: i,
-         columnIndex: colIndex9,
-       ))
-         ..value = colValue.brachName;
-       i++;
-     });
-
-     // Saving the file
-     if (li2.result!.isNotEmpty) {
-       if (Platform.isAndroid) {
-         path = (await getExternalStorageDirectory())!;
-       } else if (Platform.isIOS) {
-         path = await getApplicationDocumentsDirectory();
-       }
-// path=await getTemporaryDirectory()
-       String outputFile = "${path.path}/TicketReport$selectdate.xlsx";
-       print(outputFile);
-       //stopwatch.reset();
-       List<int>? fileBytes = excel.save();
-       //print('saving executed in ${stopwatch.elapsed}');
-       if (fileBytes != null) {
-         File(join(outputFile))
-           ..createSync(recursive: true)
-           ..writeAsBytesSync(fileBytes);
-         Fluttertoast.showToast(
-             msg: "TicketReport$selectdate.xlsx is saved!!",
-             gravity: ToastGravity.BOTTOM,
-             backgroundColor: Colors.indigo,
-             textColor: Colors.white);
-
-
-         final File file = File('${path.path}/TicketReport$selectdate.xlsx');
-         await file.writeAsBytes(fileBytes).then((value) async =>
-         await OpenFile.open('${path.path}/TicketReport$selectdate.xlsx'));
-       }
-     } else {
-       Fluttertoast.showToast(
-           msg: "No Records Found!!!",
-           gravity: ToastGravity.TOP,
-           backgroundColor: Colors.red,
-           textColor: Colors.white);
-     }
-   }
-
   @override
   void initState() {
     getStringValuesSF();
@@ -375,19 +159,471 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
       //  backgroundColor: Colors.indigo,
         appBar: AppBar(
 
-          title: Text('Admin Reports'),
+          title: Text('Tickets'),
+          actions: [
 
+                        IconButton(
+                        icon: const Icon(Icons.save),
+                        tooltip: 'Approve All',
+                        onPressed: () {
+                          if (selectedlist.length == 0 || selectedlist.length == null) {
+                            showDialogbox(context, "Select Atleast one Ticket!!");
+                          } else {
+
+
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return Padding(
+                                    padding:
+                                    const EdgeInsets.all(1.0),
+                                    child: AlertDialog(
+                                      content: StatefulBuilder(
+                                        builder: (BuildContext
+                                        context,
+                                            void Function(
+                                                void Function())
+                                            setState) {
+                                          return Container(
+                                            child:
+                                            SingleChildScrollView(
+                                              child: Column(
+                                                mainAxisSize:
+                                                MainAxisSize
+                                                    .min, // To make the card compact
+                                                children: <Widget>[
+                                                  Text("Do You Want to Proceed ?"),
+                                                  SizedBox(height: 5,),
+                                                  Text("TicketStatus="+FilterStatusName.toString(),style: TextStyle(fontWeight:FontWeight.bold),),
+
+                                                  Padding(
+                                                    padding: const EdgeInsets.all(8),
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      children: [
+                                                        Text("Select Status", style: TextStyle(fontWeight:FontWeight.bold)),
+                                                      ],
+                                                    ),
+                                                  ),
+
+
+
+                                                  DropdownSearch<String>(
+                                                    mode: Mode.DIALOG,
+                                                    showSearchBox: true,
+                                                    // showClearButton: true,
+
+                                                    // label: "Select Screen",
+                                                    items: stringlist7,
+                                                    onChanged: (val) {
+                                                      print(val);
+                                                      for (int kk = 0; kk < li10.result!.length; kk++) {
+                                                        if (li10.result![kk].statusName == val) {
+                                                          TicketStatus = li10.result![kk].statusName.toString();
+                                                          TicketStatusCode = li10.result![kk].statusCode.toString();
+                                                          setState(() {
+                                                            print(TicketStatus);
+                                                            //GetMyTablRecord();
+                                                          });
+                                                        }
+                                                      }
+
+                                                      if(TicketStatus=="Assign"){
+                                                        getAssignEmployeeDepartment();
+
+                                                        setState(() {
+                                                          ItemVisible=true;
+                                                        });
+
+
+                                                      }else{
+                                                        setState(() {
+                                                          ItemVisible=false;
+                                                        });
+                                                      }
+
+                                                      setState(() {
+
+                                                      });
+                                                    },
+                                                    selectedItem: TicketStatus,
+                                                  ),
+
+                                                  Visibility(
+                                                    visible: ItemVisible,
+                                                    child: Column(
+                                                      children: [
+                                                        Padding(
+                                                          padding: const EdgeInsets.all(8),
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                            children: [
+                                                              Text("Select Assign Department", style: TextStyle(fontWeight:FontWeight.bold)),
+                                                            ],
+                                                          ),
+                                                        ),
+
+                                                        DropdownSearch<String>(
+                                                          mode: Mode.DIALOG,
+                                                          showSearchBox: true,
+                                                          // showClearButton: true,
+
+                                                          // label: "Select Screen",
+                                                          items: stringlist8,
+                                                          onChanged: (val) {
+                                                            print(val);
+                                                            for (int kk = 0; kk < li11.result!.length; kk++) {
+                                                              if (li11.result![kk].departmentName == val) {
+                                                                AssignDepartment = li11.result![kk].departmentName.toString();
+                                                                AssignDepartmentCode = li11.result![kk].departmentCode.toString();
+                                                                setState(() {
+                                                                  print(AssignDepartment);
+                                                                  //GetMyTablRecord();
+                                                                });
+                                                              }
+                                                            }
+
+                                                            setState(() {
+
+                                                              getAssignEmployeeListBasedOnDepartment(AssignDepartment);
+
+                                                            });
+                                                          },
+                                                          selectedItem: AssignDepartment,
+                                                        ),
+
+
+                                                        Padding(
+                                                          padding: const EdgeInsets.all(8),
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                            children: [
+                                                              Text("Select Assign EmpName", style: TextStyle(fontWeight:FontWeight.bold)),
+                                                            ],
+                                                          ),
+                                                        ),
+
+                                                        DropdownSearch<String>(
+                                                          mode: Mode.DIALOG,
+                                                          showSearchBox: true,
+                                                          // showClearButton: true,
+
+                                                          // label: "Select Screen",
+                                                          items: stringlist9,
+                                                          onChanged: (val) {
+                                                            print(val);
+                                                            for (int kk = 0; kk < li12.result!.length; kk++) {
+                                                              if (li12.result![kk].firstName == val) {
+                                                                AssignEmpName = li12.result![kk].firstName.toString();
+                                                                AssignEmpNameCode = li12.result![kk].empID.toString();
+                                                                setState(() {
+                                                                  print(AssignEmpName);
+                                                                  //GetMyTablRecord();
+                                                                });
+                                                              }
+                                                            }
+
+
+                                                          },
+                                                          selectedItem: AssignEmpName,
+                                                        ),
+                                                      ],
+                                                    ),
+
+
+
+
+                                                  ),
+
+                                                  SizedBox(
+                                                      height: 15.0),
+                                                  Row(
+                                                    children: [
+                                                      SizedBox(
+                                                        width: 8,
+                                                      ),
+                                                      Expanded(
+                                                        child:
+                                                        TextButton
+                                                            .icon(
+                                                          onPressed:
+                                                              () {
+                                                            TicketStatusCode="";
+                                                            TicketStatus="";
+
+                                                            AssignDepartment="";
+                                                            AssignDepartmentCode="";
+
+                                                            AssignEmpName="";
+                                                            AssignEmpNameCode="";
+                                                            ItemVisible=false;
+                                                            Fluttertoast.showToast(
+                                                                msg:
+                                                                "Assign Cancelled!!",
+                                                                backgroundColor:
+                                                                Colors.red);
+                                                            Navigator.pop(
+                                                                context);
+                                                            // call();
+                                                          },
+                                                          icon:
+                                                          Icon(
+                                                            Icons
+                                                                .cancel,
+                                                            color: Colors
+                                                                .white,
+                                                          ),
+                                                          label:
+                                                          Text(
+                                                            'Cancel',
+                                                            style: TextStyle(
+                                                                color:
+                                                                Colors.white),
+                                                          ),
+                                                          style: TextButton
+                                                              .styleFrom(
+                                                            backgroundColor:
+                                                            Colors.red,
+                                                            shape:
+                                                            RoundedRectangleBorder(
+                                                              borderRadius:
+                                                              BorderRadius.circular(8.0),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 8,
+                                                      ),
+                                                      Expanded(
+                                                        child:
+                                                        TextButton
+                                                            .icon(
+                                                          onPressed:
+                                                              () {
+
+
+                                                            if(TicketStatus=="Assign"){
+
+                                                              if (TicketStatus.isEmpty) {
+                                                                Fluttertoast.showToast(
+                                                                    msg: "TicketStatus should not left Empty!!",
+                                                                    toastLength: Toast.LENGTH_LONG,
+                                                                    gravity: ToastGravity.SNACKBAR,
+                                                                    timeInSecForIosWeb: 1,
+                                                                    textColor: Colors.white,
+                                                                    backgroundColor: Colors.red,
+                                                                    fontSize: 16.0);
+                                                              }else  if (AssignDepartment.isEmpty) {
+                                                                Fluttertoast.showToast(
+                                                                    msg: "AssignDepartment should not left Empty!!",
+                                                                    toastLength: Toast.LENGTH_LONG,
+                                                                    gravity: ToastGravity.SNACKBAR,
+                                                                    timeInSecForIosWeb: 1,
+                                                                    textColor: Colors.white,
+                                                                    backgroundColor: Colors.red,
+                                                                    fontSize: 16.0);
+                                                              }else  if (AssignEmpName.isEmpty) {
+                                                                Fluttertoast.showToast(
+                                                                    msg: "AssignEmpName should not left Empty!!",
+                                                                    toastLength: Toast.LENGTH_LONG,
+                                                                    gravity: ToastGravity.SNACKBAR,
+                                                                    timeInSecForIosWeb: 1,
+                                                                    textColor: Colors.white,
+                                                                    backgroundColor: Colors.red,
+                                                                    fontSize: 16.0);
+                                                              }else{
+
+                                                                print("Empty true");
+
+
+                                                                selectedDatalist.clear();
+
+                                                                for (int k = 0; k < li2.result!.length; k++) {
+                                                                  for (int j = 0; j < selectedlist.length; j++) {
+                                                                    if (selectedlist[j] ==
+                                                                        li2.result![k].docNo.toString()) {
+
+
+                                                                      selectedDatalist.add(selectedListModel(
+                                                                          li2.result![k].docNo,
+                                                                          li2.result![k].ticketNo,
+                                                                          li2.result![k].brachName,
+                                                                          TicketStatusCode,
+                                                                          AssignEmpName,
+                                                                          AssignEmpNameCode,
+                                                                          AssignDepartment,
+                                                                          '',
+                                                                          UserID.toString()
+                                                                      ));
+
+                                                                    }
+                                                                  }
+                                                                }
+
+
+                                                                BulkinsertStatusTickets();
+                                                                Navigator.pop(context);
+
+
+                                                              }
+
+
+
+                                                            }else{
+
+
+
+                                                              if (TicketStatus.isEmpty) {
+                                                                Fluttertoast.showToast(
+                                                                    msg: "TicketStatus should not left Empty!!",
+                                                                    toastLength: Toast.LENGTH_LONG,
+                                                                    gravity: ToastGravity.SNACKBAR,
+                                                                    timeInSecForIosWeb: 1,
+                                                                    textColor: Colors.white,
+                                                                    backgroundColor: Colors.red,
+                                                                    fontSize: 16.0);
+                                                              }else{
+
+                                                                print("Empty false");
+                                                                selectedDatalist.clear();
+
+                                                                for (int k = 0; k < li2.result!.length; k++) {
+                                                                  for (int j = 0; j < selectedlist.length; j++) {
+                                                                    if (selectedlist[j] ==
+                                                                        li2.result![k].docNo.toString()) {
+
+
+                                                                      selectedDatalist.add(selectedListModel(
+                                                                          li2.result![k].docNo,
+                                                                          li2.result![k].ticketNo,
+                                                                          li2.result![k].brachName,
+                                                                          TicketStatusCode,
+                                                                          '',
+                                                                          '',
+                                                                          '',
+                                                                          '',
+                                                                          UserID.toString()
+                                                                      ));
+
+                                                                    }
+                                                                  }
+                                                                }
+
+
+                                                                BulkinsertStatusTickets();
+                                                                Navigator.pop(context);
+
+
+                                                              }
+
+                                                            }
+
+                                                            // selectState =
+                                                            // 1;
+                                                            // print(
+                                                            //     selectState);
+                                                            //
+                                                            // insertData();
+                                                            // Navigator.pop(
+                                                            //     context);
+                                                          },
+                                                          icon:
+                                                          Icon(
+                                                            Icons
+                                                                .assignment_turned_in_outlined,
+                                                            color: Colors
+                                                                .white,
+                                                          ),
+                                                          label:
+                                                          Text(
+                                                            'Submit',
+                                                            style: TextStyle(
+                                                                color:
+                                                                Colors.white,
+                                                                fontSize: 12),
+                                                          ),
+                                                          style: TextButton
+                                                              .styleFrom(
+                                                            backgroundColor:
+                                                            Colors.lightGreen,
+                                                            shape:
+                                                            RoundedRectangleBorder(
+                                                              borderRadius:
+                                                              BorderRadius.circular(8.0),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 8,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                });
+
+
+
+                          }
+
+                        }),
+                    IconButton(
+                        icon: const Icon(Icons.cancel),
+                        tooltip: 'Reject All',
+                        onPressed: () {
+
+                          if (selectedlist.length == 0 || selectedlist.length == null) {
+                            showDialogbox(context, "Select Atleast one Ticket!!");
+                          } else {
+                             RejectAll(context);
+                          }
+
+                        }),
+
+
+            /*TextButton(
+
+              style: ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20,color:Colors.green),),
+              onPressed: () {
+                if (li2.result!.length == 0 || li2.result!.length == null) {
+                  showDialogbox(context, "Row Should not Empty");
+                } else {
+
+               //   ApproveAll(context);
+
+                }
+              },
+              child: Text("Approve All"),
+
+            ),
+            TextButton(
+              style: ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20,color:Colors.redAccent,decorationColor:Colors.cyan),),
+              onPressed: () {
+                if (li2.result!.length == 0 || li2.result!.length == null) {
+                  showDialogbox(context, "Row Should not Empty");
+                } else {
+                 // RejectAll(context);
+                }
+              },
+              child: Text("Reject All"),
+            ),*/
+          ],
         ),
-
         body: loading
             ? Center(child: CircularProgressIndicator())
             : SingleChildScrollView(
-
-
           child: Container(
             child: Column(
               children: [
-
 
 
                 Padding(
@@ -424,17 +660,16 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                     }
 
                     setState(() {
-                     if (TicketType.isNotEmpty&&BranchName1.isEmpty&&FilterStatusName.isEmpty){
-                       print("TicketType.isNotEmpty");
+                     if (TicketType.isNotEmpty&&FilterStatusName.isEmpty){
+                       print("TicketType.isNotEmpty && FilterStatusName.isEmpty");
                        getTicketListBasedOnTicketCategory();
-                      } else if(BranchName1.isNotEmpty&&TicketType.isNotEmpty&&FilterStatusName.isEmpty){
-                       print("BranchName1.isNotEmpty&&FilterStatusName"
-                           ".isNotEmpty");
-                       getTicketListBasedOnTicketCategoryandBranch();
+                      } else if(TicketType.isEmpty&&FilterStatusName.isNotEmpty){
+                       print("TicketType.isEmpty&&FilterStatusName.isNotEmpty");
+                       getTicketList1(FilterStatusCode);
 
                      }else {
 
-                       print("Else");
+                       print("TicketType.isNotEmpty&&FilterStatusName.isNotEmpty");
                        getTicketList(FilterStatusCode);
 
 
@@ -448,55 +683,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                 ),
 
 
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text("Select Branch", style: TextStyle(fontWeight:FontWeight.bold)),
-                    ],
-                  ),
-                ),
 
-
-
-                DropdownSearch<String>(
-                  mode: Mode.DIALOG,
-                  showSearchBox: true,
-                  // showClearButton: true,
-
-                  // label: "Select Screen",
-                  items: stringlist5,
-                  onChanged: (val) {
-                    print(val);
-                    for (int kk = 0; kk < li5.result!.length; kk++) {
-                      if (li5.result![kk].branchName == val) {
-                        BranchName1 = li5.result![kk].branchName.toString();
-                        BranchCode = li5.result![kk].branchCode.toString();
-                        setState(() {
-                          print(BranchName1);
-                          //GetMyTablRecord();
-                        });
-                      }
-                    }
-
-                    setState(() {
-
-                      selectedlist.clear();
-
-
-                      if (TicketType.isNotEmpty&&BranchName1.isNotEmpty) {
-                        print("TicketType.isNotEmpty");
-                        getTicketListBasedOnTicketCategoryandBranch();
-                      } else {
-
-                        getTicketList(FilterStatusCode);
-
-                      }
-                    });
-                  },
-                  selectedItem: BranchName1,
-                ),
 
                 Padding(
                   padding: const EdgeInsets.all(8),
@@ -536,9 +723,26 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                             }
                           }
 
-
-
                           setState(() {
+                            if (TicketType.isNotEmpty&&FilterStatusName.isEmpty){
+                              print("TicketType.isNotEmpty && FilterStatusName.isEmpty");
+                              getTicketListBasedOnTicketCategory();
+                            } else if(TicketType.isEmpty&&FilterStatusName.isNotEmpty){
+                              print("TicketType.isEmpty&&FilterStatusName.isNotEmpty");
+                              getTicketList1(FilterStatusCode);
+
+                            }else {
+
+                              print("TicketType.isNotEmpty&&FilterStatusName.isNotEmpty");
+                              getTicketList(FilterStatusCode);
+
+
+                            }
+                          });
+
+
+
+                         /* setState(() {
 
                             selectedlist.clear();
                             if (TicketType.isEmpty) {
@@ -564,7 +768,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                               getTicketList(FilterStatusCode);
 
                             }
-                          });
+                          });*/
                         },
                         selectedItem: FilterStatusName,
                       ),
@@ -632,7 +836,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                                       .contains(value)
 
                               )
-                                li3.add(FilterList2(
+                                li3.add(FilterList4(
 
                                     li2.result![k].createdDate,
                                     li2.result![k].docNo,
@@ -666,7 +870,9 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                                     li2.result![k].solutionProvided,
                                     li2.result![k].endDate,
                                     li2.result![k].startDate,
-                                    li2.result![k].assignEmpcontactNo
+                                    li2.result![k].assignEmpcontactNo,
+                                    li2.result![k].assetName,
+                                    li2.result![k].assetCode
 
                                 ));
                           }
@@ -683,7 +889,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                           if (li2 != null) {
                             li3.clear();
                             for (int k = 0; k < li2.result!.length; k++)
-                              li3.add(FilterList2(
+                              li3.add(FilterList4(
                                   li2.result![k].createdDate,
                                   li2.result![k].docNo,
                                   li2.result![k].brachName,
@@ -716,7 +922,9 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                                   li2.result![k].solutionProvided,
                                   li2.result![k].endDate,
                                   li2.result![k].startDate,
-                                  li2.result![k].assignEmpcontactNo
+                                  li2.result![k].assignEmpcontactNo,
+                                  li2.result![k].assetName,
+                                  li2.result![k].assetCode
                               ));
                           }
                         });
@@ -735,7 +943,12 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                     sortColumnIndex: _currentSortColumn,
                     sortAscending: _isAscending,
                     columns: <DataColumn>[
-
+                      DataColumn(
+                        label: Text(
+                          'View',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
                       if(FilterStatusName=="")DataColumn(
                         label: Text(
                           'TicketType',
@@ -763,7 +976,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                       ),
                       DataColumn(
                         label: Text(
-                          'IssueCategory',
+                          'Issuetype',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -793,6 +1006,19 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
+
+                      if(TicketType=="Assets")DataColumn(
+                        label: Text(
+                          'AssetCode',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      if(TicketType=="Assets")DataColumn(
+                        label: Text(
+                          'AssetName',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
                       DataColumn(
                         label: Text(
                           'RequiredDate',
@@ -805,7 +1031,12 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
-
+                      DataColumn(
+                        label: Text(
+                          'Attachment',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
                       DataColumn(
                         label: Text(
                           'CreatedBy',
@@ -814,29 +1045,68 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                       ),
 
 
-
+                      DataColumn(
+                        label: Text(
+                          'Action',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Reject',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
                     ],
                     rows: li3
                         .map(
                           (list) => DataRow(
-                          // selected: selectedlist.contains(
-                          //     list.docNo.toString()),
-                          // onSelectChanged: (value) {
-                          //   // if (value == true) {
-                          //   //   setState(() {
-                          //   //     selectedlist.add(
-                          //   //         list.docNo.toString());
-                          //   //
-                          //   //   });
-                          //   // } else {
-                          //   //   setState(() {
-                          //   //     selectedlist.remove(
-                          //   //         list.docNo.toString());
-                          //   //   });
-                          //   // }
-                          // },
-                          cells: [
+                          selected: selectedlist.contains(
+                              list.docNo.toString()),
+                          onSelectChanged: (value) {
+                            if (value == true) {
+                              setState(() {
+                                selectedlist.add(
+                                    list.docNo.toString());
 
+                              });
+                            } else {
+                              setState(() {
+                                selectedlist.remove(
+                                    list.docNo.toString());
+                              });
+                            }
+                          },
+                          cells: [
+                            DataCell(
+                              Center(
+                                child: Center(
+                                  child: Wrap(
+                                      direction: Axis
+                                          .vertical, //default
+                                      alignment:
+                                      WrapAlignment.center,
+                                      children: [
+                                        IconButton(
+                                            onPressed: () {
+                                              print(list.docNo);
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (builder) =>
+                                                          BranchAdminWipAssignTicketsDetailsView(
+                                                            draftno:
+                                                            int.parse(list.docNo.toString()),TicketType:list.category.toString(),list2: li3,id:li3.indexOf(list), Branch1:BranchName1
+                                                            /*callback:
+                                                                              getpendingapprovallist*/
+                                                          )));
+                                            },
+                                            icon: Icon(Icons
+                                                .remove_red_eye_outlined))
+                                      ]),
+                                ),
+                              ),
+                            ),
                             if(FilterStatusName=="")DataCell(Text(
                                 list.category.toString(),
                                 textAlign: TextAlign.center)),
@@ -851,7 +1121,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                                 list.priority.toString(),
                                 textAlign: TextAlign.center)),
                             DataCell(Text(
-                                list.issueCatrgory.toString(),
+                                list.issueType.toString(),
                                 textAlign: TextAlign.center)),
                             if(FilterStatusName=="Work IN Progress")DataCell(Text(
                                 list.assignEmpName.toString(),
@@ -892,6 +1162,12 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                             if(TicketType=="Tools")DataCell(Text(
                                 list.itemName.toString(),
                                 textAlign: TextAlign.center)),
+                            if(TicketType=="Assets")DataCell(Text(
+                                list.assetCode.toString(),
+                                textAlign: TextAlign.center)),
+                            if(TicketType=="Assets")DataCell(Text(
+                                list.assetName.toString(),
+                                textAlign: TextAlign.center)),
                             DataCell(Text(
                                 list.requiredDate.toString(),
                                 textAlign: TextAlign.center)),
@@ -909,11 +1185,135 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                                       textAlign:
                                       TextAlign.center)
                                 ])),
+                            DataCell(list.attachFileName.toString()!=null
+                                &&
+                                list.attachFileName.toString().isNotEmpty?Column(
+                              children: [
+                                new TextButton.icon(
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder:
+                                          (BuildContext context) {
+                                        return Center(
+                                          child: Container(
+                                            padding:
+                                            EdgeInsets.all(8),
+                                            color: Colors
+                                                .transparent,
+                                            child:
+                                            SingleChildScrollView(
+                                              child: Column(
+                                                children: [
+                                                  Image
+                                                      .network(
+                                                    AppConstants.LIVE_URL+
+                                                        list.attachFileName.toString(),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        vertical:
+                                                        8.0,
+                                                        horizontal:
+                                                        15),
+                                                    child:
+                                                    TextButton
+                                                        .icon(
+                                                      onPressed:
+                                                          () {
+                                                        Navigator.pop(
+                                                            context);
+                                                      },
+                                                      icon: Icon(
+                                                        Icons
+                                                            .cancel_presentation,
+                                                        color: Colors
+                                                            .white,
+                                                      ),
+                                                      label: Text(
+                                                        'Close',
+                                                        style: TextStyle(
+                                                            color: Colors
+                                                                .white,
+                                                            fontSize:
+                                                            12),
+                                                      ),
+                                                      style: TextButton
+                                                          .styleFrom(
+                                                        backgroundColor:
+                                                        Colors
+                                                            .red,
+                                                        shape:
+                                                        RoundedRectangleBorder(
+                                                          borderRadius:
+                                                          BorderRadius.circular(8.0),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                    print("attachement viewed");
+                                  },
+                                  icon: Icon(
+                                    Icons.attach_file,
+                                    color: Colors.white,
+                                    size: 18,
+                                  ),
+                                  label: Text(
+                                    'Attachment',
+                                    style: TextStyle(color: Colors.white, fontSize: 10),
+                                  ),
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: Colors.blueGrey,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ):Container()),
 
 
-                            DataCell(Text(
-                                list.empName.toString(),
-                                textAlign: TextAlign.center)),
+                            DataCell(Row(
+                              children: [
+                                Text(
+                                    list.empName.toString(),
+                                    textAlign: TextAlign.center),
+                                list.empContactNo.toString()!=null
+                                    &&
+                                    list.empContactNo.toString().length>9?
+                                Center(
+                                    child: InkWell(
+                                      // onTap:() async {
+                                      //   var url='tel:${list.mobileNo}';
+                                      //
+                                      //
+                                      //   await launch(url);
+                                      //
+                                      // },
+                                        child: InkWell(
+                                            onTap: () async {
+                                              var url = 'tel:${list.empContactNo.toString()}';
+
+                                              await launch(url);
+                                            },
+                                            child: Icon(
+                                              Icons.call,
+                                              color: Colors.green,
+                                            )))
+                                ):Container()
+                              ],
+                            )),
 
                             // DataCell(Wrap(
                             //     direction:
@@ -924,7 +1324,560 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                             //           textAlign:
                             //               TextAlign.center)
                             //     ])),
+                            DataCell(
+                              Center(
+                                child: Center(
+                                    child: IconButton(
+                                      icon: Icon(Icons.work_history_rounded),
+                                      color: Colors.green,
+                                      onPressed: () {
 
+                                        showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (BuildContext context) {
+                                              return Padding(
+                                                padding:
+                                                const EdgeInsets.all(1.0),
+                                                child: AlertDialog(
+                                                  content: StatefulBuilder(
+                                                    builder: (BuildContext
+                                                    context,
+                                                        void Function(
+                                                            void Function())
+                                                        setState) {
+                                                      return Container(
+                                                        child:
+                                                        SingleChildScrollView(
+                                                          child: Column(
+                                                            mainAxisSize:
+                                                            MainAxisSize
+                                                                .min, // To make the card compact
+                                                            children: <Widget>[
+                                                              Text("Do You Want to Proceed ?"),
+                                                              SizedBox(height: 5,),
+                                                              FilterStatusName.isNotEmpty?Text("TicketStatus="+FilterStatusName.toString(),style: TextStyle(fontWeight:FontWeight.bold),):Text(list.status!.toLowerCase().toString()=='o'?"TicketStatus=Open".toString():list.status!.toLowerCase().toString()=='p'?"TicketStatus=Work IN Progress":"TicketStatus=Work IN Progress"),
+
+
+
+                                                              Padding(
+                                                                padding: const EdgeInsets.all(8),
+                                                                child: Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                                  children: [
+                                                                    Text("Select Status", style: TextStyle(fontWeight:FontWeight.bold)),
+                                                                  ],
+                                                                ),
+                                                              ),
+
+
+
+                                                              DropdownSearch<String>(
+                                                                mode: Mode.DIALOG,
+                                                                showSearchBox: true,
+                                                                // showClearButton: true,
+
+                                                                // label: "Select Screen",
+                                                                items: stringlist7,
+                                                                onChanged: (val) {
+                                                                  print(val);
+                                                                  for (int kk = 0; kk < li10.result!.length; kk++) {
+                                                                    if (li10.result![kk].statusName == val) {
+                                                                      TicketStatus = li10.result![kk].statusName.toString();
+                                                                      TicketStatusCode = li10.result![kk].statusCode.toString();
+                                                                      setState(() {
+                                                                        print(TicketStatus);
+                                                                        //GetMyTablRecord();
+                                                                      });
+                                                                    }
+                                                                  }
+
+                                                                  if(TicketStatus=="Assign"){
+                                                                    getAssignEmployeeDepartment();
+
+                                                                    setState(() {
+                                                                      ItemVisible=true;
+                                                                    });
+
+
+                                                                  }else{
+                                                                    setState(() {
+                                                                      ItemVisible=false;
+                                                                    });
+                                                                  }
+
+                                                                  setState(() {
+
+                                                                  });
+                                                                },
+                                                                selectedItem: TicketStatus,
+                                                              ),
+
+                                                              Visibility(
+                                                                visible: ItemVisible,
+                                                                child: Column(
+                                                                  children: [
+                                                                    Padding(
+                                                                      padding: const EdgeInsets.all(8),
+                                                                      child: Row(
+                                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                                        children: [
+                                                                          Text("Select Assign Department", style: TextStyle(fontWeight:FontWeight.bold)),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+
+                                                                    DropdownSearch<String>(
+                                                                      mode: Mode.DIALOG,
+                                                                      showSearchBox: true,
+                                                                      // showClearButton: true,
+
+                                                                      // label: "Select Screen",
+                                                                      items: stringlist8,
+                                                                      onChanged: (val) {
+                                                                        print(val);
+                                                                        for (int kk = 0; kk < li11.result!.length; kk++) {
+                                                                          if (li11.result![kk].departmentName == val) {
+                                                                            AssignDepartment = li11.result![kk].departmentName.toString();
+                                                                            AssignDepartmentCode = li11.result![kk].departmentCode.toString();
+                                                                            setState(() {
+                                                                              print(AssignDepartment);
+                                                                              //GetMyTablRecord();
+                                                                            });
+                                                                          }
+                                                                        }
+
+                                                                        setState(() {
+
+                                                                          getAssignEmployeeListBasedOnDepartment(AssignDepartment);
+
+                                                                        });
+                                                                      },
+                                                                      selectedItem: AssignDepartment,
+                                                                    ),
+
+
+                                                                    Padding(
+                                                                      padding: const EdgeInsets.all(8),
+                                                                      child: Row(
+                                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                                        children: [
+                                                                          Text("Select Assign EmpName", style: TextStyle(fontWeight:FontWeight.bold)),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+
+                                                                    DropdownSearch<String>(
+                                                                      mode: Mode.DIALOG,
+                                                                      showSearchBox: true,
+                                                                      // showClearButton: true,
+
+                                                                      // label: "Select Screen",
+                                                                      items: stringlist9,
+                                                                      onChanged: (val) {
+                                                                        print(val);
+                                                                        for (int kk = 0; kk < li12.result!.length; kk++) {
+                                                                          if (li12.result![kk].firstName == val) {
+                                                                            AssignEmpName = li12.result![kk].firstName.toString();
+                                                                            AssignEmpNameCode = li12.result![kk].empID.toString();
+                                                                            setState(() {
+                                                                              print(AssignEmpName);
+                                                                              //GetMyTablRecord();
+                                                                            });
+                                                                          }
+                                                                        }
+
+
+                                                                      },
+                                                                      selectedItem: AssignEmpName,
+                                                                    ),
+                                                                  ],
+                                                                ),
+
+
+
+
+                                                              ),
+
+                                                              SizedBox(
+                                                                  height: 15.0),
+                                                              Row(
+                                                                children: [
+                                                                  SizedBox(
+                                                                    width: 8,
+                                                                  ),
+                                                                  Expanded(
+                                                                    child:
+                                                                    TextButton
+                                                                        .icon(
+                                                                      onPressed:
+                                                                          () {
+                                                                             TicketStatusCode="";
+                                                                             TicketStatus="";
+
+                                                                             AssignDepartment="";
+                                                                             AssignDepartmentCode="";
+
+                                                                             AssignEmpName="";
+                                                                             AssignEmpNameCode="";
+                                                                             ItemVisible=false;
+                                                                        Fluttertoast.showToast(
+                                                                            msg:
+                                                                            "Assign Cancelled!!",
+                                                                            backgroundColor:
+                                                                            Colors.red);
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                        // call();
+                                                                      },
+                                                                      icon:
+                                                                      Icon(
+                                                                        Icons
+                                                                            .cancel,
+                                                                        color: Colors
+                                                                            .white,
+                                                                      ),
+                                                                      label:
+                                                                      Text(
+                                                                        'Cancel',
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                            Colors.white),
+                                                                      ),
+                                                                      style: TextButton
+                                                                          .styleFrom(
+                                                                        backgroundColor:
+                                                                        Colors.red,
+                                                                        shape:
+                                                                        RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(8.0),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 8,
+                                                                  ),
+                                                                  Expanded(
+                                                                    child:
+                                                                    TextButton
+                                                                        .icon(
+                                                                      onPressed:
+                                                                          () {
+
+
+                                                                            if(TicketStatus=="Assign"){
+
+                                                                              if (TicketStatus.isEmpty) {
+                                                                                Fluttertoast.showToast(
+                                                                                    msg: "TicketStatus should not left Empty!!",
+                                                                                    toastLength: Toast.LENGTH_LONG,
+                                                                                    gravity: ToastGravity.SNACKBAR,
+                                                                                    timeInSecForIosWeb: 1,
+                                                                                    textColor: Colors.white,
+                                                                                    backgroundColor: Colors.red,
+                                                                                    fontSize: 16.0);
+                                                                              }else  if (AssignDepartment.isEmpty) {
+                                                                                Fluttertoast.showToast(
+                                                                                    msg: "AssignDepartment should not left Empty!!",
+                                                                                    toastLength: Toast.LENGTH_LONG,
+                                                                                    gravity: ToastGravity.SNACKBAR,
+                                                                                    timeInSecForIosWeb: 1,
+                                                                                    textColor: Colors.white,
+                                                                                    backgroundColor: Colors.red,
+                                                                                    fontSize: 16.0);
+                                                                              }else  if (AssignEmpName.isEmpty) {
+                                                                                Fluttertoast.showToast(
+                                                                                    msg: "AssignEmpName should not left Empty!!",
+                                                                                    toastLength: Toast.LENGTH_LONG,
+                                                                                    gravity: ToastGravity.SNACKBAR,
+                                                                                    timeInSecForIosWeb: 1,
+                                                                                    textColor: Colors.white,
+                                                                                    backgroundColor: Colors.red,
+                                                                                    fontSize: 16.0);
+                                                                              }else{
+
+                                                                                print("Empty true");
+
+
+                                                                                selectedDatalist.clear();
+
+
+                                                                                      selectedDatalist.add(selectedListModel(
+                                                                                          int.tryParse(list.docNo.toString()),
+                                                                                          list.ticketNo,
+                                                                                          list.brachName,
+                                                                                          TicketStatusCode,
+                                                                                          AssignEmpName,
+                                                                                          AssignEmpNameCode,
+                                                                                          AssignDepartment,
+                                                                                          '',
+                                                                                          UserID.toString()
+                                                                                      ));
+
+
+                                                                                BulkinsertStatusTickets();
+                                                                                Navigator.pop(context);
+
+
+                                                                              }
+
+
+
+                                                                            }else{
+
+
+
+                                                                              if (TicketStatus.isEmpty) {
+                                                                                Fluttertoast.showToast(
+                                                                                    msg: "TicketStatus should not left Empty!!",
+                                                                                    toastLength: Toast.LENGTH_LONG,
+                                                                                    gravity: ToastGravity.SNACKBAR,
+                                                                                    timeInSecForIosWeb: 1,
+                                                                                    textColor: Colors.white,
+                                                                                    backgroundColor: Colors.red,
+                                                                                    fontSize: 16.0);
+                                                                              }else{
+
+                                                                                print("Empty false");
+                                                                                selectedDatalist.clear();
+
+
+                                                                                selectedDatalist.add(selectedListModel(
+                                                                                    int.tryParse(list.docNo.toString()),
+                                                                                    list.ticketNo,
+                                                                                    list.brachName,
+                                                                                    TicketStatusCode,
+                                                                                    '',
+                                                                                    '',
+                                                                                    '',
+                                                                                    '',
+                                                                                    UserID.toString()
+                                                                                ));
+
+
+                                                                                BulkinsertStatusTickets();
+                                                                                Navigator.pop(context);
+
+
+                                                                              }
+
+                                                                            }
+
+                                                                        // selectState =
+                                                                        // 1;
+                                                                        // print(
+                                                                        //     selectState);
+                                                                        //
+                                                                        // insertData();
+                                                                        // Navigator.pop(
+                                                                        //     context);
+                                                                      },
+                                                                      icon:
+                                                                      Icon(
+                                                                        Icons
+                                                                            .assignment_turned_in_outlined,
+                                                                        color: Colors
+                                                                            .white,
+                                                                      ),
+                                                                      label:
+                                                                      Text(
+                                                                        'Submit',
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                            Colors.white,
+                                                                            fontSize: 12),
+                                                                      ),
+                                                                      style: TextButton
+                                                                          .styleFrom(
+                                                                        backgroundColor:
+                                                                        Colors.lightGreen,
+                                                                        shape:
+                                                                        RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(8.0),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 8,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                              );
+                                            });
+
+                                        /*showDialog<void>(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          // user must tap button!
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Column(
+                                                children: [
+                                                  Text("Do You Want to Approve ?"),
+
+                                                  Padding(
+                                                    //TextEditingController RemarksController =new TextEditingController();
+                                                    padding: EdgeInsets.all(15),
+                                                    // child: TextField(
+                                                    //   controller: RemarksController,
+                                                    //   decoration: InputDecoration(
+                                                    //     focusedBorder: OutlineInputBorder(
+                                                    //       borderSide:
+                                                    //       BorderSide(color: Colors.green, width: 2.0),
+                                                    //     ),
+                                                    //     enabledBorder: OutlineInputBorder(
+                                                    //       borderSide:
+                                                    //       BorderSide(color: Colors.red, width: 2.0),
+                                                    //     ),
+                                                    //     labelText: 'Remarks',
+                                                    //     prefixIcon: Icon(Icons.receipt_long_outlined),
+                                                    //     hintText: 'Enter Your Remarks',
+                                                    //   ),
+                                                    // ),
+                                                  ),
+                                                ],
+                                              ),
+
+                                              actions: <Widget>[
+
+                                                TextButton(
+                                                  onPressed: () {
+
+                                                    updateTicketStatus(8,int.parse(list.docNo.toString()),list.brachName.toString());
+
+                                                    Navigator.pop(context);
+
+                                                   /* if (RemarksController.text!=""){
+
+                                                      print(uSERID);
+                                                    /*  updateindentlist(
+                                                          int.parse(list.docNo.toString()),
+                                                          "A",
+                                                          RemarksController.text,
+                                                          int.parse(
+                                                              uSERID));*/
+                                                    }else{
+                                                      Fluttertoast.showToast(msg: "Remarks should not be empty");
+                                                    }*/
+                                                  },
+
+                                                  child: const Text('Approve'),
+                                                ),
+
+                                                TextButton(
+                                                  onPressed: (){
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text('Cancel'),
+                                                )
+                                              ],
+                                            );
+                                          },
+                                        );*/
+
+                                      },
+                                    )),
+                              ),
+                            ),
+                            DataCell(
+                              Center(
+                                child: Center(
+                                    child: IconButton(
+                                      icon: Icon(Icons.cancel),
+                                      color: Colors.red,
+                                      onPressed: () {
+                                        RemarksController.text ="";
+                                        print("Pressed");
+                                        showDialog<void>(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          // user must tap button!
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Column(
+                                                children: [
+                                                  Text("Do You Want to Reject ?"),
+                                                  Text("Ticket No ="+list.ticketNo.toString()),
+                                                  SizedBox(height: 5,),
+                                                  Text("TicketStatus="+FilterStatusName.toString(),style: TextStyle(fontWeight:FontWeight.bold),),
+
+                                                  Padding(
+
+                                                    padding: EdgeInsets.all(15),
+                                                    child: TextField(
+                                                      controller: RemarksController,
+                                                      decoration: InputDecoration(
+                                                        focusedBorder: OutlineInputBorder(
+                                                          borderSide:
+                                                          BorderSide(color: Colors.green, width: 2.0),
+                                                        ),
+                                                        enabledBorder: OutlineInputBorder(
+                                                          borderSide:
+                                                          BorderSide(color: Colors.red, width: 2.0),
+                                                        ),
+                                                        labelText: 'Enter Your Remarks',
+                                                        prefixIcon: Icon(Icons.receipt_long_outlined),
+                                                        hintText: 'Enter Your Remarks',
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+
+                                              actions: <Widget>[
+
+                                                TextButton(
+                                                  onPressed: () {
+
+
+
+
+                                                     if (RemarksController.text!=""){
+
+                                                       updateTicketStatus(7,int.parse(list.docNo.toString()),list.brachName.toString());
+
+                                                       Navigator.pop(context);
+
+                                                   /* updateindentlist(
+                                                        int.parse(list.docNo.toString()),
+                                                        "R",
+                                                        RemarksController.text,
+                                                        int.parse(
+                                                            uSERID));*/
+                                                    }else{
+                                                       Fluttertoast.showToast(msg: "Remarks should not be empty");
+                                                     }
+                                                  },
+
+                                                  child: const Text('Reject'),
+                                                ),
+
+                                                TextButton(
+                                                  onPressed: (){
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text('Cancel'),
+                                                )
+                                              ],
+                                            );
+                                          },
+                                        );
+
+                                      },
+                                    )),
+                              ),
+                            ),
                           ]),
                     )
                         .toList(),
@@ -961,7 +1914,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                                   for (int i = (page * 20) - 19;
                                   i < page * 20;
                                   i++) {
-                                    li3.add(FilterList2(
+                                    li3.add(FilterList4(
 
                                         li2.result![i].createdDate,
                                         li2.result![i].docNo,
@@ -995,7 +1948,9 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                                         li2.result![i].solutionProvided,
                                         li2.result![i].endDate,
                                         li2.result![i].startDate,
-                                        li2.result![i].assignEmpcontactNo
+                                        li2.result![i].assignEmpcontactNo,
+                                      li2.result![i].assetName,
+                                      li2.result![i].assetCode
 
                                     ));
                                   }
@@ -1030,7 +1985,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                                   for (int i = (page * 20) - 19;
                                   i < page * 20;
                                   i++) {
-                                    li3.add(FilterList2(
+                                    li3.add(FilterList4(
 
 
                                         li2.result![i].createdDate,
@@ -1065,7 +2020,9 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                                         li2.result![i].solutionProvided,
                                         li2.result![i].endDate,
                                         li2.result![i].startDate,
-                                        li2.result![i].assignEmpcontactNo
+                                        li2.result![i].assignEmpcontactNo,
+                                        li2.result![i].assetName,
+                                        li2.result![i].assetCode
 
                                     ));
                                   }
@@ -1082,128 +2039,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton.extended(
-            onPressed: () async {
-
-              showModalBottomSheet(
-                  context: context,
-                  builder: (BuildContext bc) {
-                    return SafeArea(
-                      child: Container(
-                        child: Wrap(
-                          children: <Widget>[
-                            new ListTile(
-                              // leading: new Icon(Icons.),
-                                title: new Text('Excel'),
-                                onTap: () {
-
-                                  attendanceReport();
-
-
-                                 // generateSalesReportExcel();
-                                  Navigator.of(context).pop();
-                                }),
-                            // new ListTile(
-                            //   // leading: new Icon(Icons.photo_camera),
-                            //   title: new Text('Pdf'),
-                            //   onTap: () {
-                            //     generateSalesReport(context);
-                            //     Navigator.of(context).pop();
-                            //   },
-                            // ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-              );
-
-
-
-              //                Excel excel;
-              //                 excel = Excel.createExcel();
-              //                Sheet sheetObject = excel['Sales Report'];
-              //                sheetObject.appendRow([""]);
-              //                sheetObject.appendRow([""]);
-              //                sheetObject.appendRow(["OrderNo","Name", "GST No","Bill Date","Bill Amount","Advance","Discount", "Balance Receivable"]);
-              //                for(int i=0;i<li6.details.length;i++)
-              //                 sheetObject.appendRow([li6.details[i].orderNo, li6.details[i].name, li6.details[i].invNo,"${DateFormat("hh:mm a, dd-MM-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(li6.details[i].docDate.toString().replaceAll("/Date(", "").replaceAll(")/", ""))))}",li6.details[i].orderPrice,li6.details[i].advanceAmount,li6.details[i].disAmount,"${li6.details[i].orderPrice-li6.details[i].advanceAmount-li6.details[i].disAmount}"]);
-              //
-              //                CellStyle cellStyle = CellStyle(backgroundColorHex: "#1AFF1A", fontFamily : getFontFamily(FontFamily.Calibri));
-              //
-              //                cellStyle.underline = Underline.Single; // or Underline.Double
-              //
-              //
-              //                var cell = sheetObject.cell(CellIndex.indexByString("A3"));
-              //                // cell.value = 8; // dynamic values support provided;
-              //                cell.cellStyle = cellStyle;
-              //                 cell = sheetObject.cell(CellIndex.indexByString("B3"));
-              //                cell.cellStyle = cellStyle;
-              //                cell = sheetObject.cell(CellIndex.indexByString("C3"));
-              //                cell.cellStyle = cellStyle;
-              //                cell = sheetObject.cell(CellIndex.indexByString("D3"));
-              //                cell.cellStyle = cellStyle;
-              //                cell = sheetObject.cell(CellIndex.indexByString("E3"));
-              //                cell.cellStyle = cellStyle;
-              //                cell = sheetObject.cell(CellIndex.indexByString("F3"));
-              //                cell.cellStyle = cellStyle;
-              //                cell = sheetObject.cell(CellIndex.indexByString("G3"));
-              //                cell.cellStyle = cellStyle;
-              //                cell = sheetObject.cell(CellIndex.indexByString("H3"));
-              //                cell.cellStyle = cellStyle;
-              // //                 var sheet = excel['mySheet'];
-              // //
-              // //                 var cell = sheet.cell(CellIndex.indexByString("A1"));
-              // //                 cell.value = "Heya How are you I am fine ok goood night";
-              // //                 cell.cellStyle = cellStyle;
-              // //
-              // //                 var cell2 = sheet.cell(CellIndex.indexByString("E5"));
-              // //                 cell2.value = "Heya How night";
-              // //                 cell2.cellStyle = cellStyle;
-              // //                 /*
-              // // * sheetObject.appendRow(list-iterables);
-              // // * sheetObject created by calling - // Sheet sheetObject = excel['SheetName'];
-              // // * list-iterables === list of iterables
-              // // */
-              // //
-              // //
-              // //
-              // //
-              // //                 /// printing cell-type
-              // //                 print("CellType: " + cell.cellType.toString());
-              //
-              //                 ///
-              //                 ///
-              //                 /// Iterating and changing values to desired type
-              //                 ///
-              //                 ///
-              //                 // for (int row = 0; row < sheet.maxRows; row++) {
-              //                 //   sheet.row(row).forEach((cell1) {
-              //                 //     if (cell1 != null) {
-              //                 //       cell1.value = ' My custom Value ';
-              //                 //     }
-              //                 //   });
-              //                 // }
-              //
-              //                 var fileBytes = excel.save();
-              //                 var tempDir;
-              //                 if (Platform.isAndroid) {
-              //                   tempDir = await getTemporaryDirectory();
-              //                   // Android-specific code
-              //                 } else {
-              //                   tempDir = await getApplicationDocumentsDirectory();
-              //                   // iOS-specific code
-              //                 }
-              //                 String tempPath = tempDir.path;
-              //                 print("$tempPath/text.xlsx");
-              //                 File(join("$tempPath/text.xlsx"))
-              //                   ..createSync(recursive: true)
-              //                   ..writeAsBytesSync(fileBytes);
-            },
-            icon: Icon(Icons.download_outlined),
-            backgroundColor: String_Values.primarycolor,
-            label: Text("Download")));
-
+      );
 
   }
 
@@ -1364,7 +2200,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
 
       getOpenTickets();
 
-      gettickettype().then((value) => getBranchList()).then((value) => getTicketStatusList()).then((value) => getTicketStatusfilterList());
+      gettickettype().then((value) => getTicketStatusList()).then((value) => getTicketStatusfilterList());
     });
   }
 
@@ -1450,86 +2286,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
     }
   }
 
-  Future<http.Response> getBranchList() async {
 
-    print("getBranchList is called");
-    var headers = {"Content-Type": "application/json"};
-    var body = {
-      "FormID": 10,
-      "UserID": "",
-      "Password": "",
-      "Branch": "",
-      "DataBase":""
-    };
-
-    print(body);
-    setState(() {
-      loading = true;
-    });
-    try {
-      final response = await http.post(
-          Uri.parse(AppConstants.LIVE_URL + 'JasperLogin'),
-          body: jsonEncode(body),
-          headers: headers);
-      print(AppConstants.LIVE_URL + 'JasperLogin');
-      print(response.body);
-      setState(() {
-        loading = false;
-      });
-      if (response.statusCode == 200) {
-
-        if (jsonDecode(response.body)["status"].toString() == "0") {
-
-        }else if (json.decode(response.body)["status"] == "0" &&
-            jsonDecode(response.body)["result"].toString() == []) {
-
-        } else if (json.decode(response.body)["status"] == 1 &&
-            jsonDecode(response.body)["result"].toString() == "[]") {
-
-        }else{
-
-          li5 = BranchMasterModel.fromJson(jsonDecode(response.body));
-
-          for(int i=0;i<li5.result!.length;i++);
-          print(li5.result!.length.toString());
-
-          setState(() {
-            stringlist5.clear();
-            stringlist5.add("Select Branch");
-            for (int i = 0; i < li5.result!.length; i++)
-              stringlist5.add(li5.result![i].branchName.toString());
-          });
-
-          setState(() {
-            loading = false;
-          });
-
-
-        }
-
-      } else {
-        showDialogbox(this.context, "Failed to Login API");
-      }
-      return response;
-    } on SocketException {
-      setState(() {
-        loading = false;
-        showDialog(
-            context: this.context,
-            builder: (_) => AlertDialog(
-                backgroundColor: Colors.black,
-                title: Text(
-                  "No Response!..",
-                  style: TextStyle(color: Colors.purple),
-                ),
-                content: Text(
-                  "Slow Server Response or Internet connection",
-                  style: TextStyle(color: Colors.white),
-                )));
-      });
-      throw Exception('Internet is down');
-    }
-  }
 
 
    Future<http.Response> getTicketStatusList() async {
@@ -1862,7 +2619,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
     var headers = {"Content-Type": "application/json"};
     var body = {
       "TicketCategory": TicketType.toString(),
-      "BrachName": BranchName1.toString(),
+      "BranchCode": branchID.toString(),
       "Status":FilterStatusCode.toString()
     };
 
@@ -1911,7 +2668,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
           li3.removeRange(0, li3.length);
 
           for (int k = 0; k < li2.result!.length; k++) {
-            li3.add(FilterList2(
+            li3.add(FilterList4(
 
                 li2.result![k].createdDate,
                 li2.result![k].docNo,
@@ -1945,7 +2702,9 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                 li2.result![k].solutionProvided,
                 li2.result![k].endDate,
                 li2.result![k].startDate,
-                li2.result![k].assignEmpcontactNo
+                li2.result![k].assignEmpcontactNo,
+                li2.result![k].assetName,
+                li2.result![k].assetCode
 
             ));
 
@@ -2017,12 +2776,13 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
   }
 
 
-   Future<http.Response> getTicketListBasedOnTicketCategory() async {
+   Future<http.Response> getTicketList1(FilterStatusCode) async {
 
-     print("getTicketListBasedOnTicketCategory is called");
+     print("getTicketList is called");
      var headers = {"Content-Type": "application/json"};
      var body = {
-       "TicketCategory": TicketType.toString(),
+       "BranchCode": branchID.toString(),
+       "Status":FilterStatusCode.toString()
      };
 
      print(body);
@@ -2031,10 +2791,10 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
      });
      try {
        final response = await http.post(
-           Uri.parse(AppConstants.LIVE_URL + 'getOpenTicketsBasedOnCategory'),
+           Uri.parse(AppConstants.LIVE_URL + 'getWipcustTckttoAsignnew1'),
            body: jsonEncode(body),
            headers: headers);
-       print(AppConstants.LIVE_URL + 'getOpenTicketsBasedOnCategory');
+       print(AppConstants.LIVE_URL + 'getWipcustTckttoAsignnew1');
        print(response.body);
        setState(() {
          loading = false;
@@ -2070,7 +2830,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
            li3.removeRange(0, li3.length);
 
            for (int k = 0; k < li2.result!.length; k++) {
-             li3.add(FilterList2(
+             li3.add(FilterList4(
 
                  li2.result![k].createdDate,
                  li2.result![k].docNo,
@@ -2104,7 +2864,9 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                  li2.result![k].solutionProvided,
                  li2.result![k].endDate,
                  li2.result![k].startDate,
-                 li2.result![k].assignEmpcontactNo
+                 li2.result![k].assignEmpcontactNo,
+                 li2.result![k].assetName,
+                 li2.result![k].assetCode
 
              ));
 
@@ -2115,6 +2877,8 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
 
            print("SumQty"+SumQty.toString());
            setState(() {
+
+
 
            });
 
@@ -2174,13 +2938,145 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
    }
 
 
+   Future<http.Response> getTicketListBasedOnTicketCategory() async {
+
+     print("getTicketListBasedOnTicketCategory is called");
+     var headers = {"Content-Type": "application/json"};
+     var body = {
+       "TicketCategory": TicketType.toString(),
+       "BranchCode":branchID.toString()
+     };
+
+     print(body);
+     setState(() {
+       loading = true;
+     });
+     try {
+       final response = await http.post(
+           Uri.parse(AppConstants.LIVE_URL + 'getBranchAdminOpenTicketsBasedOnCategory'),
+           body: jsonEncode(body),
+           headers: headers);
+       print(AppConstants.LIVE_URL + 'getBranchAdminOpenTicketsBasedOnCategory');
+       print(response.body);
+       setState(() {
+         loading = false;
+       });
+       if (response.statusCode == 200) {
+
+         var isdata = json.decode(response.body)["status"] == 0;
+         print(isdata);
+         if (isdata) {
+           ScaffoldMessenger.of(this.context)
+               .showSnackBar(SnackBar(content: Text("No Records Found!!")));
+           print('No Records Found!!');
+           // CustomerTicketsModel li2 =CustomerTicketsModel(result: []);
+
+           SumQty =0;
+
+           li2.result!.clear();
+
+         } else {
+
+           print(AppConstants.LIVE_URL + 'getWipcustTckttoAsignnew');
+           print(body);
+           print(response.body);
+
+           li2 = CustomerTicketsModel.fromJson(jsonDecode(response.body));
+
+           if (li2.result!.length % 20 == 0)
+             totalpages = (li2.result!.length / 20).floor();
+           else
+             totalpages = (li2.result!.length / 20).floor() + 1;
+           print(totalpages);
+
+           li3.removeRange(0, li3.length);
+
+           for (int k = 0; k < li2.result!.length; k++) {
+             li3.add(FilterList4(
+
+                 li2.result![k].createdDate,
+                 li2.result![k].docNo,
+                 li2.result![k].brachName,
+                 li2.result![k].branchCode,
+                 li2.result![k].issueCatrgory,
+                 li2.result![k].issueCategoryId,
+                 li2.result![k].itemName,
+                 li2.result![k].itemCode,
+                 li2.result![k].issueType,
+                 li2.result![k].requiredDate,
+                 li2.result![k].description,
+                 li2.result![k].attachFilePath,
+                 li2.result![k].attachFileName,
+                 li2.result![k].status,
+                 li2.result![k].closedDate,
+                 li2.result![k].empName,
+                 li2.result![k].empContactNo,
+                 li2.result![k].empMailid,
+                 li2.result![k].rejectRemarks,
+                 li2.result![k].createdAt,
+                 li2.result![k].updatedAt,
+                 li2.result![k].priority,
+                 li2.result![k].category,
+                 li2.result![k].modifiedDate,
+                 li2.result![k].assignStatus,
+                 li2.result![k].ticketNo,
+                 li2.result![k].assignEmpName,
+                 li2.result![k].assignEmpId,
+                 li2.result![k].assignEmpDept,
+                 li2.result![k].solutionProvided,
+                 li2.result![k].endDate,
+                 li2.result![k].startDate,
+                 li2.result![k].assignEmpcontactNo,
+                 li2.result![k].assetName,
+                 li2.result![k].assetCode
+
+             ));
+
+             li3.length==""?  SumQty =0:  SumQty =li3.length.toInt();
+
+           }
+
+
+           print("SumQty"+SumQty.toString());
+           setState(() {
+
+           });
+
+         }
+
+
+       } else {
+         showDialogbox(this.context, "Failed to Login API");
+       }
+       return response;
+     } on SocketException {
+       setState(() {
+         loading = false;
+         showDialog(
+             context: this.context,
+             builder: (_) => AlertDialog(
+                 backgroundColor: Colors.black,
+                 title: Text(
+                   "No Response!..",
+                   style: TextStyle(color: Colors.purple),
+                 ),
+                 content: Text(
+                   "Slow Server Response or Internet connection",
+                   style: TextStyle(color: Colors.white),
+                 )));
+       });
+       throw Exception('Internet is down');
+     }
+   }
+
+
    Future<http.Response> getTicketListBasedOnTicketCategoryandBranch() async {
 
      print("getTicketListBasedOnTicketCategoryandBranch is called");
      var headers = {"Content-Type": "application/json"};
      var body = {
        "TicketCategory": TicketType.toString(),
-       "BrachName": BranchName1.toString(),
+       "BrachName": branch.toString(),
      };
 
      print(body);
@@ -2228,7 +3124,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
            li3.removeRange(0, li3.length);
 
            for (int k = 0; k < li2.result!.length; k++) {
-             li3.add(FilterList2(
+             li3.add(FilterList4(
 
                  li2.result![k].createdDate,
                  li2.result![k].docNo,
@@ -2262,7 +3158,9 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                  li2.result![k].solutionProvided,
                  li2.result![k].endDate,
                  li2.result![k].startDate,
-                 li2.result![k].assignEmpcontactNo
+                 li2.result![k].assignEmpcontactNo,
+                 li2.result![k].assetName,
+                 li2.result![k].assetCode
 
              ));
 
@@ -2338,7 +3236,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
      var headers = {"Content-Type": "application/json"};
      var body = {
        "TicketCategory": TicketType.toString(),
-       "BrachName": BranchName1.toString(),
+       "BranchCode": branchID.toString(),
      };
 
      print(body);
@@ -2347,10 +3245,10 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
      });
      try {
        final response = await http.post(
-           Uri.parse(AppConstants.LIVE_URL + 'getOpenTickets'),
+           Uri.parse(AppConstants.LIVE_URL + 'getOpenTicketsforbranchAdmin'),
            body: jsonEncode(body),
            headers: headers);
-       print(AppConstants.LIVE_URL + 'getOpenTickets');
+       print(AppConstants.LIVE_URL + 'getOpenTicketsforbranchAdmin');
        print(response.body);
        setState(() {
          loading = false;
@@ -2386,7 +3284,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
            li3.removeRange(0, li3.length);
 
            for (int k = 0; k < li2.result!.length; k++) {
-             li3.add(FilterList2(
+             li3.add(FilterList4(
 
                  li2.result![k].createdDate,
                  li2.result![k].docNo,
@@ -2420,7 +3318,9 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                  li2.result![k].solutionProvided,
                  li2.result![k].endDate,
                  li2.result![k].startDate,
-                 li2.result![k].assignEmpcontactNo
+                 li2.result![k].assignEmpcontactNo,
+                 li2.result![k].assetName,
+                 li2.result![k].assetCode
 
              ));
 
@@ -2727,7 +3627,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                               '',
                               '',
                               '',
-                              ''
+                                UserID.toString()
                             ));
 
                           }
@@ -2800,7 +3700,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                               '',
                               '',
                               _textFieldController.text.toString(),
-                              ''
+                              UserID.toString()
                           ));
 
                         }
@@ -3116,7 +4016,7 @@ class selectedListModel {
   }
 }
 
-class FilterList2 {
+class FilterList4 {
   String? createdDate;
   int? docNo;
   String? brachName;
@@ -3150,7 +4050,9 @@ class FilterList2 {
   String? endDate;
   String? startDate;
   String? assignEmpcontactNo;
-  FilterList2(
+  String? assetName;
+  String? assetCode;
+  FilterList4(
       this.createdDate,
       this.docNo,
       this.brachName,
@@ -3183,7 +4085,9 @@ class FilterList2 {
       this.solutionProvided,
       this.endDate,
       this.startDate,
-      this.assignEmpcontactNo
+      this.assignEmpcontactNo,
+      this.assetName,
+      this.assetCode
       );
 }
 

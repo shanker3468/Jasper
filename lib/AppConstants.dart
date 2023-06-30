@@ -10,7 +10,7 @@ class AppConstants {
  // static String LIVE_URL = "http://106.51.48.63:4207/";
 
   // for Live 4205//
- static String LIVE_URL = "http://14.98.224.37:5201/";
+ static String LIVE_URL = "http://mob.Indusnovateur.in:5201/";
 
 
   //////////////////////////////////////////////////////

@@ -7,6 +7,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:jasper/Admin/WipAssignTickets.dart';
 import 'package:jasper/Admin/master_screens.dart';
+import 'package:jasper/BranchAdminScreens/BranchAdminWipAssignTickets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,20 +18,19 @@ import '../LoginPage.dart';
 import '../ServiceStation/reports.dart';
 import '../String_Values.dart';
 import '../ServiceStation/TicketCreation.dart';
-import 'AdminReport_dashboard.dart';
-import 'AllAssignTickets.dart';
-import 'ApprovedAssignTickets.dart';
-import 'AssignTickets.dart';
+import 'BranchAdminAllAssignTickets.dart';
+import 'BranchAdminReport_dashboard.dart';
 
 
-class AdminDashBoard extends StatefulWidget {
-  const AdminDashBoard({Key? key}) : super(key: key);
+
+class BranchAdminDashBoard extends StatefulWidget {
+  const BranchAdminDashBoard({Key? key}) : super(key: key);
 
   @override
-  State<AdminDashBoard> createState() => _AdminDashBoardState();
+  State<BranchAdminDashBoard> createState() => _BranchAdminDashBoardState();
 }
 
-class _AdminDashBoardState extends State<AdminDashBoard> {
+class _BranchAdminDashBoardState extends State<BranchAdminDashBoard> {
   int _current = 0;
 
   int sapbone = 0;
@@ -87,8 +87,7 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
     print("getOpenTickets is called");
     var headers = {"Content-Type": "application/json"};
     var body = {
-      "TicketCategory": "".toString(),
-      "BrachName": "".toString(),
+      "BranchCode": branchID.toString(),
     };
 
     print(body);
@@ -97,10 +96,10 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
     });
     try {
       final response = await http.post(
-          Uri.parse(AppConstants.LIVE_URL + 'getOpenTickets'),
+          Uri.parse(AppConstants.LIVE_URL + 'getOpenTicketsforbranchAdmin'),
           body: jsonEncode(body),
           headers: headers);
-      print(AppConstants.LIVE_URL + 'getOpenTickets');
+      print(AppConstants.LIVE_URL + 'getOpenTicketsforbranchAdmin');
       print(response.body);
       setState(() {
         loading = false;
@@ -114,12 +113,13 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
               .showSnackBar(SnackBar(content: Text("No Records Found!!")));
           print('No Records Found!!');
           // CustomerTicketsModel li2 =CustomerTicketsModel(result: []);
+          sapbone=0;
 
 
 
         } else {
 
-          print(AppConstants.LIVE_URL + 'getWipcustTckttoAsignnew');
+          print(AppConstants.LIVE_URL + 'getOpenTicketsforbranchAdmin');
           print(body);
           print(response.body);
 
@@ -233,7 +233,7 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                     ),
                   ),
                   Text(' ${
-                      Location.toString()}',
+                      BranchName.toString()}',
                     style: TextStyle(fontWeight: FontWeight.w900,fontStyle:FontStyle.italic,color: Colors.indigo,fontSize: 15),
 
                   ),
@@ -803,7 +803,7 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
-                                                    builder: (context) => WIP_Assign_Tickets( status:"1",Tickettype:'',BranchName:''
+                                                    builder: (context) => BranchAdminWIP_Assign_Tickets( status:"1",Tickettype:'',BranchName:''
 
                                                     ),
                                                   ),
@@ -854,7 +854,7 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                                               ),
                                             ),
 
-                                            SizedBox(
+                                            /*SizedBox(
                                               height: height / 50,
                                             ),
 
@@ -877,7 +877,7 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                                                       color: String_Values.primarycolor),
                                                 ),
                                               ),
-                                            ),
+                                            ),*/
 
                                             /*SizedBox(height: height/50,),
 
@@ -907,7 +907,7 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                                             GestureDetector(
                                               onTap: (){
                                                 Navigator.pop(context);
-                                                Navigator.push(context,MaterialPageRoute(builder: (context)=>AllAssign_Tickets(status:"1",Tickettype:'',BranchName:'')));
+                                                Navigator.push(context,MaterialPageRoute(builder: (context)=>BranchAdminAllAssign_Tickets(status:"1",Tickettype:'',BranchName:'')));
                                               },
                                               child: Container(
                                                 height: 50,
@@ -991,9 +991,9 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                           InkWell(
                             onTap: () {
 
-                              //logoutfunction(context);
+
                               Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) => AdminReportDashboard()));
+                                  MaterialPageRoute(builder: (context) => BranchAdminReportDashboard()));
                             },
                             child: Card(
                               shape: RoundedRectangleBorder(

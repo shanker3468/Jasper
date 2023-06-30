@@ -133,13 +133,13 @@ class _ReportsDashBoardState extends State<ReportsDashBoard> {
                     decoration: new BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(25)),
                         color: Colors.white,
-                        /*gradient: LinearGradient(
+                        gradient: LinearGradient(
                             colors: [
-                              Colors.cyanAccent.withOpacity(0.3),
-                              Colors.black12.withOpacity(0.1)
+                              Colors.red,
+                              Colors.redAccent
                             ],
-                          ),*/
-                        border: new Border.all(color: Colors.indigo)),
+                          ),
+                        border: new Border.all(color: Colors.white12)),
                     child: loading != true
                         ? Center(
                             child: Text(
@@ -147,7 +147,7 @@ class _ReportsDashBoardState extends State<ReportsDashBoard> {
                               style: TextStyle(
                                   fontWeight: FontWeight.normal,
                                   fontSize: 13,
-                                  color: Colors.deepPurple),
+                                  color: Colors.white),
                             ),
                           )
                         : Padding(

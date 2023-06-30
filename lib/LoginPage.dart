@@ -6,12 +6,15 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:jasper/Admin/AdminDashBoard.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:unique_identifier/unique_identifier.dart';
 
 
+import 'Admin/SuperAdminDashBoard.dart';
 import 'AppConstants.dart';
+
+import 'BranchAdminScreens/BranchAdminDashBoard.dart';
 import 'DashBoard.dart';
 import 'package:http/http.dart' as http;
 
@@ -91,7 +94,9 @@ class LoginPageState extends State<LoginPage> {
           body: jsonEncode(body),
           headers: headers);
       print(AppConstants.LIVE_URL + 'JasperLogin');
+      print(response.statusCode);
       print(response.body);
+      print(response.statusCode);
       setState(() {
         loading = false;
       });
@@ -160,11 +165,18 @@ class LoginPageState extends State<LoginPage> {
           print("Acdmin?User="+loginModel.result![0].adminUser.toString());
 
 
-          if(loginModel.result![0].adminUser.toString()=='S'){
+          if(loginModel.result![0].adminUser.toString()=='SA'){
 
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => AdminDashBoard()),
+              MaterialPageRoute(builder: (context) => SuperAdminDashBoard()),
+            );
+
+          }else   if(loginModel.result![0].adminUser.toString()=='S'){
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => BranchAdminDashBoard()),
             );
 
           }else {

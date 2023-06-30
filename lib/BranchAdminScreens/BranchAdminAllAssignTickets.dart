@@ -16,8 +16,7 @@ import '../ADMIN Models/CustomerTicketsModel.dart';
 import '../ADMIN Models/WeekUpdateAdminModel.dart';
 import '../AppConstants.dart';
 import '../Model/TicketTypeModel.dart';
-import 'SuperAdminDashBoard.dart';
-import 'AssignTickets_DetailsView.dart';
+
 
 
 class MuliselectList {
@@ -30,18 +29,18 @@ class MuliselectList {
   });
 }
 
-class AllAssign_Tickets extends StatefulWidget {
-   AllAssign_Tickets({ Key? key, required  String this.status,required String this.Tickettype,required String this.BranchName}) : super(key: key);
+class BranchAdminAllAssign_Tickets extends StatefulWidget {
+   BranchAdminAllAssign_Tickets({ Key? key, required  String this.status,required String this.Tickettype,required String this.BranchName}) : super(key: key);
 
   String status;
   String BranchName;
    String Tickettype;
 
   @override
-  AllAssign_TicketsState createState() => AllAssign_TicketsState();
+  BranchAdminAllAssign_TicketsState createState() => BranchAdminAllAssign_TicketsState();
 }
 
-class AllAssign_TicketsState extends State<AllAssign_Tickets> {
+class BranchAdminAllAssign_TicketsState extends State<BranchAdminAllAssign_Tickets> {
  // ApprovalPendingModel li2;
 
    TicketTypeModel li4=TicketTypeModel(result: []);
@@ -135,7 +134,7 @@ class AllAssign_TicketsState extends State<AllAssign_Tickets> {
       //  backgroundColor: Colors.indigo,
         appBar: AppBar(
 
-          title: Text('weekly Updation'),
+          title: Text('weekly Updation '),
 
         ),
         body: loading
@@ -149,7 +148,7 @@ class AllAssign_TicketsState extends State<AllAssign_Tickets> {
 
 
 
-                Padding(
+                /*Padding(
                   padding: const EdgeInsets.all(8),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -199,7 +198,7 @@ class AllAssign_TicketsState extends State<AllAssign_Tickets> {
                     });
                   },
                   selectedItem: BranchName1,
-                ),
+                ),*/
 
                 Card(
                   child: new ListTile(
@@ -1143,6 +1142,8 @@ class AllAssign_TicketsState extends State<AllAssign_Tickets> {
   void getStringValuesSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
+
+
     setState(() {
       UserID = prefs.getString('UserID').toString();
       UserName = prefs.getString('UserName').toString();
@@ -1153,9 +1154,7 @@ class AllAssign_TicketsState extends State<AllAssign_Tickets> {
       Location = prefs.getString('Location').toString();
       EmpGroup=prefs.getString('EmpGroup').toString();
 
-      getTicketListforAllBranch();
-
-      gettickettype().then((value) => getBranchList());
+      getTicketList();
     });
   }
 
@@ -1406,7 +1405,7 @@ class AllAssign_TicketsState extends State<AllAssign_Tickets> {
     print("getTicketList is called");
     var headers = {"Content-Type": "application/json"};
     var body = {
-      "BranchCode": BranchCode.toString(),
+      "BranchCode": branchID.toString(),
     };
 
     print(body);

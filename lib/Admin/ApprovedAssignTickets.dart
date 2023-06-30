@@ -17,7 +17,7 @@ import '../ADMIN Models/CustomerTicketsModel.dart';
 import '../ADMIN Models/TicketStatusModel.dart';
 import '../AppConstants.dart';
 import '../Model/TicketTypeModel.dart';
-import 'AdminDashBoard.dart';
+import 'SuperAdminDashBoard.dart';
 import 'ApprovedAssignTickets_DetailsView.dart';
 import 'AssignTickets_DetailsView.dart';
 

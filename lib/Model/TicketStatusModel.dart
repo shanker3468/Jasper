@@ -58,6 +58,10 @@ class Result {
   String? endDate;
   String? startDate;
   String? assignEmpcontactNo;
+  String? empGroup;
+  String? empID;
+  String? assetName;
+  String? assetCode;
 
   Result(
       {this.docNo,
@@ -92,7 +96,11 @@ class Result {
         this.solutionProvided,
         this.endDate,
         this.startDate,
-        this.assignEmpcontactNo
+        this.assignEmpcontactNo,
+        this.empGroup,
+        this.empID,
+        this.assetName,
+        this.assetCode
       });
 
   Result.fromJson(Map<String, dynamic> json) {
@@ -129,6 +137,10 @@ class Result {
     endDate = json['EndDate'];
     startDate = json['StartDate'];
     assignEmpcontactNo = json['AssignEmpcontactNo'];
+    empGroup = json['EmpGroup'];
+    empID = json['EmpID'];
+    assetName = json['AssetName'];
+    assetCode = json['AssetCode'];
   }
 
   Map<String, dynamic> toJson() {
@@ -166,6 +178,10 @@ class Result {
     data['EndDate'] = this.endDate;
     data['StartDate'] = this.startDate;
     data['AssignEmpcontactNo'] = this.assignEmpcontactNo;
+    data['EmpGroup'] = this.empGroup;
+    data['EmpID'] = this.empID;
+    data['AssetName'] = this.assetName;
+    data['AssetCode'] = this.assetCode;
     return data;
   }
 }

@@ -27,18 +27,18 @@ import '../String_Values.dart';
 
 
 
-class AdminTicketReports extends StatefulWidget {
-   AdminTicketReports({ Key? key, required  String this.getScreenName,required String this.getTicketType}) : super(key: key);
+class SuperAdminAllTicketReports extends StatefulWidget {
+   SuperAdminAllTicketReports({ Key? key, required  String this.getScreenName,required String this.getTicketType}) : super(key: key);
 
   String getScreenName;
   String getTicketType;
 
 
   @override
-  AdminTicketReportsState createState() => AdminTicketReportsState();
+  SuperAdminAllTicketReportsState createState() => SuperAdminAllTicketReportsState();
 }
 
-class AdminTicketReportsState extends State<AdminTicketReports> {
+class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> {
  // ApprovalPendingModel li2;
 
    TicketTypeModel li4=TicketTypeModel(result: []);
@@ -602,7 +602,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                     setState(() {
 
 
-                      AdminFilterAPI(1);
+                      AdminFilterAPI(4);
                      // if (TicketType.isNotEmpty&&BranchName1.isEmpty&&FilterStatusName.isEmpty){
                      //   print("TicketType.isNotEmpty");
                      //   getTicketListBasedOnTicketCategory();
@@ -716,7 +716,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
 
                           setState(() {
 
-                            AdminFilterAPI(1);
+                            AdminFilterAPI(4);
                             // if (TicketType.isNotEmpty&&BranchName1.isEmpty&&FilterStatusName.isEmpty){
                             //   print("TicketType.isNotEmpty");
                             //   getTicketListBasedOnTicketCategory();
@@ -899,7 +899,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                   scrollDirection: Axis.horizontal,
                   child: li2.result!.length>0
                       ? DataTable(
-                    columnSpacing: 10.0,
+                    columnSpacing: 20.0,
                     headingRowColor:
                     MaterialStateProperty.all(Colors.blue),
                     sortColumnIndex: _currentSortColumn,
@@ -908,7 +908,13 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
 
                       if(FilterStatusName=="")DataColumn(
                         label: Text(
-                          'TicType',
+                          'Tic Type',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Tic Status',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -1011,8 +1017,12 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                                 list.category.toString(),
                                 textAlign: TextAlign.center)),
                             DataCell(Text(
+                                list.status!.toLowerCase().toString()=='t'?"ThirdParty".toString():list.status!.toLowerCase().toString()=='q'?"Quotation":list.status!.toLowerCase().toString()=='o'?"Open":list.status!.toLowerCase().toString()=='p'?"Work IN Progress":list.status!.toLowerCase().toString()=='r'?"Reject":list.status!.toLowerCase().toString()=='a'?"Approved":list.status!.toLowerCase().toString()=='c'?"Closed":"Re-Open",
+                                textAlign: TextAlign.center)),
+                            DataCell(Text(
                                 list.ticketNo.toString(),
                                 textAlign: TextAlign.center)),
+
                             DataCell(Text(
                                 list.brachName.toString(),
                                 textAlign: TextAlign.center)),
@@ -1071,6 +1081,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                             DataCell(Text(
                                 list.empName.toString(),
                                 textAlign: TextAlign.center)),
+
                             DataCell(Wrap(
                                 direction:
                                 Axis.vertical, //default
@@ -1535,7 +1546,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
       Location = prefs.getString('Location').toString();
       EmpGroup=prefs.getString('EmpGroup').toString();
 
-      AdminFilterAPI(1);
+      AdminFilterAPI(4);
 
       gettickettype().then((value) => getBranchList()).then((value) => getTicketStatusList()).then((value) => getTicketStatusfilterList());
     });

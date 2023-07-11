@@ -38,6 +38,8 @@ class Result {
   String? modifiedDate;
   String? empGroup;
   String? empID;
+  String? branchCategory;
+  String? vechileType;
 
   Result(
       {this.createdDate,
@@ -52,10 +54,13 @@ class Result {
         this.empMailid,
         this.modifiedDate,
         this.empGroup,
-        this.empID});
+        this.empID,
+        this.branchCategory,
+        this.vechileType
+      });
 
   Result.fromJson(Map<String, dynamic> json) {
-    createdDate = json['CreatedDate'];
+    createdDate = json['CreatedDate1'];
     docNo = json['DocNo'];
     brachName = json['BrachName'];
     branchCode = json['BranchCode'];
@@ -68,11 +73,13 @@ class Result {
     modifiedDate = json['ModifiedDate'];
     empGroup = json['EmpGroup'];
     empID = json['EmpID'];
+    branchCategory = json['BranchCategory'];
+    vechileType = json['VechileType'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['CreatedDate'] = this.createdDate;
+    data['CreatedDate1'] = this.createdDate;
     data['DocNo'] = this.docNo;
     data['BrachName'] = this.brachName;
     data['BranchCode'] = this.branchCode;
@@ -85,6 +92,8 @@ class Result {
     data['ModifiedDate'] = this.modifiedDate;
     data['EmpGroup'] = this.empGroup;
     data['EmpID'] = this.empID;
+    data['BranchCategory'] = this.branchCategory;
+    data['VechileType'] = this.vechileType;
     return data;
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -116,6 +117,14 @@ class BranchAdminAllAssign_TicketsState extends State<BranchAdminAllAssign_Ticke
     locale: 'HI',
     symbol: "",
   );
+
+
+
+   TextEditingController EndDateController = new TextEditingController();
+   TextEditingController StartDateController = new TextEditingController();
+
+   late  String dateupload="";
+   late  String dateupload1="";
   @override
   void initState() {
     getStringValuesSF();
@@ -124,6 +133,17 @@ class BranchAdminAllAssign_TicketsState extends State<BranchAdminAllAssign_Ticke
     //   getTicketList1();
     // }
   }
+
+
+   Future<bool> check() async {
+     var connectivityResult = await (Connectivity().checkConnectivity());
+     if (connectivityResult == ConnectivityResult.mobile) {
+       return true;
+     } else if (connectivityResult == ConnectivityResult.wifi) {
+       return true;
+     }
+     return false;
+   }
 
   @override
   Widget build(BuildContext context) {
@@ -143,6 +163,141 @@ class BranchAdminAllAssign_TicketsState extends State<BranchAdminAllAssign_Ticke
           child: Container(
             child: Column(
               children: [
+
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text("Select Date", style: TextStyle(fontWeight:FontWeight.bold)),
+                    ],
+                  ),
+                ),
+
+                Row(
+                  mainAxisAlignment:
+                  MainAxisAlignment.spaceAround,
+                  children: [
+                    Container(
+                        height: 55,
+                        width: width / 2.2,
+                        child: TextField(
+                          onTap: () async {
+                            DateTime? date = DateTime(1900);
+                            FocusScope.of(context)
+                                .requestFocus(new FocusNode());
+
+                            date = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime.now()
+                                    .subtract(new Duration(
+                                    days: 365 * 120)),
+                                lastDate: DateTime.now().add(
+                                    new Duration(days: 365)));
+                            dateupload =  date!.month.toString().padLeft(2, "0")+'/'+
+                                date.day
+                                    .toString()
+                                    .padLeft(2, "0")+'/'+date.year.toString() ;
+
+                            print("dateupload"+dateupload.toString());
+
+                            StartDateController.text = date!.day
+                                .toString()
+                                .padLeft(2, "0") +
+                                '-' +
+                                date.month
+                                    .toString()
+                                    .padLeft(2, "0") +
+                                '-' +
+                                date.year.toString();
+                            check().then((value) {
+                              if (value) {
+                                getTicketList();
+                              } else
+                                Fluttertoast.showToast(
+                                    msg:
+                                    "No Internet Connection");
+                            });
+                          },
+                          enabled: true,
+                          controller: StartDateController,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(
+                                Icons.calendar_today_outlined),
+                            labelText: 'Start Date',
+                            hintStyle: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 16.0,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius:
+                              BorderRadius.circular(0),
+                            ),
+                          ),
+                        )),
+                    Container(
+                        height: 55,
+                        width: width / 2.2,
+                        child: TextField(
+                          onTap: () async {
+                            DateTime? date = DateTime(1900);
+                            FocusScope.of(context)
+                                .requestFocus(new FocusNode());
+
+                            date = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime.now()
+                                    .subtract(new Duration(
+                                    days: 365 * 120)),
+                                lastDate: DateTime.now().add(
+                                    new Duration(days: 365)));
+
+                            dateupload1 = date!.month.toString().padLeft(2, "0")+'/'+
+                                date.day
+                                    .toString()
+                                    .padLeft(2, "0")+'/'+date.year.toString() ;
+
+                            print("dateupload1"+dateupload1.toString());
+
+
+                            EndDateController.text = date!.day
+                                .toString()
+                                .padLeft(2, "0") +
+                                '-' +
+                                date.month
+                                    .toString()
+                                    .padLeft(2, "0") +
+                                '-' +
+                                date.year.toString();
+                            check().then((value) {
+                              if (value) {
+                                getTicketList();
+                              } else
+                                Fluttertoast.showToast(
+                                    msg:
+                                    "No Internet Connection");
+                            });
+                          },
+                          enabled: true,
+                          controller: EndDateController,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(
+                                Icons.calendar_today_outlined),
+                            labelText: 'End Date',
+                            hintStyle: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 16.0,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius:
+                              BorderRadius.circular(0),
+                            ),
+                          ),
+                        )),
+                  ],
+                ),
 
 
 
@@ -200,39 +355,74 @@ class BranchAdminAllAssign_TicketsState extends State<BranchAdminAllAssign_Ticke
                   selectedItem: BranchName1,
                 ),*/
 
-                Card(
-                  child: new ListTile(
-                    leading: new Icon(Icons.search),
-                    title: new TextField(
-                      controller: searchcontroller,
-                      decoration: new InputDecoration(
-                          hintText: 'Search', border: InputBorder.none),
-                      onChanged: (value) {
-                        setState(() {
-                          _searchResult = value;
-                          if (li2 != null) {
-                            li3.clear();
-                            for (int k = 0; k < li2.result!.length; k++)
-                              if (li2.result![k].docNo
-                                  .toString()
-                                  .toLowerCase()
-                                  .contains(value) ||
-                                  li2.result![k].description
-                                      .toString()
-                                      .toLowerCase()
-                                      .contains(value) ||
-                                  li2.result![k].empName
-                                      .toString()
-                                      .toLowerCase()
-                                      .contains(value) ||
-                                  li2.result![k].docNo
-                                      .toString()
-                                      .toLowerCase()
-                                      .contains(value)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    child: new ListTile(
+                      leading: new Icon(Icons.search),
+                      title: new TextField(
+                        controller: searchcontroller,
+                        decoration: new InputDecoration(
+                            hintText: 'Search', border: InputBorder.none),
+                        onChanged: (value) {
+                          setState(() {
+                            _searchResult = value;
+                            if (li2 != null) {
+                              li3.clear();
+                              for (int k = 0; k < li2.result!.length; k++)
+                                if (li2.result![k].docNo
+                                    .toString()
+                                    .toLowerCase()
+                                    .contains(value) ||
+                                    li2.result![k].description
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(value) ||
+                                    li2.result![k].empName
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(value) ||
+                                    li2.result![k].docNo
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(value)
 
-                              )
+                                )
+                                  li3.add(FilterList(
+
+                                      li2.result![k].createdDate,
+                                      li2.result![k].docNo,
+                                      li2.result![k].brachName,
+                                      li2.result![k].branchCode,
+                                      li2.result![k].description,
+                                      li2.result![k].attachFilePath,
+                                      li2.result![k].attachFileName,
+                                      li2.result![k].empName,
+                                      li2.result![k].empContactNo,
+                                      li2.result![k].empMailid,
+                                      li2.result![k].modifiedDate,
+                                      li2.result![k].empGroup,
+                                      li2.result![k].empID,
+                                      li2.result![k].branchCategory,
+                                      li2.result![k].vechileType
+
+
+                                  ));
+                            }
+                          });
+                        },
+                      ),
+                      trailing: new IconButton(
+                        icon: new Icon(Icons.cancel),
+                        onPressed: () {
+                          setState(() {
+                            _searchResult = "";
+                            searchcontroller.text = "";
+
+                            if (li2 != null) {
+                              li3.clear();
+                              for (int k = 0; k < li2.result!.length; k++)
                                 li3.add(FilterList(
-
                                     li2.result![k].createdDate,
                                     li2.result![k].docNo,
                                     li2.result![k].brachName,
@@ -245,42 +435,14 @@ class BranchAdminAllAssign_TicketsState extends State<BranchAdminAllAssign_Ticke
                                     li2.result![k].empMailid,
                                     li2.result![k].modifiedDate,
                                     li2.result![k].empGroup,
-                                    li2.result![k].empID
-
-
+                                    li2.result![k].empID,
+                                    li2.result![k].branchCategory,
+                                    li2.result![k].vechileType
                                 ));
-                          }
-                        });
-                      },
-                    ),
-                    trailing: new IconButton(
-                      icon: new Icon(Icons.cancel),
-                      onPressed: () {
-                        setState(() {
-                          _searchResult = "";
-                          searchcontroller.text = "";
-
-                          if (li2 != null) {
-                            li3.clear();
-                            for (int k = 0; k < li2.result!.length; k++)
-                              li3.add(FilterList(
-                                  li2.result![k].createdDate,
-                                  li2.result![k].docNo,
-                                  li2.result![k].brachName,
-                                  li2.result![k].branchCode,
-                                  li2.result![k].description,
-                                  li2.result![k].attachFilePath,
-                                  li2.result![k].attachFileName,
-                                  li2.result![k].empName,
-                                  li2.result![k].empContactNo,
-                                  li2.result![k].empMailid,
-                                  li2.result![k].modifiedDate,
-                                  li2.result![k].empGroup,
-                                  li2.result![k].empID
-                              ));
-                          }
-                        });
-                      },
+                            }
+                          });
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -297,6 +459,12 @@ class BranchAdminAllAssign_TicketsState extends State<BranchAdminAllAssign_Ticke
 
 
                     columns: <DataColumn>[
+                      DataColumn(
+                        label: Text(
+                          'Date',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
                       DataColumn(
                         label: Text(
                           'BranchName',
@@ -343,6 +511,9 @@ class BranchAdminAllAssign_TicketsState extends State<BranchAdminAllAssign_Ticke
                           //   // }
                           // },
                           cells: [
+                            DataCell(Text(
+                                list.createdDate.toString(),
+                                textAlign: TextAlign.center)),
                             DataCell(Text(
                                 list.brachName.toString(),
                                 textAlign: TextAlign.center)),
@@ -925,7 +1096,9 @@ class BranchAdminAllAssign_TicketsState extends State<BranchAdminAllAssign_Ticke
                                         li2.result![i].empMailid,
                                         li2.result![i].modifiedDate,
                                         li2.result![i].empGroup,
-                                        li2.result![i].empID
+                                        li2.result![i].empID,
+                                        li2.result![i].branchCategory,
+                                        li2.result![i].vechileType
 
 
                                     ));
@@ -975,7 +1148,9 @@ class BranchAdminAllAssign_TicketsState extends State<BranchAdminAllAssign_Ticke
                                         li2.result![i].empMailid,
                                         li2.result![i].modifiedDate,
                                         li2.result![i].empGroup,
-                                        li2.result![i].empID
+                                        li2.result![i].empID,
+                                        li2.result![i].branchCategory,
+                                        li2.result![i].vechileType
 
 
                                     ));
@@ -1153,6 +1328,11 @@ class BranchAdminAllAssign_TicketsState extends State<BranchAdminAllAssign_Ticke
       DepartmentName = prefs.getString('DepartmentName').toString();
       Location = prefs.getString('Location').toString();
       EmpGroup=prefs.getString('EmpGroup').toString();
+
+
+
+      BranchCode=branchID;
+      BranchName1=BranchName;
 
       getTicketList();
     });
@@ -1400,7 +1580,7 @@ class BranchAdminAllAssign_TicketsState extends State<BranchAdminAllAssign_Ticke
      }
    }
 
-  Future<http.Response> getTicketList() async {
+  /*Future<http.Response> getTicketList() async {
 
     print("getTicketList is called");
     var headers = {"Content-Type": "application/json"};
@@ -1465,7 +1645,9 @@ class BranchAdminAllAssign_TicketsState extends State<BranchAdminAllAssign_Ticke
                 li2.result![k].empMailid,
                 li2.result![k].modifiedDate,
                 li2.result![k].empGroup,
-                li2.result![k].empID
+                li2.result![k].empID,
+                li2.result![k].branchCategory,
+                li2.result![k].vechileType
 
 
             ));
@@ -1528,7 +1710,123 @@ class BranchAdminAllAssign_TicketsState extends State<BranchAdminAllAssign_Ticke
       });
       throw Exception('Internet is down');
     }
-  }
+  }*/
+
+   Future<http.Response> getTicketList() async {
+
+     print("getTicketListforAllBranch is called");
+     var headers = {"Content-Type": "application/json"};
+     var body = {
+       "FormID": "4",
+       "CompanyName":dateupload,
+       "CompanyAddress":dateupload1,
+       "Country": BranchCode,
+       "State": "",
+       "City": "",
+       "ZipCode": "",
+       "Landmark": "",
+       "MobileNo": "",
+       "EMail": "",
+       "UserName": ""
+     };
+
+     print(body);
+     setState(() {
+       loading = true;
+     });
+     try {
+       final response = await http.post(
+           Uri.parse(AppConstants.LIVE_URL + 'UpdateMaster'),
+           body: jsonEncode(body),
+           headers: headers);
+       print(AppConstants.LIVE_URL + 'UpdateMaster');
+       print(response.body);
+       setState(() {
+         loading = false;
+       });
+       if (response.statusCode == 200) {
+
+         var isdata = json.decode(response.body)["status"] == 0;
+         print(isdata);
+         if (isdata) {
+           ScaffoldMessenger.of(this.context)
+               .showSnackBar(SnackBar(content: Text("No Records Found!!")));
+           print('No Records Found!!');
+           // CustomerTicketsModel li2 =CustomerTicketsModel(result: []);
+
+           li2.result!.clear();
+
+         } else {
+
+           print(AppConstants.LIVE_URL + 'getcustTckttoAsignnew');
+           print(body);
+           print(response.body);
+
+           li2 = WeekUpdateAdminModel.fromJson(jsonDecode(response.body));
+
+           if (li2.result!.length % 20 == 0)
+             totalpages = (li2.result!.length / 20).floor();
+           else
+             totalpages = (li2.result!.length / 20).floor() + 1;
+           print(totalpages);
+
+           li3.removeRange(0, li3.length);
+
+           for (int k = 0; k < li2.result!.length; k++) {
+             li3.add(FilterList(
+
+                 li2.result![k].createdDate,
+                 li2.result![k].docNo,
+                 li2.result![k].brachName,
+                 li2.result![k].branchCode,
+                 li2.result![k].description,
+                 li2.result![k].attachFilePath,
+                 li2.result![k].attachFileName,
+                 li2.result![k].empName,
+                 li2.result![k].empContactNo,
+                 li2.result![k].empMailid,
+                 li2.result![k].modifiedDate,
+                 li2.result![k].empGroup,
+                 li2.result![k].empID,
+                 li2.result![k].branchCategory,
+                 li2.result![k].vechileType,
+
+
+
+             ));
+           }
+
+
+           // print(li2.result.length);
+           setState(() {});
+
+         }
+
+
+
+       } else {
+         showDialogbox(this.context, "Failed to Login API");
+       }
+       return response;
+     } on SocketException {
+       setState(() {
+         loading = false;
+         showDialog(
+             context: this.context,
+             builder: (_) => AlertDialog(
+                 backgroundColor: Colors.black,
+                 title: Text(
+                   "No Response!..",
+                   style: TextStyle(color: Colors.purple),
+                 ),
+                 content: Text(
+                   "Slow Server Response or Internet connection",
+                   style: TextStyle(color: Colors.white),
+                 )));
+       });
+       throw Exception('Internet is down');
+     }
+   }
 
    Future<http.Response> getTicketListforAllBranch() async {
 
@@ -1595,7 +1893,9 @@ class BranchAdminAllAssign_TicketsState extends State<BranchAdminAllAssign_Ticke
                  li2.result![k].empMailid,
                  li2.result![k].modifiedDate,
                  li2.result![k].empGroup,
-                 li2.result![k].empID
+                 li2.result![k].empID,
+                 li2.result![k].branchCategory,
+                 li2.result![k].vechileType
 
 
              ));
@@ -1869,6 +2169,8 @@ class FilterList {
   String? modifiedDate;
   String? empGroup;
   String? empID;
+  String? branchCategory;
+  String? vechileType;
   FilterList(
       this.createdDate,
       this.docNo,
@@ -1882,7 +2184,9 @@ class FilterList {
       this.empMailid,
       this.modifiedDate,
       this.empGroup,
-      this.empID
+      this.empID,
+      this.branchCategory,
+      this.vechileType
       );
 }
 

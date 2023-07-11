@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -74,9 +75,9 @@ class AllAssign_TicketsState extends State<AllAssign_Tickets> {
   var stringlist5 = ["Select Branch"];
 
 
-   String BranchName1="";
+   String BranchName1="ALL";
 
-   String BranchCode="";
+   String BranchCode="ALL";
 
 
   int _currentSortColumn = 0;
@@ -117,6 +118,14 @@ class AllAssign_TicketsState extends State<AllAssign_Tickets> {
     locale: 'HI',
     symbol: "",
   );
+
+
+   TextEditingController EndDateController = new TextEditingController();
+   TextEditingController StartDateController = new TextEditingController();
+
+ late  String dateupload="";
+ late  String dateupload1="";
+
   @override
   void initState() {
     getStringValuesSF();
@@ -125,6 +134,17 @@ class AllAssign_TicketsState extends State<AllAssign_Tickets> {
     //   getTicketList1();
     // }
   }
+
+   Future<bool> check() async {
+     var connectivityResult = await (Connectivity().checkConnectivity());
+     if (connectivityResult == ConnectivityResult.mobile) {
+       return true;
+     } else if (connectivityResult == ConnectivityResult.wifi) {
+       return true;
+     }
+     return false;
+   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -140,860 +160,1036 @@ class AllAssign_TicketsState extends State<AllAssign_Tickets> {
         ),
         body: loading
             ? Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
+            : SafeArea(
+              child: SingleChildScrollView(
           child: Container(
-            child: Column(
-              children: [
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text("Select Date", style: TextStyle(fontWeight:FontWeight.bold)),
+                      ],
+                    ),
+                  ),
 
-
-
-
-
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                  Row(
+                    mainAxisAlignment:
+                    MainAxisAlignment.spaceAround,
                     children: [
-                      Text("Select Branch", style: TextStyle(fontWeight:FontWeight.bold)),
-                    ],
-                  ),
-                ),
+                      Container(
+                          height: 55,
+                          width: width / 2.2,
+                          child: TextField(
+                            onTap: () async {
+                              DateTime? date = DateTime(1900);
+                              FocusScope.of(context)
+                                  .requestFocus(new FocusNode());
 
+                              date = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime.now()
+                                      .subtract(new Duration(
+                                      days: 365 * 120)),
+                                  lastDate: DateTime.now().add(
+                                      new Duration(days: 365)));
+                              dateupload =  date!.month.toString().padLeft(2, "0")+'/'+
+                                  date.day
+                                      .toString()
+                                      .padLeft(2, "0")+'/'+date.year.toString() ;
 
+                              print("dateupload"+dateupload.toString());
 
-                DropdownSearch<String>(
-                  mode: Mode.DIALOG,
-                  showSearchBox: true,
-                  // showClearButton: true,
-
-                  // label: "Select Screen",
-                  items: stringlist5,
-                  onChanged: (val) {
-                    print(val);
-                    for (int kk = 0; kk < li5.result!.length; kk++) {
-                      if (li5.result![kk].branchName == val) {
-                        BranchName1 = li5.result![kk].branchName.toString();
-                        BranchCode = li5.result![kk].branchCode.toString();
-                        setState(() {
-                          print(BranchName1);
-                          //GetMyTablRecord();
-                        });
-                      }
-                    }
-
-                    setState(() {
-                      if (BranchName1.isEmpty) {
-                        Fluttertoast.showToast(
-                            msg: "BranchName should not left Empty!!",
-                            toastLength: Toast.LENGTH_LONG,
-                            gravity: ToastGravity.SNACKBAR,
-                            timeInSecForIosWeb: 1,
-                            textColor: Colors.white,
-                            backgroundColor: Colors.red,
-                            fontSize: 16.0);
-                      }  else {
-
-                        getTicketList();
-
-                      }
-                    });
-                  },
-                  selectedItem: BranchName1,
-                ),
-
-                Card(
-                  child: new ListTile(
-                    leading: new Icon(Icons.search),
-                    title: new TextField(
-                      controller: searchcontroller,
-                      decoration: new InputDecoration(
-                          hintText: 'Search', border: InputBorder.none),
-                      onChanged: (value) {
-                        setState(() {
-                          _searchResult = value;
-                          if (li2 != null) {
-                            li3.clear();
-                            for (int k = 0; k < li2.result!.length; k++)
-                              if (li2.result![k].docNo
+                              StartDateController.text = date!.day
                                   .toString()
-                                  .toLowerCase()
-                                  .contains(value) ||
-                                  li2.result![k].description
+                                  .padLeft(2, "0") +
+                                  '-' +
+                                  date.month
                                       .toString()
-                                      .toLowerCase()
-                                      .contains(value) ||
-                                  li2.result![k].empName
+                                      .padLeft(2, "0") +
+                                  '-' +
+                                  date.year.toString();
+                              check().then((value) {
+                                if (value) {
+                                  GetWeeklyReport();
+                                } else
+                                  Fluttertoast.showToast(
+                                      msg:
+                                      "No Internet Connection");
+                              });
+                            },
+                            enabled: true,
+                            controller: StartDateController,
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(
+                                  Icons.calendar_today_outlined),
+                              labelText: 'Start Date',
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 16.0,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                BorderRadius.circular(0),
+                              ),
+                            ),
+                          )),
+                      Container(
+                          height: 55,
+                          width: width / 2.2,
+                          child: TextField(
+                            onTap: () async {
+                              DateTime? date = DateTime(1900);
+                              FocusScope.of(context)
+                                  .requestFocus(new FocusNode());
+
+                              date = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime.now()
+                                      .subtract(new Duration(
+                                      days: 365 * 120)),
+                                  lastDate: DateTime.now().add(
+                                      new Duration(days: 365)));
+
+                              dateupload1 = date!.month.toString().padLeft(2, "0")+'/'+
+                                  date.day
                                       .toString()
-                                      .toLowerCase()
-                                      .contains(value) ||
-                                  li2.result![k].docNo
+                                      .padLeft(2, "0")+'/'+date.year.toString() ;
+
+                              print("dateupload1"+dateupload1.toString());
+
+
+                              EndDateController.text = date!.day
+                                  .toString()
+                                  .padLeft(2, "0") +
+                                  '-' +
+                                  date.month
                                       .toString()
-                                      .toLowerCase()
-                                      .contains(value)
+                                      .padLeft(2, "0") +
+                                  '-' +
+                                  date.year.toString();
+                              check().then((value) {
+                                if (value) {
+                                  GetWeeklyReport();
+                                } else
+                                  Fluttertoast.showToast(
+                                      msg:
+                                      "No Internet Connection");
+                              });
+                            },
+                            enabled: true,
+                            controller: EndDateController,
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(
+                                  Icons.calendar_today_outlined),
+                              labelText: 'End Date',
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 16.0,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                BorderRadius.circular(0),
+                              ),
+                            ),
+                          )),
+                    ],
+                  ),
 
-                              )
-                                li3.add(FilterList(
 
-                                    li2.result![k].createdDate,
-                                    li2.result![k].docNo,
-                                    li2.result![k].brachName,
-                                    li2.result![k].branchCode,
-                                    li2.result![k].description,
-                                    li2.result![k].attachFilePath,
-                                    li2.result![k].attachFileName,
-                                    li2.result![k].empName,
-                                    li2.result![k].empContactNo,
-                                    li2.result![k].empMailid,
-                                    li2.result![k].modifiedDate,
-                                    li2.result![k].empGroup,
-                                    li2.result![k].empID
-
-
-                                ));
-                          }
-                        });
-                      },
-                    ),
-                    trailing: new IconButton(
-                      icon: new Icon(Icons.cancel),
-                      onPressed: () {
-                        setState(() {
-                          _searchResult = "";
-                          searchcontroller.text = "";
-
-                          if (li2 != null) {
-                            li3.clear();
-                            for (int k = 0; k < li2.result!.length; k++)
-                              li3.add(FilterList(
-                                  li2.result![k].createdDate,
-                                  li2.result![k].docNo,
-                                  li2.result![k].brachName,
-                                  li2.result![k].branchCode,
-                                  li2.result![k].description,
-                                  li2.result![k].attachFilePath,
-                                  li2.result![k].attachFileName,
-                                  li2.result![k].empName,
-                                  li2.result![k].empContactNo,
-                                  li2.result![k].empMailid,
-                                  li2.result![k].modifiedDate,
-                                  li2.result![k].empGroup,
-                                  li2.result![k].empID
-                              ));
-                          }
-                        });
-                      },
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text("Select Branch", style: TextStyle(fontWeight:FontWeight.bold)),
+                      ],
                     ),
                   ),
-                ),
-                SingleChildScrollView(
-                  padding: EdgeInsets.all(5.0),
-                  scrollDirection: Axis.horizontal,
-                  child: li2.result!.length>0
-                      ? DataTable(
-                    columnSpacing: 20.0,
-                    headingRowColor:
-                    MaterialStateProperty.all(Colors.blue),
-                    sortColumnIndex: _currentSortColumn,
-                    sortAscending: _isAscending,
 
 
-                    columns: <DataColumn>[
-                      DataColumn(
-                        label: Text(
-                          'BranchName',
-                          style: TextStyle(color: Colors.white),
+
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DropdownSearch<String>(
+                      mode: Mode.DIALOG,
+                      showSearchBox: true,
+                      // showClearButton: true,
+
+                      // label: "Select Screen",
+                      items: stringlist5,
+                      onChanged: (val) {
+                        print(val);
+                        for (int kk = 0; kk < li5.result!.length; kk++) {
+                          if (li5.result![kk].branchName == val) {
+
+                            if(val=="ALL"){
+                              setState(() {
+                                BranchName1 ="ALL";
+                                BranchCode ="ALL";
+                                GetWeeklyReport();
+                              });
+
+                            }else {
+                              BranchName1 =
+                                  li5.result![kk].branchName.toString();
+                              BranchCode =
+                                  li5.result![kk].branchCode.toString();
+                              setState(() {
+                                print(BranchName1);
+                                GetWeeklyReport();
+                                //GetMyTablRecord();
+                              });
+                            }
+                          }
+                        }
+
+
+                      },
+                      selectedItem: BranchName1,
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      child: new ListTile(
+                        leading: new Icon(Icons.search),
+                        title: new TextField(
+                          controller: searchcontroller,
+                          decoration: new InputDecoration(
+                              hintText: 'Search', border: InputBorder.none),
+                          onChanged: (value) {
+                            setState(() {
+                              _searchResult = value;
+                              if (li2 != null) {
+                                li3.clear();
+                                for (int k = 0; k < li2.result!.length; k++)
+                                  if (li2.result![k].docNo
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(value) ||
+                                      li2.result![k].description
+                                          .toString()
+                                          .toLowerCase()
+                                          .contains(value) ||
+                                      li2.result![k].empName
+                                          .toString()
+                                          .toLowerCase()
+                                          .contains(value) ||
+                                      li2.result![k].docNo
+                                          .toString()
+                                          .toLowerCase()
+                                          .contains(value)
+
+                                  )
+                                    li3.add(FilterList(
+
+                                        li2.result![k].createdDate,
+                                        li2.result![k].docNo,
+                                        li2.result![k].brachName,
+                                        li2.result![k].branchCode,
+                                        li2.result![k].description,
+                                        li2.result![k].attachFilePath,
+                                        li2.result![k].attachFileName,
+                                        li2.result![k].empName,
+                                        li2.result![k].empContactNo,
+                                        li2.result![k].empMailid,
+                                        li2.result![k].modifiedDate,
+                                        li2.result![k].empGroup,
+                                        li2.result![k].empID,
+                                        li2.result![k].branchCategory,
+                                        li2.result![k].vechileType
+
+
+                                    ));
+                              }
+                            });
+                          },
+                        ),
+                        trailing: new IconButton(
+                          icon: new Icon(Icons.cancel),
+                          onPressed: () {
+                            setState(() {
+                              _searchResult = "";
+                              searchcontroller.text = "";
+
+                              if (li2 != null) {
+                                li3.clear();
+                                for (int k = 0; k < li2.result!.length; k++)
+                                  li3.add(FilterList(
+                                      li2.result![k].createdDate,
+                                      li2.result![k].docNo,
+                                      li2.result![k].brachName,
+                                      li2.result![k].branchCode,
+                                      li2.result![k].description,
+                                      li2.result![k].attachFilePath,
+                                      li2.result![k].attachFileName,
+                                      li2.result![k].empName,
+                                      li2.result![k].empContactNo,
+                                      li2.result![k].empMailid,
+                                      li2.result![k].modifiedDate,
+                                      li2.result![k].empGroup,
+                                      li2.result![k].empID,
+                                      li2.result![k].branchCategory,
+                                      li2.result![k].vechileType
+                                  ));
+                              }
+                            });
+                          },
                         ),
                       ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.all(5.0),
+                      scrollDirection: Axis.horizontal,
+                      child: li2.result!.length>0
+                          ? DataTable(
+                        columnSpacing: 10.0,
+                        headingRowColor:
+                        MaterialStateProperty.all(Colors.blue),
+                        sortColumnIndex: _currentSortColumn,
+                        sortAscending: _isAscending,
 
-                      DataColumn(
-                        label: Text(
-                          'Attachment',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'CreatedBy',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'Emp Contact Number',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ],
-                    rows: li3
-                        .map(
-                          (list) => DataRow(
-                          selected: selectedlist.contains(
-                              list.docNo.toString()),
-                          // onSelectChanged: (value) {
-                          //   // if (value == true) {
-                          //   //   setState(() {
-                          //   //     selectedlist.add(
-                          //   //         list.docNo.toString());
-                          //   //
-                          //   //   });
-                          //   // } else {
-                          //   //   setState(() {
-                          //   //     selectedlist.remove(
-                          //   //         list.docNo.toString());
-                          //   //   });
-                          //   // }
-                          // },
-                          cells: [
-                            DataCell(Text(
-                                list.brachName.toString(),
-                                textAlign: TextAlign.center)),
-                            DataCell(list.attachFileName.toString()!=null
-                                &&
-                                list.attachFileName.toString().isNotEmpty?Column(
-                              children: [
-                                TextButton.icon(
-                                  onPressed: () {
 
-                                    List<String> imglist =
-                                    list.attachFileName!.split(',');
-                                    print("sizeimglist" + imglist.length.toString());
+                        columns: <DataColumn>[
+                          DataColumn(
+                            label: Text(
+                              'Date',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'BranchName',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'BranchCategory',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Vechile Type',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
 
-                                    showModalBottomSheet(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return SingleChildScrollView(
-                                          scrollDirection: Axis.horizontal,
-                                          child: Row(
-                                            children: [
-                                              for (int i = 0; i < imglist.length; i++)
-                                                InkWell(
-                                                  onTap: () {
-                                                    imglist[i].endsWith(".jpg")
-                                                        ? showDialog(
-                                                      context: context,
-                                                      builder:
-                                                          (BuildContext context) {
-                                                        return Center(
-                                                          child: Container(
-                                                            padding:
-                                                            EdgeInsets.all(8),
-                                                            color: Colors
-                                                                .transparent,
-                                                            child:
-                                                            SingleChildScrollView(
-                                                              child: Column(
-                                                                children: [
-                                                                  imglist[i].endsWith(
-                                                                      ".jpg")
-                                                                      ? InteractiveViewer(
-                                                                    boundaryMargin:
-                                                                    const EdgeInsets.all(20.0),
-                                                                    minScale:
-                                                                    0.1,
-                                                                    maxScale:
-                                                                    2.5,
-                                                                    child: Image
-                                                                        .network(
-                                                                      AppConstants.LIVE_URL + imglist[i],
-                                                                      fit: BoxFit
-                                                                          .fill,
-                                                                      // loadingBuilder: (BuildContext context,
-                                                                      //     Widget child,
-                                                                      //     ImageChunkEvent loadingProgress) {
-                                                                      //   if (loadingProgress ==
-                                                                      //       null)
-                                                                      //     return child;
-                                                                      //   return Center(
-                                                                      //     child: CircularProgressIndicator(
-                                                                      //       value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes : null,
-                                                                      //     ),
-                                                                      //   );
-                                                                      // },
-                                                                    ),
-                                                                  )
-                                                                      : imglist[i].endsWith(
-                                                                      ".pdf")
-                                                                      ? Image
-                                                                      .asset(
-                                                                    "assets/images/pdf.png",
-                                                                    width:
-                                                                    24,
-                                                                    height:
-                                                                    24,
-                                                                  )
-                                                                      : Image
-                                                                      .asset(
-                                                                    "assets/images/docs.png",
-                                                                    width:
-                                                                    24,
-                                                                    height:
-                                                                    24,
-                                                                  ),
-                                                                  SizedBox(
-                                                                    height: 10,
-                                                                  ),
-                                                                  Padding(
-                                                                    padding: const EdgeInsets
-                                                                        .symmetric(
-                                                                        vertical:
-                                                                        8.0,
-                                                                        horizontal:
-                                                                        15),
-                                                                    child:
-                                                                    TextButton
-                                                                        .icon(
-                                                                      onPressed:
-                                                                          () {
-                                                                        Navigator.pop(
-                                                                            context);
-                                                                      },
-                                                                      icon: Icon(
-                                                                        Icons
-                                                                            .cancel_presentation,
-                                                                        color: Colors
-                                                                            .white,
+                          DataColumn(
+                            label: Text(
+                              'Attachment',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'CreatedBy',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Emp Contact Number',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                        rows: li3
+                            .map(
+                              (list) => DataRow(
+                              selected: selectedlist.contains(
+                                  list.docNo.toString()),
+                              // onSelectChanged: (value) {
+                              //   // if (value == true) {
+                              //   //   setState(() {
+                              //   //     selectedlist.add(
+                              //   //         list.docNo.toString());
+                              //   //
+                              //   //   });
+                              //   // } else {
+                              //   //   setState(() {
+                              //   //     selectedlist.remove(
+                              //   //         list.docNo.toString());
+                              //   //   });
+                              //   // }
+                              // },
+                              cells: [
+                                DataCell(Text(
+
+                                    list.createdDate.toString(),
+                                    textAlign: TextAlign.center)),
+                                DataCell(Text(
+                                    list.brachName.toString(),
+                                    textAlign: TextAlign.center)),
+                                DataCell(Text(
+                                    list.branchCategory.toString(),
+                                    textAlign: TextAlign.center)),
+                                DataCell(Text(
+                                    list.vechileType.toString(),
+                                    textAlign: TextAlign.center)),
+                                DataCell(list.attachFileName.toString()!=null
+                                    &&
+                                    list.attachFileName.toString().isNotEmpty?Column(
+                                  children: [
+                                    TextButton.icon(
+                                      onPressed: () {
+
+                                        List<String> imglist =
+                                        list.attachFileName!.split(',');
+                                        print("sizeimglist" + imglist.length.toString());
+
+                                        showModalBottomSheet(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Row(
+                                                children: [
+                                                  for (int i = 0; i < imglist.length; i++)
+                                                    InkWell(
+                                                      onTap: () {
+                                                        imglist[i].endsWith(".jpg")
+                                                            ? showDialog(
+                                                          context: context,
+                                                          builder:
+                                                              (BuildContext context) {
+                                                            return Center(
+                                                              child: Container(
+                                                                padding:
+                                                                EdgeInsets.all(8),
+                                                                color: Colors
+                                                                    .transparent,
+                                                                child:
+                                                                SingleChildScrollView(
+                                                                  child: Column(
+                                                                    children: [
+                                                                      imglist[i].endsWith(
+                                                                          ".jpg")
+                                                                          ? InteractiveViewer(
+                                                                        boundaryMargin:
+                                                                        const EdgeInsets.all(20.0),
+                                                                        minScale:
+                                                                        0.1,
+                                                                        maxScale:
+                                                                        2.5,
+                                                                        child: Image
+                                                                            .network(
+                                                                          AppConstants.LIVE_URL + imglist[i],
+                                                                          fit: BoxFit
+                                                                              .fill,
+                                                                          // loadingBuilder: (BuildContext context,
+                                                                          //     Widget child,
+                                                                          //     ImageChunkEvent loadingProgress) {
+                                                                          //   if (loadingProgress ==
+                                                                          //       null)
+                                                                          //     return child;
+                                                                          //   return Center(
+                                                                          //     child: CircularProgressIndicator(
+                                                                          //       value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes : null,
+                                                                          //     ),
+                                                                          //   );
+                                                                          // },
+                                                                        ),
+                                                                      )
+                                                                          : imglist[i].endsWith(
+                                                                          ".pdf")
+                                                                          ? Image
+                                                                          .asset(
+                                                                        "assets/images/pdf.png",
+                                                                        width:
+                                                                        24,
+                                                                        height:
+                                                                        24,
+                                                                      )
+                                                                          : Image
+                                                                          .asset(
+                                                                        "assets/images/docs.png",
+                                                                        width:
+                                                                        24,
+                                                                        height:
+                                                                        24,
                                                                       ),
-                                                                      label: Text(
-                                                                        'Close',
-                                                                        style: TextStyle(
+                                                                      SizedBox(
+                                                                        height: 10,
+                                                                      ),
+                                                                      Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .symmetric(
+                                                                            vertical:
+                                                                            8.0,
+                                                                            horizontal:
+                                                                            15),
+                                                                        child:
+                                                                        TextButton
+                                                                            .icon(
+                                                                          onPressed:
+                                                                              () {
+                                                                            Navigator.pop(
+                                                                                context);
+                                                                          },
+                                                                          icon: Icon(
+                                                                            Icons
+                                                                                .cancel_presentation,
                                                                             color: Colors
                                                                                 .white,
-                                                                            fontSize:
-                                                                            12),
-                                                                      ),
-                                                                      style: TextButton
-                                                                          .styleFrom(
-                                                                        backgroundColor:
-                                                                        Colors
-                                                                            .red,
-                                                                        shape:
-                                                                        RoundedRectangleBorder(
-                                                                          borderRadius:
-                                                                          BorderRadius.circular(8.0),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        );
-                                                      },
-                                                    )
-                                                        : Container();
-                                                  },
-                                                  child: Container(
-                                                    padding: EdgeInsets.all(16),
-                                                    height: 100,
-                                                    width: 100,
-                                                    child: imglist[i].endsWith(".jpg")
-                                                        ? Image.network(
-                                                      AppConstants.LIVE_URL +
-
-                                                          imglist[i],
-                                                      // loadingBuilder: (BuildContext
-                                                      // context,
-                                                      //     Widget child,
-                                                      //     ImageChunkEvent
-                                                      //     loadingProgress) {
-                                                      //   if (loadingProgress ==
-                                                      //       null) return child;
-                                                      //   return Center(
-                                                      //     child:
-                                                      //     CircularProgressIndicator(
-                                                      //       value: loadingProgress
-                                                      //           .expectedTotalBytes !=
-                                                      //           null
-                                                      //           ? loadingProgress
-                                                      //           .cumulativeBytesLoaded /
-                                                      //           loadingProgress
-                                                      //               .expectedTotalBytes
-                                                      //           : null,
-                                                      //     ),
-                                                      //   );
-                                                      // },
-                                                    ):
-                                                      Icon(
-                                                          Icons.list_alt),
-                                                    ),
-                                                  ),
-
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                    );
-                                    print("attachement viewed");
-
-
-
-                                    /*Expanded(
-                                      flex: 2,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 8.0, right: 8, top: 2, bottom: 2),
-                                        child: TextButton.icon(
-                                          onPressed: () {
-                                            List<String> imglist =
-                                            list.attachFileName!.split(',');
-                                            print("sizeimglist" + imglist.length.toString());
-
-                                            showModalBottomSheet(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return SingleChildScrollView(
-                                                  scrollDirection: Axis.horizontal,
-                                                  child: Row(
-                                                    children: [
-                                                      for (int i = 0; i < imglist.length; i++)
-                                                        InkWell(
-                                                          onTap: () {
-                                                            imglist[i].endsWith(".jpg")
-                                                                ? showDialog(
-                                                              context: context,
-                                                              builder:
-                                                                  (BuildContext context) {
-                                                                return Center(
-                                                                  child: Container(
-                                                                    padding:
-                                                                    EdgeInsets.all(8),
-                                                                    color: Colors
-                                                                        .transparent,
-                                                                    child:
-                                                                    SingleChildScrollView(
-                                                                      child: Column(
-                                                                        children: [
-                                                                          imglist[i].endsWith(
-                                                                              ".jpg")
-                                                                              ? InteractiveViewer(
-                                                                            boundaryMargin:
-                                                                            const EdgeInsets.all(20.0),
-                                                                            minScale:
-                                                                            0.1,
-                                                                            maxScale:
-                                                                            2.5,
-                                                                            child: Image
-                                                                                .network(
-                                                                              AppConstants.LIVE_URL +
-                                                                                  '/' +
-                                                                                  imglist[i],
-                                                                              fit: BoxFit
-                                                                                  .fill,
-
-                                                                            ),
-                                                                          )
-                                                                              : imglist[i].endsWith(
-                                                                              ".pdf")
-                                                                              ? Image
-                                                                              .asset(
-                                                                            "assets/images/pdf.png",
-                                                                            width:
-                                                                            24,
-                                                                            height:
-                                                                            24,
-                                                                          )
-                                                                              : Image
-                                                                              .asset(
-                                                                            "assets/images/docs.png",
-                                                                            width:
-                                                                            24,
-                                                                            height:
-                                                                            24,
                                                                           ),
-                                                                          SizedBox(
-                                                                            height: 10,
-                                                                          ),
-                                                                          Padding(
-                                                                            padding: const EdgeInsets
-                                                                                .symmetric(
-                                                                                vertical:
-                                                                                8.0,
-                                                                                horizontal:
-                                                                                15),
-                                                                            child:
-                                                                            TextButton
-                                                                                .icon(
-                                                                              onPressed:
-                                                                                  () {
-                                                                                Navigator.pop(
-                                                                                    context);
-                                                                              },
-                                                                              icon: Icon(
-                                                                                Icons
-                                                                                    .cancel_presentation,
+                                                                          label: Text(
+                                                                            'Close',
+                                                                            style: TextStyle(
                                                                                 color: Colors
                                                                                     .white,
-                                                                              ),
-                                                                              label: Text(
-                                                                                'Close',
-                                                                                style: TextStyle(
-                                                                                    color: Colors
-                                                                                        .white,
-                                                                                    fontSize:
-                                                                                    12),
-                                                                              ),
-                                                                              style: TextButton
-                                                                                  .styleFrom(
-                                                                                backgroundColor:
-                                                                                Colors
-                                                                                    .red,
-                                                                                shape:
-                                                                                RoundedRectangleBorder(
-                                                                                  borderRadius:
-                                                                                  BorderRadius.circular(8.0),
-                                                                                ),
-                                                                              ),
+                                                                                fontSize:
+                                                                                12),
+                                                                          ),
+                                                                          style: TextButton
+                                                                              .styleFrom(
+                                                                            backgroundColor:
+                                                                            Colors
+                                                                                .red,
+                                                                            shape:
+                                                                            RoundedRectangleBorder(
+                                                                              borderRadius:
+                                                                              BorderRadius.circular(8.0),
                                                                             ),
                                                                           ),
-                                                                        ],
+                                                                        ),
                                                                       ),
-                                                                    ),
+                                                                    ],
                                                                   ),
-                                                                );
-                                                              },
-                                                            )
-                                                                : Container();
+                                                                ),
+                                                              ),
+                                                            );
                                                           },
-                                                          child: Container(
-                                                            padding: EdgeInsets.all(16),
-                                                            height: 100,
-                                                            width: 100,
-                                                            child: imglist[i].endsWith(".jpg")
-                                                                ? Image.network(
-                                                              AppConstants.LIVE_URL+
-                                                                  '/' +
-                                                                  imglist[i],
-                                                              // loadingBuilder: (BuildContext
-                                                              // context,
-                                                              //     Widget child,
-                                                              //     ImageChunkEvent
-                                                              //     loadingProgress) {
-                                                              //   if (loadingProgress ==
-                                                              //       null) return child;
-                                                              //   return Center(
-                                                              //     child:
-                                                              //     CircularProgressIndicator(
-                                                              //       value: loadingProgress
-                                                              //           .expectedTotalBytes !=
-                                                              //           null
-                                                              //           ? loadingProgress
-                                                              //           .cumulativeBytesLoaded /
-                                                              //           loadingProgress
-                                                              //               .expectedTotalBytes
-                                                              //           : null,
-                                                              //     ),
-                                                              //   );
-                                                              // },
-                                                            )
-                                                                : InkWell(
-                                                              onTap: () async {
-                                                                launch(AppConstants.LIVE_URL+
-                                                                    '/' +
-                                                                    imglist[i]);
-                                                              },
-                                                              child: Icon(
-                                                                  Icons.list_alt),
-                                                            ),
-                                                          ),
                                                         )
-                                                    ],
-                                                  ),
-                                                );
-                                              },
-                                            );
-                                            print("attachement viewed");
-                                          },
-                                          icon: Icon(
-                                            Icons.attach_file,
-                                            color: Colors.white,
-                                            size: 18,
-                                          ),
-                                          label: Text(
-                                            'View Attachment',
-                                            style: TextStyle(color: Colors.white, fontSize: 10),
-                                          ),
-                                          style: TextButton.styleFrom(
-                                            backgroundColor: Colors.blueGrey,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(8.0),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    );*/
-                                   /*showDialog(
-
-                                      context: context,
-                                      builder:
-                                          (BuildContext context) {
-                                        return Center(
-                                          child: Container(
-                                            padding:
-                                            EdgeInsets.all(8),
-                                            color: Colors
-                                                .transparent,
-                                            child:
-                                            SingleChildScrollView(
-
-                                              child: Column(
-                                                children: [
-                                              imglist[i].endsWith(".jpg")
-                                                  ? Image.network(
-                                                AppConstants.LIVE_URL+
-                                                    '/' +
-                                                    imglist[i],
-                                                // loadingBuilder: (BuildContext
-                                                // context,
-                                                //     Widget child,
-                                                //     ImageChunkEvent
-                                                //     loadingProgress) {
-                                                //   if (loadingProgress ==
-                                                //       null) return child;
-                                                //   return Center(
-                                                //     child:
-                                                //     CircularProgressIndicator(
-                                                //       value: loadingProgress
-                                                //           .expectedTotalBytes !=
-                                                //           null
-                                                //           ? loadingProgress
-                                                //           .cumulativeBytesLoaded /
-                                                //           loadingProgress
-                                                //               .expectedTotalBytes
-                                                //           : null,
-                                                //     ),
-                                                //   );
-                                                // },
-                                              )
-                                                  : InkWell(
-                                                onTap: () async {
-                                                  launch(AppConstants.LIVE_URL+
-                                                      '/' +
-                                                      imglist[i]);
-                                                },
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        vertical:
-                                                        8.0,
-                                                        horizontal:
-                                                        15),
-                                                    child:
-                                                    TextButton
-                                                        .icon(
-                                                      onPressed:
-                                                          () {
-                                                        Navigator.pop(
-                                                            context);
+                                                            : Container();
                                                       },
-                                                      icon: Icon(
-                                                        Icons
-                                                            .cancel_presentation,
-                                                        color: Colors
-                                                            .white,
-                                                      ),
-                                                      label: Text(
-                                                        'Close',
-                                                        style: TextStyle(
-                                                            color: Colors
-                                                                .white,
-                                                            fontSize:
-                                                            12),
-                                                      ),
-                                                      style: TextButton
-                                                          .styleFrom(
-                                                        backgroundColor:
-                                                        Colors
-                                                            .red,
-                                                        shape:
-                                                        RoundedRectangleBorder(
-                                                          borderRadius:
-                                                          BorderRadius.circular(8.0),
+                                                      child: Container(
+                                                        padding: EdgeInsets.all(16),
+                                                        height: 100,
+                                                        width: 100,
+                                                        child: imglist[i].endsWith(".jpg")
+                                                            ? Image.network(
+                                                          AppConstants.LIVE_URL +
+
+                                                              imglist[i],
+                                                          // loadingBuilder: (BuildContext
+                                                          // context,
+                                                          //     Widget child,
+                                                          //     ImageChunkEvent
+                                                          //     loadingProgress) {
+                                                          //   if (loadingProgress ==
+                                                          //       null) return child;
+                                                          //   return Center(
+                                                          //     child:
+                                                          //     CircularProgressIndicator(
+                                                          //       value: loadingProgress
+                                                          //           .expectedTotalBytes !=
+                                                          //           null
+                                                          //           ? loadingProgress
+                                                          //           .cumulativeBytesLoaded /
+                                                          //           loadingProgress
+                                                          //               .expectedTotalBytes
+                                                          //           : null,
+                                                          //     ),
+                                                          //   );
+                                                          // },
+                                                        ):
+                                                          Icon(
+                                                              Icons.list_alt),
                                                         ),
                                                       ),
-                                                    ),
-                                                  ),
+
                                                 ],
+                                              ),
+                                            );
+                                          },
+                                        );
+                                        print("attachement viewed");
+
+
+
+                                        /*Expanded(
+                                          flex: 2,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 8.0, right: 8, top: 2, bottom: 2),
+                                            child: TextButton.icon(
+                                              onPressed: () {
+                                                List<String> imglist =
+                                                list.attachFileName!.split(',');
+                                                print("sizeimglist" + imglist.length.toString());
+
+                                                showModalBottomSheet(
+                                                  context: context,
+                                                  builder: (BuildContext context) {
+                                                    return SingleChildScrollView(
+                                                      scrollDirection: Axis.horizontal,
+                                                      child: Row(
+                                                        children: [
+                                                          for (int i = 0; i < imglist.length; i++)
+                                                            InkWell(
+                                                              onTap: () {
+                                                                imglist[i].endsWith(".jpg")
+                                                                    ? showDialog(
+                                                                  context: context,
+                                                                  builder:
+                                                                      (BuildContext context) {
+                                                                    return Center(
+                                                                      child: Container(
+                                                                        padding:
+                                                                        EdgeInsets.all(8),
+                                                                        color: Colors
+                                                                            .transparent,
+                                                                        child:
+                                                                        SingleChildScrollView(
+                                                                          child: Column(
+                                                                            children: [
+                                                                              imglist[i].endsWith(
+                                                                                  ".jpg")
+                                                                                  ? InteractiveViewer(
+                                                                                boundaryMargin:
+                                                                                const EdgeInsets.all(20.0),
+                                                                                minScale:
+                                                                                0.1,
+                                                                                maxScale:
+                                                                                2.5,
+                                                                                child: Image
+                                                                                    .network(
+                                                                                  AppConstants.LIVE_URL +
+                                                                                      '/' +
+                                                                                      imglist[i],
+                                                                                  fit: BoxFit
+                                                                                      .fill,
+
+                                                                                ),
+                                                                              )
+                                                                                  : imglist[i].endsWith(
+                                                                                  ".pdf")
+                                                                                  ? Image
+                                                                                  .asset(
+                                                                                "assets/images/pdf.png",
+                                                                                width:
+                                                                                24,
+                                                                                height:
+                                                                                24,
+                                                                              )
+                                                                                  : Image
+                                                                                  .asset(
+                                                                                "assets/images/docs.png",
+                                                                                width:
+                                                                                24,
+                                                                                height:
+                                                                                24,
+                                                                              ),
+                                                                              SizedBox(
+                                                                                height: 10,
+                                                                              ),
+                                                                              Padding(
+                                                                                padding: const EdgeInsets
+                                                                                    .symmetric(
+                                                                                    vertical:
+                                                                                    8.0,
+                                                                                    horizontal:
+                                                                                    15),
+                                                                                child:
+                                                                                TextButton
+                                                                                    .icon(
+                                                                                  onPressed:
+                                                                                      () {
+                                                                                    Navigator.pop(
+                                                                                        context);
+                                                                                  },
+                                                                                  icon: Icon(
+                                                                                    Icons
+                                                                                        .cancel_presentation,
+                                                                                    color: Colors
+                                                                                        .white,
+                                                                                  ),
+                                                                                  label: Text(
+                                                                                    'Close',
+                                                                                    style: TextStyle(
+                                                                                        color: Colors
+                                                                                            .white,
+                                                                                        fontSize:
+                                                                                        12),
+                                                                                  ),
+                                                                                  style: TextButton
+                                                                                      .styleFrom(
+                                                                                    backgroundColor:
+                                                                                    Colors
+                                                                                        .red,
+                                                                                    shape:
+                                                                                    RoundedRectangleBorder(
+                                                                                      borderRadius:
+                                                                                      BorderRadius.circular(8.0),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                )
+                                                                    : Container();
+                                                              },
+                                                              child: Container(
+                                                                padding: EdgeInsets.all(16),
+                                                                height: 100,
+                                                                width: 100,
+                                                                child: imglist[i].endsWith(".jpg")
+                                                                    ? Image.network(
+                                                                  AppConstants.LIVE_URL+
+                                                                      '/' +
+                                                                      imglist[i],
+                                                                  // loadingBuilder: (BuildContext
+                                                                  // context,
+                                                                  //     Widget child,
+                                                                  //     ImageChunkEvent
+                                                                  //     loadingProgress) {
+                                                                  //   if (loadingProgress ==
+                                                                  //       null) return child;
+                                                                  //   return Center(
+                                                                  //     child:
+                                                                  //     CircularProgressIndicator(
+                                                                  //       value: loadingProgress
+                                                                  //           .expectedTotalBytes !=
+                                                                  //           null
+                                                                  //           ? loadingProgress
+                                                                  //           .cumulativeBytesLoaded /
+                                                                  //           loadingProgress
+                                                                  //               .expectedTotalBytes
+                                                                  //           : null,
+                                                                  //     ),
+                                                                  //   );
+                                                                  // },
+                                                                )
+                                                                    : InkWell(
+                                                                  onTap: () async {
+                                                                    launch(AppConstants.LIVE_URL+
+                                                                        '/' +
+                                                                        imglist[i]);
+                                                                  },
+                                                                  child: Icon(
+                                                                      Icons.list_alt),
+                                                                ),
+                                                              ),
+                                                            )
+                                                        ],
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                                print("attachement viewed");
+                                              },
+                                              icon: Icon(
+                                                Icons.attach_file,
+                                                color: Colors.white,
+                                                size: 18,
+                                              ),
+                                              label: Text(
+                                                'View Attachment',
+                                                style: TextStyle(color: Colors.white, fontSize: 10),
+                                              ),
+                                              style: TextButton.styleFrom(
+                                                backgroundColor: Colors.blueGrey,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(8.0),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        );
-                                      },
-                                    );*/
-                                    print("attachement viewed");
-                                  },
-                                  icon: Icon(
-                                    Icons.attach_file,
-                                    color: Colors.white,
-                                    size: 18,
-                                  ),
-                                  label: Text(
-                                    'Attachment',
-                                    style: TextStyle(color: Colors.white, fontSize: 10),
-                                  ),
-                                  style: TextButton.styleFrom(
-                                    backgroundColor: Colors.blueGrey,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ):Container()),
-                            DataCell(Text(
-                                list.empName.toString(),
-                                textAlign: TextAlign.center)),
-                            DataCell(Row(
-                              children: [
-                                Text(
-                                    list.empContactNo.toString(),
-                                    textAlign: TextAlign.center),
-                                list.empContactNo.toString()!=null
-                                    &&
-                                    list.empContactNo.toString().length>9?
-                                Center(
-                                    child: InkWell(
-                                      // onTap:() async {
-                                      //   var url='tel:${list.mobileNo}';
-                                      //
-                                      //
-                                      //   await launch(url);
-                                      //
-                                      // },
-                                        child: InkWell(
-                                            onTap: () async {
-                                              var url = 'tel:${list.empContactNo.toString()}';
+                                        );*/
+                                       /*showDialog(
 
-                                              await launch(url);
-                                            },
-                                            child: Icon(
-                                              Icons.call,
-                                              color: Colors.green,
-                                            )))
-                                ):Container()
-                              ],
-                            )),
-                          ]),
-                    )
-                        .toList(),
-                  )
-                      : Container(
-                    child: Center(
-                      child: Text('No Data'),
+                                          context: context,
+                                          builder:
+                                              (BuildContext context) {
+                                            return Center(
+                                              child: Container(
+                                                padding:
+                                                EdgeInsets.all(8),
+                                                color: Colors
+                                                    .transparent,
+                                                child:
+                                                SingleChildScrollView(
+
+                                                  child: Column(
+                                                    children: [
+                                                  imglist[i].endsWith(".jpg")
+                                                      ? Image.network(
+                                                    AppConstants.LIVE_URL+
+                                                        '/' +
+                                                        imglist[i],
+                                                    // loadingBuilder: (BuildContext
+                                                    // context,
+                                                    //     Widget child,
+                                                    //     ImageChunkEvent
+                                                    //     loadingProgress) {
+                                                    //   if (loadingProgress ==
+                                                    //       null) return child;
+                                                    //   return Center(
+                                                    //     child:
+                                                    //     CircularProgressIndicator(
+                                                    //       value: loadingProgress
+                                                    //           .expectedTotalBytes !=
+                                                    //           null
+                                                    //           ? loadingProgress
+                                                    //           .cumulativeBytesLoaded /
+                                                    //           loadingProgress
+                                                    //               .expectedTotalBytes
+                                                    //           : null,
+                                                    //     ),
+                                                    //   );
+                                                    // },
+                                                  )
+                                                      : InkWell(
+                                                    onTap: () async {
+                                                      launch(AppConstants.LIVE_URL+
+                                                          '/' +
+                                                          imglist[i]);
+                                                    },
+                                                      SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      Padding(
+                                                        padding: const EdgeInsets
+                                                            .symmetric(
+                                                            vertical:
+                                                            8.0,
+                                                            horizontal:
+                                                            15),
+                                                        child:
+                                                        TextButton
+                                                            .icon(
+                                                          onPressed:
+                                                              () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          icon: Icon(
+                                                            Icons
+                                                                .cancel_presentation,
+                                                            color: Colors
+                                                                .white,
+                                                          ),
+                                                          label: Text(
+                                                            'Close',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize:
+                                                                12),
+                                                          ),
+                                                          style: TextButton
+                                                              .styleFrom(
+                                                            backgroundColor:
+                                                            Colors
+                                                                .red,
+                                                            shape:
+                                                            RoundedRectangleBorder(
+                                                              borderRadius:
+                                                              BorderRadius.circular(8.0),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );*/
+                                        print("attachement viewed");
+                                      },
+                                      icon: Icon(
+                                        Icons.attach_file,
+                                        color: Colors.white,
+                                        size: 18,
+                                      ),
+                                      label: Text(
+                                        'Attachment',
+                                        style: TextStyle(color: Colors.white, fontSize: 10),
+                                      ),
+                                      style: TextButton.styleFrom(
+                                        backgroundColor: Colors.blueGrey,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8.0),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ):Container()),
+                                DataCell(Text(
+                                    list.empName.toString(),
+                                    textAlign: TextAlign.center)),
+                                DataCell(Row(
+                                  children: [
+                                    Text(
+                                        list.empContactNo.toString(),
+                                        textAlign: TextAlign.center),
+                                    list.empContactNo.toString()!=null
+                                        &&
+                                        list.empContactNo.toString().length>9?
+                                    Center(
+                                        child: InkWell(
+                                          // onTap:() async {
+                                          //   var url='tel:${list.mobileNo}';
+                                          //
+                                          //
+                                          //   await launch(url);
+                                          //
+                                          // },
+                                            child: InkWell(
+                                                onTap: () async {
+                                                  var url = 'tel:${list.empContactNo.toString()}';
+
+                                                  await launch(url);
+                                                },
+                                                child: Icon(
+                                                  Icons.call,
+                                                  color: Colors.green,
+                                                )))
+                                    ):Container()
+                                  ],
+                                )),
+                              ]),
+                        )
+                            .toList(),
+                      )
+                          : Container(
+                        child: Center(
+                          child: Text('No Data'),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  color: Colors.blueAccent.withOpacity(0.2),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("Page : ${page}"),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          IconButton(
-                            icon: Icon(
-                              Icons.arrow_back,
-                              color: page > 0
-                                  ? Colors.blue
-                                  : Colors.grey,
+                  Container(
+                    color: Colors.blueAccent.withOpacity(0.2),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("Page : ${page}"),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                Icons.arrow_back,
+                                color: page > 0
+                                    ? Colors.blue
+                                    : Colors.grey,
+                              ),
+                              onPressed: () {
+                                if (page > 1)
+                                  setState(() {
+                                    page--;
+                                    li3.removeRange(0, li3.length);
+                                    for (int i = (page * 20) - 19;
+                                    i < page * 20;
+                                    i++) {
+                                      li3.add(FilterList(
+
+                                          li2.result![i].createdDate,
+                                          li2.result![i].docNo,
+                                          li2.result![i].brachName,
+                                          li2.result![i].branchCode,
+                                          li2.result![i].description,
+                                          li2.result![i].attachFilePath,
+                                          li2.result![i].attachFileName,
+                                          li2.result![i].empName,
+                                          li2.result![i].empContactNo,
+                                          li2.result![i].empMailid,
+                                          li2.result![i].modifiedDate,
+                                          li2.result![i].empGroup,
+                                          li2.result![i].empID,
+                                          li2.result![i].branchCategory,
+                                          li2.result![i].vechileType
+
+
+                                      ));
+                                    }
+                                  });
+                              },
                             ),
-                            onPressed: () {
-                              if (page > 1)
+                            int.parse(li3.length.toString()) == 0
+                                ? Text("0 to 0 of 0")
+                                : int.parse(li2.result!.length.toString()) >
+                                (page * 20)
+                                ? Text(
+                                "${(page * 20) - 19} to ${(page * 20)} of ${li2.result!.length}")
+                                : Text(
+                                "${(page * 20) - 19} to ${li2.result!.length} of ${li2.result!.length}"),
+                            IconButton(
+                              icon: Icon(
+                                Icons.arrow_forward,
+                                color: int.parse(li2 != null
+                                    ? li2.result!.length.toString()
+                                    : 0.toString()) >
+                                    (page * 20)
+                                    ? Colors.blueAccent
+                                    : Colors.grey,
+                              ),
+                              onPressed: () {
                                 setState(() {
-                                  page--;
-                                  li3.removeRange(0, li3.length);
-                                  for (int i = (page * 20) - 19;
-                                  i < page * 20;
-                                  i++) {
-                                    li3.add(FilterList(
+                                  if (int.parse(
+                                      li2.result!.length.toString()) >
+                                      (page * 20)) {
+                                    page++;
+                                    li3.removeRange(0, li3.length);
+                                    for (int i = (page * 20) - 19;
+                                    i < page * 20;
+                                    i++) {
+                                      li3.add(FilterList(
 
-                                        li2.result![i].createdDate,
-                                        li2.result![i].docNo,
-                                        li2.result![i].brachName,
-                                        li2.result![i].branchCode,
-                                        li2.result![i].description,
-                                        li2.result![i].attachFilePath,
-                                        li2.result![i].attachFileName,
-                                        li2.result![i].empName,
-                                        li2.result![i].empContactNo,
-                                        li2.result![i].empMailid,
-                                        li2.result![i].modifiedDate,
-                                        li2.result![i].empGroup,
-                                        li2.result![i].empID
+                                          li2.result![i].createdDate,
+                                          li2.result![i].docNo,
+                                          li2.result![i].brachName,
+                                          li2.result![i].branchCode,
+                                          li2.result![i].description,
+                                          li2.result![i].attachFilePath,
+                                          li2.result![i].attachFileName,
+                                          li2.result![i].empName,
+                                          li2.result![i].empContactNo,
+                                          li2.result![i].empMailid,
+                                          li2.result![i].modifiedDate,
+                                          li2.result![i].empGroup,
+                                          li2.result![i].empID,
+                                          li2.result![i].branchCategory,
+                                          li2.result![i].vechileType
 
 
-                                    ));
+                                      ));
+                                    }
                                   }
                                 });
-                            },
-                          ),
-                          int.parse(li3.length.toString()) == 0
-                              ? Text("0 to 0 of 0")
-                              : int.parse(li2.result!.length.toString()) >
-                              (page * 20)
-                              ? Text(
-                              "${(page * 20) - 19} to ${(page * 20)} of ${li2.result!.length}")
-                              : Text(
-                              "${(page * 20) - 19} to ${li2.result!.length} of ${li2.result!.length}"),
-                          IconButton(
-                            icon: Icon(
-                              Icons.arrow_forward,
-                              color: int.parse(li2 != null
-                                  ? li2.result!.length.toString()
-                                  : 0.toString()) >
-                                  (page * 20)
-                                  ? Colors.blueAccent
-                                  : Colors.grey,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                if (int.parse(
-                                    li2.result!.length.toString()) >
-                                    (page * 20)) {
-                                  page++;
-                                  li3.removeRange(0, li3.length);
-                                  for (int i = (page * 20) - 19;
-                                  i < page * 20;
-                                  i++) {
-                                    li3.add(FilterList(
-
-                                        li2.result![i].createdDate,
-                                        li2.result![i].docNo,
-                                        li2.result![i].brachName,
-                                        li2.result![i].branchCode,
-                                        li2.result![i].description,
-                                        li2.result![i].attachFilePath,
-                                        li2.result![i].attachFileName,
-                                        li2.result![i].empName,
-                                        li2.result![i].empContactNo,
-                                        li2.result![i].empMailid,
-                                        li2.result![i].modifiedDate,
-                                        li2.result![i].empGroup,
-                                        li2.result![i].empID
-
-
-                                    ));
-                                  }
-                                }
-                              });
-                            },
-                          )
-                        ],
-                      ),
-                    ],
+                              },
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
           ),
         ),
+            ),
       );
 
   }
@@ -1466,7 +1662,9 @@ class AllAssign_TicketsState extends State<AllAssign_Tickets> {
                 li2.result![k].empMailid,
                 li2.result![k].modifiedDate,
                 li2.result![k].empGroup,
-                li2.result![k].empID
+                li2.result![k].empID,
+                li2.result![k].branchCategory,
+                li2.result![k].vechileType
 
 
             ));
@@ -1531,7 +1729,7 @@ class AllAssign_TicketsState extends State<AllAssign_Tickets> {
     }
   }
 
-   Future<http.Response> getTicketListforAllBranch() async {
+   /*Future<http.Response> getTicketListforAllBranch() async {
 
      print("getTicketListforAllBranch is called");
      var headers = {"Content-Type": "application/json"};
@@ -1596,7 +1794,9 @@ class AllAssign_TicketsState extends State<AllAssign_Tickets> {
                  li2.result![k].empMailid,
                  li2.result![k].modifiedDate,
                  li2.result![k].empGroup,
-                 li2.result![k].empID
+                 li2.result![k].empID,
+                 li2.result![k].branchCategory,
+                 li2.result![k].vechileType
 
 
              ));
@@ -1659,7 +1859,241 @@ class AllAssign_TicketsState extends State<AllAssign_Tickets> {
        });
        throw Exception('Internet is down');
      }
+   }*/
+
+   Future<http.Response> GetWeeklyReport() async {
+
+     print("getTicketListforAllBranch is called");
+     var headers = {"Content-Type": "application/json"};
+     var body = {
+       "FormID": "4",
+       "CompanyName":dateupload,
+       "CompanyAddress":dateupload1,
+       "Country": BranchCode,
+       "State": "",
+       "City": "",
+       "ZipCode": "",
+       "Landmark": "",
+       "MobileNo": "",
+       "EMail": "",
+       "UserName": ""
+     };
+
+     print(body);
+     setState(() {
+       loading = true;
+     });
+     try {
+       final response = await http.post(
+           Uri.parse(AppConstants.LIVE_URL + 'UpdateMaster'),
+           body: jsonEncode(body),
+           headers: headers);
+       print(AppConstants.LIVE_URL + 'UpdateMaster');
+       print(response.body);
+       setState(() {
+         loading = false;
+       });
+       if (response.statusCode == 200) {
+
+         var isdata = json.decode(response.body)["status"] == 0;
+         print(isdata);
+         if (isdata) {
+           ScaffoldMessenger.of(this.context)
+               .showSnackBar(SnackBar(content: Text("No Records Found!!")));
+           print('No Records Found!!');
+           // CustomerTicketsModel li2 =CustomerTicketsModel(result: []);
+
+           li2.result!.clear();
+
+         } else {
+
+           print(AppConstants.LIVE_URL + 'getcustTckttoAsignnew');
+           print(body);
+           print(response.body);
+
+           li2 = WeekUpdateAdminModel.fromJson(jsonDecode(response.body));
+
+           if (li2.result!.length % 20 == 0)
+             totalpages = (li2.result!.length / 20).floor();
+           else
+             totalpages = (li2.result!.length / 20).floor() + 1;
+           print(totalpages);
+
+           li3.removeRange(0, li3.length);
+
+           for (int k = 0; k < li2.result!.length; k++) {
+             li3.add(FilterList(
+
+                 li2.result![k].createdDate,
+                 li2.result![k].docNo,
+                 li2.result![k].brachName,
+                 li2.result![k].branchCode,
+                 li2.result![k].description,
+                 li2.result![k].attachFilePath,
+                 li2.result![k].attachFileName,
+                 li2.result![k].empName,
+                 li2.result![k].empContactNo,
+                 li2.result![k].empMailid,
+                 li2.result![k].modifiedDate,
+                 li2.result![k].empGroup,
+                 li2.result![k].empID,
+                 li2.result![k].branchCategory,
+                 li2.result![k].vechileType
+
+
+             ));
+           }
+
+
+           // print(li2.result.length);
+           setState(() {});
+
+         }
+
+
+
+       } else {
+         showDialogbox(this.context, "Failed to Login API");
+       }
+       return response;
+     } on SocketException {
+       setState(() {
+         loading = false;
+         showDialog(
+             context: this.context,
+             builder: (_) => AlertDialog(
+                 backgroundColor: Colors.black,
+                 title: Text(
+                   "No Response!..",
+                   style: TextStyle(color: Colors.purple),
+                 ),
+                 content: Text(
+                   "Slow Server Response or Internet connection",
+                   style: TextStyle(color: Colors.white),
+                 )));
+       });
+       throw Exception('Internet is down');
+     }
    }
+
+   Future<http.Response> getTicketListforAllBranch() async {
+
+     print("getTicketListforAllBranch is called");
+     var headers = {"Content-Type": "application/json"};
+     var body = {
+       "FormID": "5",
+       "CompanyName":"",
+       "CompanyAddress":"",
+       "Country": "",
+       "State": "",
+       "City": "",
+       "ZipCode": "",
+       "Landmark": "",
+       "MobileNo": "",
+       "EMail": "",
+       "UserName": ""
+     };
+
+     print(body);
+     setState(() {
+       loading = true;
+     });
+     try {
+       final response = await http.post(
+           Uri.parse(AppConstants.LIVE_URL + 'UpdateMaster'),
+           body: jsonEncode(body),
+           headers: headers);
+       print(AppConstants.LIVE_URL + 'UpdateMaster');
+       print(response.body);
+       setState(() {
+         loading = false;
+       });
+       if (response.statusCode == 200) {
+
+         var isdata = json.decode(response.body)["status"] == 0;
+         print(isdata);
+         if (isdata) {
+           ScaffoldMessenger.of(this.context)
+               .showSnackBar(SnackBar(content: Text("No Records Found!!")));
+           print('No Records Found!!');
+           // CustomerTicketsModel li2 =CustomerTicketsModel(result: []);
+
+           li2.result!.clear();
+
+         } else {
+
+           print(AppConstants.LIVE_URL + 'getcustTckttoAsignnew');
+           print(body);
+           print(response.body);
+
+           li2 = WeekUpdateAdminModel.fromJson(jsonDecode(response.body));
+
+           if (li2.result!.length % 20 == 0)
+             totalpages = (li2.result!.length / 20).floor();
+           else
+             totalpages = (li2.result!.length / 20).floor() + 1;
+           print(totalpages);
+
+           li3.removeRange(0, li3.length);
+
+           for (int k = 0; k < li2.result!.length; k++) {
+             li3.add(FilterList(
+
+                 li2.result![k].createdDate,
+                 li2.result![k].docNo,
+                 li2.result![k].brachName,
+                 li2.result![k].branchCode,
+                 li2.result![k].description,
+                 li2.result![k].attachFilePath,
+                 li2.result![k].attachFileName,
+                 li2.result![k].empName,
+                 li2.result![k].empContactNo,
+                 li2.result![k].empMailid,
+                 li2.result![k].modifiedDate,
+                 li2.result![k].empGroup,
+                 li2.result![k].empID,
+                 li2.result![k].branchCategory,
+                 li2.result![k].vechileType
+
+
+             ));
+           }
+
+
+           // print(li2.result.length);
+           setState(() {});
+
+         }
+
+
+
+       } else {
+         showDialogbox(this.context, "Failed to Login API");
+       }
+       return response;
+     } on SocketException {
+       setState(() {
+         loading = false;
+         showDialog(
+             context: this.context,
+             builder: (_) => AlertDialog(
+                 backgroundColor: Colors.black,
+                 title: Text(
+                   "No Response!..",
+                   style: TextStyle(color: Colors.purple),
+                 ),
+                 content: Text(
+                   "Slow Server Response or Internet connection",
+                   style: TextStyle(color: Colors.white),
+                 )));
+       });
+       throw Exception('Internet is down');
+     }
+   }
+
+
+
+
 
 
 
@@ -1870,6 +2304,8 @@ class FilterList {
   String? modifiedDate;
   String? empGroup;
   String? empID;
+  String? branchCategory;
+  String? vechileType;
   FilterList(
       this.createdDate,
       this.docNo,
@@ -1883,7 +2319,9 @@ class FilterList {
       this.empMailid,
       this.modifiedDate,
       this.empGroup,
-      this.empID
+      this.empID,
+      this.branchCategory,
+      this.vechileType
       );
 }
 

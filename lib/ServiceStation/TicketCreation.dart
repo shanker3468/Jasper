@@ -1764,6 +1764,7 @@ class TicketCreationState extends State<TicketCreation> {
           child: TextButton.icon(
             onPressed: () {
 
+
              /* if (TicketType.isEmpty) {
                 Fluttertoast.showToast(
                     msg: "TicketType should not left Empty!!",
@@ -1858,7 +1859,21 @@ class TicketCreationState extends State<TicketCreation> {
                       textColor: Colors.white,
                       backgroundColor: Colors.red,
                       fontSize: 16.0);
+                } else if (files.isEmpty ||
+                    files.length == 0) {
+                  Fluttertoast.showToast(
+                      msg: "Please Capture One Image!!",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.SNACKBAR,
+                      timeInSecForIosWeb: 1,
+                      textColor: Colors.white,
+                      backgroundColor: Colors.red,
+                      fontSize: 16.0);
                 } else {
+
+                  setState(() {
+                    loading=true;
+                  });
                   if (files.length != 0) Photoupload();
                   insertticket();
                 }
@@ -1919,7 +1934,20 @@ class TicketCreationState extends State<TicketCreation> {
                       textColor: Colors.white,
                       backgroundColor: Colors.red,
                       fontSize: 16.0);
-                } else {
+                }else if (files.isEmpty ||
+                  files.length == 0) {
+                Fluttertoast.showToast(
+                    msg: "Please Capture One Image!!",
+                    toastLength: Toast.LENGTH_LONG,
+                    gravity: ToastGravity.SNACKBAR,
+                    timeInSecForIosWeb: 1,
+                    textColor: Colors.white,
+                    backgroundColor: Colors.red,
+                    fontSize: 16.0);
+              } else {
+                setState(() {
+                  loading=true;
+                });
                   if (files.length != 0) Photoupload();
                   insertticket();
                 }
@@ -1976,7 +2004,22 @@ class TicketCreationState extends State<TicketCreation> {
                       textColor: Colors.white,
                       backgroundColor: Colors.red,
                       fontSize: 16.0);
+                }else if (files.isEmpty ||
+                    files.length == 0) {
+
+                  Fluttertoast.showToast(
+                      msg: "Please Capture One Image!!",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.SNACKBAR,
+                      timeInSecForIosWeb: 1,
+                      textColor: Colors.white,
+                      backgroundColor: Colors.red,
+                      fontSize: 16.0);
                 } else {
+
+                  setState(() {
+                    loading=true;
+                  });
                   if (files.length != 0) Photoupload();
                   insertticket();
                 }

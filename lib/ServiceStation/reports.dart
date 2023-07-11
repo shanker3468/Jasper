@@ -29,6 +29,7 @@ class _ReportsDashBoardState extends State<ReportsDashBoard> {
 
   bool loading = false;
   int openTickets = 0;
+
   int wipTickets = 0;
   int solProvidTickets = 0;
   int reopenTickets = 0;
@@ -70,12 +71,12 @@ class _ReportsDashBoardState extends State<ReportsDashBoard> {
               color: Colors.white,
               child: ListView(
                 children: [
-                  babyCard("openTickets", "O", openTickets),
+                  babyCard("open Tickets", "O", openTickets),
+                  babyCard("ReOpen Tickets", "RO", reopenTickets),
                   babyCard("Approved Tickets", "A", ApprovedTickets),
                   babyCard("Third Party", "T", ThirdPartyTickets),
                   babyCard("Quotation", "Q", QuotationTickets),
                   babyCard("WIP Tickets", "P", wipTickets),
-
                   babyCard("Resolved Tickets", "S", solProvidTickets),
                   babyCard("Reject Tickets", "R", rejectTickets),
                   babyCard("Deleted Tickets", "D", deleteTickets),

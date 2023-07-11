@@ -42,6 +42,8 @@ class _BranchAdminDashBoardState extends State<BranchAdminDashBoard> {
   var DepartmentCode = "";
   var DepartmentName = "";
   var Location = "";
+  var branchCategory="";
+  var vechileType="";
 
   bool loading = false;
 
@@ -72,6 +74,8 @@ class _BranchAdminDashBoardState extends State<BranchAdminDashBoard> {
       DepartmentCode = prefs.getString('DepartmentCode')!;
       DepartmentName = prefs.getString('DepartmentName')!;
       Location = prefs.getString('Location')!;
+      branchCategory=prefs.getString('branchCategory')!;
+      vechileType=prefs.getString('vechileType')!;
       // FromBranchController.text = sessionfromBranchName;
 
       getOpenTickets();
@@ -88,6 +92,8 @@ class _BranchAdminDashBoardState extends State<BranchAdminDashBoard> {
     var headers = {"Content-Type": "application/json"};
     var body = {
       "BranchCode": branchID.toString(),
+      "BranchCategory":branchCategory.toString(),
+      "VechileType":vechileType.toString()
     };
 
     print(body);
@@ -232,8 +238,27 @@ class _BranchAdminDashBoardState extends State<BranchAdminDashBoard> {
                       ],
                     ),
                   ),
+
+                  Container(
+                    color: Colors.white,
+                    // padding: EdgeInsets.only(right: 10),
+                    height: 20,
+                    width: width,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Vechile Type:',
+                            style: TextStyle(fontStyle:FontStyle.italic,fontSize: 18)),
+                        Text(' ${
+                            vechileType.toString()}',
+                          style: TextStyle(fontWeight: FontWeight.w900,fontStyle:FontStyle.italic,color: Colors.indigo,fontSize: 18),
+
+                        ),
+                      ],
+                    ),
+                  ),
                   Text(' ${
-                      BranchName.toString()}',
+                      BranchName.toString()+'-'+branchCategory.toString()}',
                     style: TextStyle(fontWeight: FontWeight.w900,fontStyle:FontStyle.italic,color: Colors.indigo,fontSize: 15),
 
                   ),
@@ -363,269 +388,7 @@ class _BranchAdminDashBoardState extends State<BranchAdminDashBoard> {
                         crossAxisCount: 2,
                         physics: const PageScrollPhysics(),
                         children: <Widget>[
-                          /*InkWell(
-                            onTap: () {
-                              showDialog<void>(
-                                  context: context,
-                                  barrierDismissible: true,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      backgroundColor: Colors.white.withOpacity(0),
-                                      title: SingleChildScrollView(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Container(
 
-                                              child: Image.asset(
-                                                "logo.png",
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: height / 30,
-                                            ),
-                                            Text(
-                                              "Please Choose",
-                                              style: TextStyle(
-                                                  color: Colors.amber, fontSize: 16),
-                                            ),
-                                            SizedBox(
-                                              height: height / 30,
-                                            ),
-                                            // SizedBox(height: height/50,),
-                                            // FlatButton(
-                                            //   onPressed: () {
-                                            //     QuotaionNameState.Namecontroller.text="";
-                                            //     QuotaionNameState.Emailcontroller.text="";
-                                            //     QuotaionNameState.Mobilecontroller.text="";
-                                            //     QuotaionNameState.Addresscontroller.text="";
-                                            //     QuotaionNameState.GSTcontroller.text="";
-                                            //     QuotaionNameState.Whatsappcontroller.text="";
-                                            //     QuotaionNameState.Pincodecontroller.text="";
-                                            //     Navigator.pop(context);
-                                            //     Navigator.push(context,MaterialPageRoute(builder: (context)=>QuotationDate()));
-                                            //   },
-                                            //   child: Container(
-                                            //     height: 50,
-                                            //     // margin: EdgeInsets.only(left:16,right: 16),
-                                            //     alignment: Alignment.center,
-                                            //     decoration: BoxDecoration(
-                                            //         color: Colors.white,
-                                            //         borderRadius: BorderRadius.all(
-                                            //             Radius.circular(50))),
-                                            //     child: Text(
-                                            //       "New Quotation",
-                                            //       style: TextStyle(
-                                            //           color: String_Values.primarycolor),
-                                            //     ),
-                                            //   ),
-                                            // ),
-                                            SizedBox(
-                                              height: height / 50,
-                                            ),
-                                            FlatButton(
-                                              onPressed: () {
-                                                QuotaionNameState.Namecontroller.text="";
-                                                QuotaionNameState.Emailcontroller.text="";
-                                                QuotaionNameState.Mobilecontroller.text="";
-                                                QuotaionNameState.Addresscontroller.text="";
-                                                QuotaionNameState.GSTcontroller.text="";
-                                                QuotaionNameState.Whatsappcontroller.text="";
-                                                QuotaionNameState.Pincodecontroller.text="";
-                                                Navigator.pop(context);
-                                                Navigator.push(context,MaterialPageRoute(builder: (context)=>QuotaionName()));
-                                              },
-                                              child: Container(
-                                                height: 50,
-                                                // margin: EdgeInsets.only(left:16,right: 16),
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius: BorderRadius.all(
-                                                        Radius.circular(50))),
-                                                child: Text(
-                                                  "Quotation",
-                                                  style: TextStyle(
-                                                      color: String_Values.primarycolor),
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: height/50,),
-                                            FlatButton(
-                                              onPressed: () {
-                                                Order4State.Namecontroller.text="";
-                                                Order4State.Emailcontroller.text="";
-                                                Order4State.Mobilecontroller.text="";
-                                                Order4State.Addresscontroller.text="";
-                                                Order4State.GSTcontroller.text="";
-                                                Order4State.Whatsappcontroller.text="";
-                                                Order4State.Pincodecontroller.text="";
-                                                Navigator.pop(context);
-                                                Navigator.push(context,MaterialPageRoute(builder: (context)=>NewOrder()));
-                                              },
-                                              child: Container(
-                                                height: 50,
-                                                // margin: EdgeInsets.only(left:16,right: 16),
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius: BorderRadius.all(
-                                                        Radius.circular(50))),
-                                                child: Text(
-                                                  "New Order",
-                                                  style: TextStyle(
-                                                      color: String_Values.primarycolor),
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: height / 50,
-                                            ),
-
-                                            Column(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                FlatButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                    Navigator.push(context,MaterialPageRoute(builder: (context)=>OrderList(gst:false)));
-                                                    // Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => Dashboard()));
-
-                                                  },
-                                                  child: Container(
-                                                    height: 50,
-                                                    alignment: Alignment.center,
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius: BorderRadius.all(
-                                                            Radius.circular(50))),
-                                                    child: Text(
-                                                      "Existing Order",
-                                                      style: TextStyle(
-
-                                                          color: String_Values.primarycolor),
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(height: height/50,),
-                                                FlatButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                    Navigator.push(context,MaterialPageRoute(builder: (context)=>OrderListGST(gst: true,)));
-                                                  },
-                                                  child: Container(
-                                                    height: 50,
-                                                    alignment: Alignment.center,
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius: BorderRadius.all(
-                                                            Radius.circular(50))),
-                                                    child: Text(
-                                                      "GST Invoice",
-                                                      style: TextStyle(
-                                                          color: String_Values.primarycolor),
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(height: height/50,),
-                                                FlatButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                    Navigator.push(context,MaterialPageRoute(builder: (context)=>PendingPayments(gst: true,)));
-                                                  },
-                                                  child: Container(
-                                                    height: 50,
-                                                    alignment: Alignment.center,
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius: BorderRadius.all(
-                                                            Radius.circular(50))),
-                                                    child: Text(
-                                                      "Pending Payments",
-                                                      style: TextStyle(
-                                                          color: String_Values.primarycolor),
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(height: height/50,),
-
-
-                                                FlatButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                    Navigator.push(context,MaterialPageRoute(builder: (context)=>Reports()));
-                                                  },
-
-
-                                                  child: Container(
-                                                    height: 50,
-                                                    alignment: Alignment.center,
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius: BorderRadius.all(
-                                                            Radius.circular(50))),
-                                                    child: Text(
-                                                      "Reports",
-                                                      style: TextStyle(
-                                                          color: String_Values.primarycolor),
-                                                    ),
-                                                  ),
-                                                ),
-
-                                                // SizedBox(height: height/50,),
-                                                // FlatButton(
-                                                //   onPressed: () {
-                                                //     Navigator.pop(context);
-                                                //     Navigator.push(context,MaterialPageRoute(builder: (context)=>GeneralList(gst: false,)));
-                                                //   },
-                                                //
-                                                //
-                                                //   child: Container(
-                                                //     height: 50,
-                                                //     alignment: Alignment.center,
-                                                //     decoration: BoxDecoration(
-                                                //         color: Colors.white,
-                                                //         borderRadius: BorderRadius.all(
-                                                //             Radius.circular(50))),
-                                                //     child: Text(
-                                                //       "General Items",
-                                                //       style: TextStyle(
-                                                //           color: String_Values.primarycolor),
-                                                //     ),
-                                                //   ),
-                                                // ),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: height / 50,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  });
-                            },
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(width),),
-                              elevation: 5,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
-                                children: [
-                                  Icon(Icons.fastfood,color: String_Values.primarycolor,size: height/12,),
-                                  Text(
-                                    "Party Order",
-                                    style: TextStyle( color: String_Values.primarycolor,fontWeight: FontWeight.w800),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),*/
 
                           InkWell(
                             onTap: () {
@@ -659,138 +422,10 @@ class _BranchAdminDashBoardState extends State<BranchAdminDashBoard> {
                                             SizedBox(
                                               height: height / 30,
                                             ),
-                                            // SizedBox(height: height/50,),
-                                            // FlatButton(
-                                            //   onPressed: () {
-                                            //     QuotaionNameState.Namecontroller.text="";
-                                            //     QuotaionNameState.Emailcontroller.text="";
-                                            //     QuotaionNameState.Mobilecontroller.text="";
-                                            //     QuotaionNameState.Addresscontroller.text="";
-                                            //     QuotaionNameState.GSTcontroller.text="";
-                                            //     QuotaionNameState.Whatsappcontroller.text="";
-                                            //     QuotaionNameState.Pincodecontroller.text="";
-                                            //     Navigator.pop(context);
-                                            //     Navigator.push(context,MaterialPageRoute(builder: (context)=>QuotationDate()));
-                                            //   },
-                                            //   child: Container(
-                                            //     height: 50,
-                                            //     // margin: EdgeInsets.only(left:16,right: 16),
-                                            //     alignment: Alignment.center,
-                                            //     decoration: BoxDecoration(
-                                            //         color: Colors.white,
-                                            //         borderRadius: BorderRadius.all(
-                                            //             Radius.circular(50))),
-                                            //     child: Text(
-                                            //       "New Quotation",
-                                            //       style: TextStyle(
-                                            //           color: String_Values.primarycolor),
-                                            //     ),
-                                            //   ),
-                                            // ),
-                                            SizedBox(
-                                              height: height / 50,
-                                            ),
-
-                                            /* GestureDetector(
-
-                                                onTap: (){
-
-
-                                                  Navigator.pop(context);
-
-
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) => Assign_Tickets( status:"1",Tickettype:'',BranchName:''
-
-                                                      ),
-                                                    ),
-                                                  );
-
-
-                                                 //Navigator.push(context,MaterialPageRoute(builder: (context)=>TicketCreation()));
-                                                },
-                                                child: Container(
-                                                  height: 50,
-                                                  // margin: EdgeInsets.only(left:16,right: 16),
-                                                  alignment: Alignment.center,
-
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius: BorderRadius.all(
-                                                          Radius.circular(50))),
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                    children: [
-
-
-                                                      Text(
-                                                        "Open Tickets",
-                                                        style: TextStyle(
-                                                            color: String_Values.primarycolor),
-                                                      ),
-
-
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
 
                                             SizedBox(
                                               height: height / 50,
                                             ),
-
-                                            GestureDetector(
-
-                                              onTap: (){
-
-
-                                                Navigator.pop(context);
-
-
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) => Approved_Assign_Tickets( status:"1",Tickettype:'',BranchName:''
-
-                                                    ),
-                                                  ),
-                                                );
-
-
-                                                //Navigator.push(context,MaterialPageRoute(builder: (context)=>TicketCreation()));
-                                              },
-                                              child: Container(
-                                                height: 50,
-                                                // margin: EdgeInsets.only(left:16,right: 16),
-                                                alignment: Alignment.center,
-
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius: BorderRadius.all(
-                                                        Radius.circular(50))),
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                  children: [
-
-
-                                                    Text(
-                                                      "Approved Tickets",
-                                                      style: TextStyle(
-                                                          color: String_Values.primarycolor),
-                                                    ),
-
-
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-
-
-                                            SizedBox(
-                                              height: height / 50,
-                                            ),*/
 
                                             GestureDetector(
 
@@ -854,51 +489,6 @@ class _BranchAdminDashBoardState extends State<BranchAdminDashBoard> {
                                               ),
                                             ),
 
-                                            /*SizedBox(
-                                              height: height / 50,
-                                            ),
-
-                                            GestureDetector(
-                                              onTap: (){
-                                                Navigator.pop(context);
-                                                Navigator.push(context,MaterialPageRoute(builder: (context)=>MasterScreens()));
-                                              },
-                                              child: Container(
-                                                height: 50,
-                                                // margin: EdgeInsets.only(left:16,right: 16),
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius: BorderRadius.all(
-                                                        Radius.circular(50))),
-                                                child: Text(
-                                                  "Master Screens",
-                                                  style: TextStyle(
-                                                      color: String_Values.primarycolor),
-                                                ),
-                                              ),
-                                            ),*/
-
-                                            /*SizedBox(height: height/50,),
-
-
-                                              GestureDetector(
-
-                                                child: Container(
-                                                  height: 50,
-                                                  // margin: EdgeInsets.only(left:16,right: 16),
-                                                  alignment: Alignment.center,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius: BorderRadius.all(
-                                                          Radius.circular(50))),
-                                                  child: Text(
-                                                    "Ticket Status",
-                                                    style: TextStyle(
-                                                        color: String_Values.primarycolor),
-                                                  ),
-                                                ),
-                                              ),*/
 
                                             SizedBox(
                                               height: height / 50,
@@ -929,30 +519,6 @@ class _BranchAdminDashBoardState extends State<BranchAdminDashBoard> {
                                               height: height / 50,
                                             ),
 
-                                            // GestureDetector(
-                                            //   onTap: (){
-                                            //     Navigator.pop(context);
-                                            //     //    Navigator.push(context,MaterialPageRoute(builder: (context)=>ReportsDashBoard()));
-                                            //   },
-                                            //   child: Container(
-                                            //     height: 50,
-                                            //     // margin: EdgeInsets.only(left:16,right: 16),
-                                            //     alignment: Alignment.center,
-                                            //     decoration: BoxDecoration(
-                                            //         color: Colors.white,
-                                            //         borderRadius: BorderRadius.all(
-                                            //             Radius.circular(50))),
-                                            //     child: Text(
-                                            //       "Reports",
-                                            //       style: TextStyle(
-                                            //           color: String_Values.primarycolor),
-                                            //     ),
-                                            //   ),
-                                            // ),
-                                            //
-                                            // SizedBox(
-                                            //   height: height / 50,
-                                            // ),
 
 
 

@@ -696,13 +696,98 @@ class ReportListState extends State<ReportList> {
                                                         const SizedBox(
                                                           height: 5,
                                                         ),
+
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceEvenly,
+                                                          children: [
+                                                            Container(
+                                                                width: SW / 2.5,
+                                                                child: RichText(
+                                                                    text:
+                                                                    TextSpan(
+                                                                      children: [
+                                                                        TextSpan(
+                                                                          text:
+                                                                          'Created Date :',
+                                                                          style: TextStyle(
+                                                                              fontSize:
+                                                                              SH /
+                                                                                  60,
+                                                                              color: Colors
+                                                                                  .black,
+                                                                              fontWeight:
+                                                                              FontWeight
+                                                                                  .bold),
+                                                                        ),
+                                                                        TextSpan(
+                                                                          text: DateFormat("dd-MM-yyyy").format(DateTime.parse(custTicketStatuslist.result![index].createdDate.toString())).toString(),
+                                                                          style: TextStyle(
+                                                                              fontSize:
+                                                                              SH /
+                                                                                  60,
+                                                                              color: Colors
+                                                                                  .black),
+                                                                        ),
+                                                                      ],
+                                                                    )) /*Text(
+                                                                "Ageing Days : ${custTicketStatuslist.result[index].ticketNo.toString()}",
+                                                                style: TextStyle(
+                                                                    fontSize: SH / 60,
+                                                                    color: Colors.black),
+                                                              ),*/
+                                                            ),
+                                                            Container(
+                                                                width: SW / 2.5,
+                                                                child: RichText(
+                                                                    text:
+                                                                    TextSpan(
+                                                                      children: [
+                                                                        TextSpan(
+                                                                          text:
+                                                                          'RequiredDate :',
+                                                                          style: TextStyle(
+                                                                              fontSize: SH /
+                                                                                  60,
+                                                                              color: Colors
+                                                                                  .black,
+                                                                              fontWeight:
+                                                                              FontWeight.bold),
+                                                                        ),
+                                                                        TextSpan(
+                                                                          text:
+                                                                          '${custTicketStatuslist.result![index].requiredDate.toString()}',
+                                                                          style: TextStyle(
+                                                                              fontSize: SH /
+                                                                                  60,
+                                                                              color:
+                                                                              Colors.black),
+                                                                        ),
+                                                                      ],
+                                                                    ))
+                                                              /*Text(
+                                                                "RequiredDate : ${custTicketStatuslist.result[index].requiredDate.toString()}",
+                                                                overflow:
+                                                                    TextOverflow.ellipsis,
+                                                                softWrap: true,
+                                                                style: TextStyle(
+                                                                    fontSize: SH / 60),
+                                                              ),*/
+                                                            ),
+
+                                                          ],
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
                                                         Row(
                                                           mainAxisAlignment:
                                                           MainAxisAlignment
                                                               .spaceAround,
                                                           children: [
                                                             Container(
-                                                                width: SW / 2,
+                                                                width: SW / 2.5,
                                                                 child: RichText(
                                                                     text:
                                                                     TextSpan(
@@ -739,7 +824,7 @@ class ReportListState extends State<ReportList> {
                                                               ),*/
                                                             ),
                                                             Container(
-                                                              //width: SW / 2,
+                                                              width: SW / 2.5,
                                                                 child: RichText(
                                                                     text:
                                                                     TextSpan(
@@ -780,9 +865,59 @@ class ReportListState extends State<ReportList> {
 
                                                           ],
                                                         ),
+
                                                         const SizedBox(
                                                           height: 5,
                                                         ),
+
+                                                        /*Row(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                          children: [
+                                                            Container(
+                                                                width: SW / 2,
+                                                                child: RichText(
+                                                                    text:
+                                                                    TextSpan(
+                                                                      children: [
+                                                                        TextSpan(
+                                                                          text:
+                                                                          'RequiredDate :',
+                                                                          style: TextStyle(
+                                                                              fontSize: SH /
+                                                                                  60,
+                                                                              color: Colors
+                                                                                  .black,
+                                                                              fontWeight:
+                                                                              FontWeight.bold),
+                                                                        ),
+                                                                        TextSpan(
+                                                                          text:
+                                                                          '  ${custTicketStatuslist.result![index].requiredDate.toString()}',
+                                                                          style: TextStyle(
+                                                                              fontSize: SH /
+                                                                                  60,
+                                                                              color:
+                                                                              Colors.black),
+                                                                        ),
+                                                                      ],
+                                                                    ))
+                                                              /*Text(
+                                                                "RequiredDate : ${custTicketStatuslist.result[index].requiredDate.toString()}",
+                                                                overflow:
+                                                                    TextOverflow.ellipsis,
+                                                                softWrap: true,
+                                                                style: TextStyle(
+                                                                    fontSize: SH / 60),
+                                                              ),*/
+                                                            ),
+                                                            Container(),
+                                                          ],
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),*/
                                                         custTicketStatuslist.result![index].assetName.toString().isNotEmpty&&custTicketStatuslist.result![index].assetName.toString()!=null?Row(
                                                           mainAxisAlignment:
                                                           MainAxisAlignment
@@ -879,6 +1014,55 @@ class ReportListState extends State<ReportList> {
                                                         ):Container(),
 
                                                         custTicketStatuslist.result![index].itemName.toString().isNotEmpty?const SizedBox(
+                                                          height: 5,
+                                                        ):Container(),
+                                                        custTicketStatuslist.result![index].quotation.toString()!="null"||custTicketStatuslist.result![index].quotation!.isNotEmpty||custTicketStatuslist.result![index].quotation.toString()!=""?Row(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                          children: [
+                                                            Container(
+                                                                width: SW / 2,
+                                                                child: RichText(
+                                                                    text:
+                                                                    TextSpan(
+                                                                      children: [
+                                                                        TextSpan(
+                                                                          text:
+                                                                          'quotation:',
+                                                                          style: TextStyle(
+                                                                              fontSize: SH /
+                                                                                  60,
+                                                                              color: Colors
+                                                                                  .black,
+                                                                              fontWeight:
+                                                                              FontWeight.bold),
+                                                                        ),
+                                                                        TextSpan(
+                                                                          text:
+                                                                          '  ${custTicketStatuslist.result![index].quotation.toString()}',
+                                                                          style: TextStyle(
+                                                                              fontSize: SH /
+                                                                                  60,
+                                                                              color:
+                                                                              Colors.black),
+                                                                        ),
+                                                                      ],
+                                                                    ))
+                                                              /*Text(
+                                                                "RequiredDate : ${custTicketStatuslist.result[index].requiredDate.toString()}",
+                                                                overflow:
+                                                                    TextOverflow.ellipsis,
+                                                                softWrap: true,
+                                                                style: TextStyle(
+                                                                    fontSize: SH / 60),
+                                                              ),*/
+                                                            ),
+                                                            Container(),
+                                                          ],
+                                                        ):Container(),
+
+                                                        custTicketStatuslist.result![index].quotation.toString()!="null"||custTicketStatuslist.result![index].quotation!.isNotEmpty||custTicketStatuslist.result![index].quotation.toString()!=""?const SizedBox(
                                                           height: 5,
                                                         ):Container(),
                                                         custTicketStatuslist.result![index].issueCatrgory.toString().isNotEmpty?Row(
@@ -1028,102 +1212,7 @@ class ReportListState extends State<ReportList> {
                                                             ),
 
 
-                                                        const SizedBox(
-                                                          height: 5,
-                                                        ),
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                          children: [
-                                                            Container(
-                                                              width: SW / 2,
-                                                                child: RichText(
-                                                                    text:
-                                                                    TextSpan(
-                                                                      children: [
-                                                                        TextSpan(
-                                                                          text:
-                                                                          'Created Date :',
-                                                                          style: TextStyle(
-                                                                              fontSize:
-                                                                              SH /
-                                                                                  60,
-                                                                              color: Colors
-                                                                                  .black,
-                                                                              fontWeight:
-                                                                              FontWeight
-                                                                                  .bold),
-                                                                        ),
-                                                                        TextSpan(
-                                                                          text: DateFormat("dd-MM-yyyy").format(DateTime.parse(custTicketStatuslist.result![index].createdDate.toString())).toString(),
-                                                                          style: TextStyle(
-                                                                              fontSize:
-                                                                              SH /
-                                                                                  60,
-                                                                              color: Colors
-                                                                                  .black),
-                                                                        ),
-                                                                      ],
-                                                                    )) /*Text(
-                                                                "Ageing Days : ${custTicketStatuslist.result[index].ticketNo.toString()}",
-                                                                style: TextStyle(
-                                                                    fontSize: SH / 60,
-                                                                    color: Colors.black),
-                                                              ),*/
-                                                            ),
 
-                                                          ],
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 5,
-                                                        ),
-
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Container(
-                                                                width: SW / 2,
-                                                                child: RichText(
-                                                                    text:
-                                                                        TextSpan(
-                                                                  children: [
-                                                                    TextSpan(
-                                                                      text:
-                                                                          'RequiredDate :',
-                                                                      style: TextStyle(
-                                                                          fontSize: SH /
-                                                                              60,
-                                                                          color: Colors
-                                                                              .black,
-                                                                          fontWeight:
-                                                                              FontWeight.bold),
-                                                                    ),
-                                                                    TextSpan(
-                                                                      text:
-                                                                          '  ${custTicketStatuslist.result![index].requiredDate.toString()}',
-                                                                      style: TextStyle(
-                                                                          fontSize: SH /
-                                                                              60,
-                                                                          color:
-                                                                              Colors.black),
-                                                                    ),
-                                                                  ],
-                                                                ))
-                                                                /*Text(
-                                                                "RequiredDate : ${custTicketStatuslist.result[index].requiredDate.toString()}",
-                                                                overflow:
-                                                                    TextOverflow.ellipsis,
-                                                                softWrap: true,
-                                                                style: TextStyle(
-                                                                    fontSize: SH / 60),
-                                                              ),*/
-                                                                ),
-                                                            Container(),
-                                                          ],
-                                                        ),
                                                         widget.ticketType == "P"
                                                             ? const SizedBox(
                                                                 height: 5,
@@ -1323,7 +1412,7 @@ class ReportListState extends State<ReportList> {
                                                                     EdgeInsets
                                                                         .all(
                                                                             0)),
-                                                        widget.ticketType ==
+                                                       /* widget.ticketType ==
                                                                     "S" ||
                                                                 widget.ticketType ==
                                                                     "C"
@@ -1364,7 +1453,7 @@ class ReportListState extends State<ReportList> {
                                                                       ),
                                                                 ],
                                                               )
-                                                            : Container(),
+                                                            : Container(),*/
                                                         /* widget.ticketType == "R"
                                                             ? const SizedBox(
                                                                 height: 5,

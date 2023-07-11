@@ -110,6 +110,9 @@ flutter:
    - assets/images/newcust.png
    - assets/images/newemp.jpg
    - assets/images/avataricon.png
+   - assets/images/reopenn.png
+   - assets/images/AllTicket.jpg
+   - assets/images/alltic.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

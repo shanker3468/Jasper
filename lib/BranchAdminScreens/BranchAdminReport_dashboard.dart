@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:jasper/ADMIN%20Models/ChartCountModel.dart';
+import 'package:jasper/AdminReports/AdminAllTickets.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -35,6 +36,8 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
 
   var remarkspassword="60454";
   var remarkspassword1="12345";
+
+
 
   bool passVisible = false;
   bool passwordshow = false;
@@ -64,6 +67,8 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
   var DepartmentCode = "";
   var DepartmentName = "";
   var Location = "";
+  var branchCategory="";
+  var vechileType="";
 
   bool loading = false;
 
@@ -74,7 +79,9 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
       WIP = 0,
       ThirdParty = 0,
       Quotation = 0,
-      ReSolved = 0;
+      ReSolved = 0,
+        ReOpen = 0,
+        ALL = 0;
 
 
 
@@ -84,7 +91,8 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
     "WIP": "WIP legend",
     "ThirdParty": "Third Party legend",
     "Quotation": "Quotation legend",
-    "ReSolved": "ReSolved legend"
+    "ReSolved": "ReSolved legend",
+    "ReOpen": "ReOpen legend"
   };
   final colorList = <Color>[
     const Color(0xfffdcb6e),
@@ -92,7 +100,8 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
     const Color(0xfffd79a8),
     const Color(0xffe17055),
     const Color(0xff6c5ce7),
-    const Color(0xff60da19)
+    const Color(0xff60da19),
+    const Color(0xffda1929)
   ];
 
   final gradientList = <List<Color>>[
@@ -115,7 +124,11 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
   [
   const Color.fromRGBO(96, 218, 25, 1.0),
   const Color.fromRGBO(150, 211, 121, 1.0),
-  ]
+  ],
+    [
+      const Color.fromRGBO(218, 25, 41, 1.0),
+      const Color.fromRGBO(218, 22, 38, 0.8),
+    ]
   ];
 
 
@@ -144,7 +157,8 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
       "WIP": 0,
       "Third Party": 0,
       "Quotation": 0,
-      "ReSolved": 0
+      "ReSolved": 0,
+      "Re Open": 0
     };
 
     _tooltip = TooltipBehavior(enable: false);
@@ -184,7 +198,8 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
       const Color(0xfffd79a8),
       const Color(0xffe17055),
       const Color(0xff6c5ce7),
-      const Color(0xff60da19)
+      const Color(0xff60da19),
+      const Color(0xffda1929)
 
     ],
     stops: <double>[0.1, 0.3, 0.5, 0.7, 0.9],
@@ -389,7 +404,7 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: SfCartesianChart(
                               primaryXAxis: CategoryAxis(),
-                              primaryYAxis: NumericAxis(minimum: 0, maximum: 50, interval: 10),
+                              primaryYAxis: NumericAxis(minimum: 0, maximum: 100, interval: 20),
                               tooltipBehavior: _tooltip!,
                               series: <ChartSeries<_ChartData, String>>[
                                 BarSeries<_ChartData, String>(
@@ -414,7 +429,7 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                   childAspectRatio: 1,
                                   // crossAxisSpacing: width / 20,
                                   // mainAxisSpacing: height / 20,
-                                  crossAxisCount: 3,
+                                  crossAxisCount: 4,
                                   children: <Widget>[
 
                                       GestureDetector(
@@ -848,6 +863,133 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                           ),
                                         ),
                                       ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        myController = TextEditingController()
+                                          ..text = "Re-opened";
+                                        print(myController);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    BranchAdminTicketReports(
+                                                      getScreenName:
+                                                      myController.text,
+                                                      getTicketType:
+                                                      "RO",
+                                                    )));
+                                      },
+                                      child: Card(
+                                        elevation: 5,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(10),
+                                        ),
+                                        child: Container(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                            children: [
+                                              Badge(
+                                                padding: EdgeInsets.all(8),
+                                                shape: BadgeShape.circle,
+                                                badgeColor: Colors.deepOrange,
+                                                showBadge:
+                                                ReOpen.toString() ==
+                                                    "0"
+                                                    ? false
+                                                    : true,
+                                                badgeContent: Text(
+                                                  ReOpen.toString(),
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                      FontWeight.bold),
+                                                ),
+                                                child: Image.asset(
+                                                    "assets/images/reopenn.png",
+                                                    fit: BoxFit.fill,
+                                                    height: 70,
+                                                    width: 70),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Container(
+                                                  padding: EdgeInsets.all(3),
+                                                  width: double.infinity,
+                                                  child: Center(
+                                                    child: Text(
+                                                      "Re-opened",
+                                                      textAlign:
+                                                      TextAlign.center,
+                                                      style: TextStyle(
+                                                          color: Color(
+                                                              0xFF002D58),
+                                                          fontSize: 15),
+                                                    ),
+                                                  )),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        myController = TextEditingController()
+                                          ..text = "ALL";
+                                        print(myController);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    BranchAdminAllTicketReports(
+                                                      getScreenName:
+                                                      myController.text,
+                                                      getTicketType:
+                                                      "ALL",
+                                                    )));
+                                      },
+                                      child: Card(
+                                        elevation: 5,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(10),
+                                        ),
+                                        child: Container(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                            children: [
+
+                                            Image.asset(
+                                                    "assets/images/alltic.png",
+                                                    fit: BoxFit.fill,
+                                                    height: 70,
+                                                    width: 70),
+
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Container(
+                                                  padding: EdgeInsets.all(3),
+                                                  width: double.infinity,
+                                                  child: Center(
+                                                    child: Text(
+                                                      "All Tickets",
+                                                      textAlign:
+                                                      TextAlign.center,
+                                                      style: TextStyle(
+                                                          color: Color(
+                                                              0xFF002D58),
+                                                          fontSize: 15),
+                                                    ),
+                                                  )),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
 
                                   ],
                                 ),
@@ -991,6 +1133,8 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
       DepartmentCode = prefs.getString('DepartmentCode')!;
       DepartmentName = prefs.getString('DepartmentName')!;
       Location = prefs.getString('Location')!;
+      branchCategory=prefs.getString('branchCategory')!;
+      vechileType=prefs.getString('vechileType')!;
       // FromBranchController.text = sessionfromBranchName;
 
       prodCustCountData();
@@ -1085,8 +1229,135 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
     }
   }*/
 
-
   Future<http.Response> prodCustCountData() async {
+
+    print("postRequest1 is called");
+    var headers = {"Content-Type": "application/json"};
+    var body = {
+      "FormID": 25,
+      "UserID": branchCategory.toString(),
+      "Password": vechileType.toString(),
+      "Branch": branchID,
+      "DataBase":""
+    };
+
+    print(body);
+    setState(() {
+      loading = true;
+    });
+    try {
+      final response = await http.post(
+          Uri.parse(AppConstants.LIVE_URL + 'JasperLogin'),
+          body: jsonEncode(body),
+          headers: headers);
+      print(AppConstants.LIVE_URL + 'JasperLogin');
+      print(response.statusCode);
+      print(response.body);
+      print(response.statusCode);
+
+      if (response.statusCode == 200) {
+
+
+        //
+        //
+        // final login = jsonDecode(response.body)['result']=='[]';
+
+        if (jsonDecode(response.body)["status"].toString() == "0") {
+
+        }else if (json.decode(response.body)["status"] == "0" &&
+            jsonDecode(response.body)["result"].toString() == []) {
+
+        } else if (json.decode(response.body)["status"] == 1 &&
+            jsonDecode(response.body)["result"].toString() == "[]") {
+
+        }else{
+
+          li4 = ChartCountModel.fromJson(jsonDecode(response.body));
+
+
+
+
+          print(json.decode(response.body)["result"][0]["Count"]);
+          print(json.decode(response.body)["result"][1]["Count"]);
+
+          for (int i = 0; i < li4.result!.length; i++) {
+            chartcount = chartcount +double.parse(li4.result![i].count.toString());
+
+
+
+
+          }
+
+          print("chartcount="+chartcount.toString());
+
+
+          OpenTickets = int.parse(li4.result![0].count.toString());
+          Approved = int.parse(li4.result![1].count.toString());
+          WIP = int.parse(li4.result![2].count.toString());
+          ThirdParty = int.parse(li4.result![3].count.toString());
+          Quotation = int.parse(li4.result![4].count.toString());
+          ReSolved = int.parse(li4.result![5].count.toString());
+          ReOpen=int.parse(li4.result![6].count.toString());
+
+
+          data = [
+            _ChartData('Open Tickets', double.parse(OpenTickets.toString())),
+            _ChartData('Approved', double.parse(Approved.toString())),
+            _ChartData('WIP', double.parse(WIP.toString())),
+            _ChartData('Third Party', double.parse(ThirdParty.toString())),
+            _ChartData('Quotation', double.parse(Quotation.toString())),
+            _ChartData('ReSolved', double.parse(ReSolved.toString())),
+            _ChartData('ReOpen', double.parse(ReOpen.toString())),
+          ];
+          _tooltip = TooltipBehavior(enable: true);
+
+
+
+          dataMap = <String, double>{
+            "Open Tickets": double.parse(OpenTickets.toString()),
+            "Approved": double.parse(Approved.toString()),
+            "WIP": double.parse(WIP.toString()),
+            "Third Party": double.parse(ThirdParty.toString()),
+            "Quotation": double.parse(Quotation.toString()),
+            "ReSolved": double.parse(ReSolved.toString()),
+            "ReOpen": double.parse(ReOpen.toString())
+          };
+
+
+
+
+        }
+
+        setState(() {
+          loading = false;
+        });
+
+      } else {
+        showDialogbox(context, "Failed to Login API");
+      }
+      return response;
+    } on SocketException {
+      setState(() {
+        loading = false;
+        showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+                backgroundColor: Colors.black,
+                title: Text(
+                  "No Response!..",
+                  style: TextStyle(color: Colors.purple),
+                ),
+                content: Text(
+                  "Slow Server Response or Internet connection",
+                  style: TextStyle(color: Colors.white),
+                )));
+      });
+      throw Exception('Internet is down');
+    }
+  }
+
+
+  /*Future<http.Response> prodCustCountData() async {
 
     print("postRequest1 is called");
     var headers = {"Content-Type": "application/json"};
@@ -1208,7 +1479,7 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
       });
       throw Exception('Internet is down');
     }
-  }
+  }*/
 
   void ResetStringValuesSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

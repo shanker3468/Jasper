@@ -45,7 +45,8 @@ class Result {
   String? deviceID;
   String? empGroup;
   String? empGroupID;
-
+  String? branchCategory;
+  String? vechileType;
 
   Result(
       {this.docNo,
@@ -67,8 +68,9 @@ class Result {
         this.empStatus,
         this.deviceID,
         this.empGroup,
-        this.empGroupID
-      });
+        this.empGroupID,
+        this.branchCategory,
+        this.vechileType});
 
   Result.fromJson(Map<String, dynamic> json) {
     docNo = json['DocNo'];
@@ -91,6 +93,8 @@ class Result {
     deviceID = json['DeviceID'];
     empGroup = json['EmpGroup'];
     empGroupID = json['EmpGroupID'];
+    branchCategory = json['BranchCategory'];
+    vechileType = json['VechileType'];
   }
 
   Map<String, dynamic> toJson() {
@@ -115,6 +119,8 @@ class Result {
     data['DeviceID'] = this.deviceID;
     data['EmpGroup'] = this.empGroup;
     data['EmpGroupID'] = this.empGroupID;
+    data['BranchCategory'] = this.branchCategory;
+    data['VechileType'] = this.vechileType;
     return data;
   }
 }

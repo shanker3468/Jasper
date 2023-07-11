@@ -57,15 +57,15 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
 
    bool ItemVisible =false;
 
-  late  String UserName,UserID,branchID,BranchName,DepartmentCode,DepartmentName,Location,EmpGroup;
+  late  String UserName,UserID,branchID,BranchName,DepartmentCode,DepartmentName,Location,EmpGroup,branchCategory,vechileType;
   late bool sessionLoggedIn;
 
   var dropdownValue2 = "Select Ticket Type";
   var stringlist2 = ["Select Ticket Type"];
 
-  String TicketType="";
+  String TicketType="ALL";
 
-   String Ticketcode="";
+   String Ticketcode="ALL";
 
   var dropdownValue5 = "Select Branch";
   var stringlist5 = ["Select Branch"];
@@ -376,7 +376,7 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
       //  backgroundColor: Colors.indigo,
         appBar: AppBar(
 
-          title: Text(widget.getScreenName.toString()+" Reports1"),
+          title: Text(widget.getScreenName.toString()+" Reports"),
 
         ),
 
@@ -525,22 +525,32 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
                         items: stringlist2,
                         onChanged: (val) {
                           print(val);
-                          for (int kk = 0; kk < li4.result!.length; kk++) {
-                            if (li4.result![kk].type == val) {
-                              TicketType = li4.result![kk].type.toString();
-                              Ticketcode = li4.result![kk].typeCode.toString();
-                              setState(() {
-                                print(TicketType);
-                                print(Ticketcode);
 
-                                //GetMyTablRecord();
-                              });
+
+                          if(val=="ALL"){
+                            TicketType="ALL";
+                            Ticketcode="ALL";
+
+
+                          }else {
+                            for (int kk = 0; kk < li4.result!.length; kk++) {
+                              if (li4.result![kk].type == val) {
+                                TicketType = li4.result![kk].type.toString();
+                                Ticketcode =
+                                    li4.result![kk].typeCode.toString();
+                                setState(() {
+                                  print(TicketType);
+                                  print(Ticketcode);
+
+                                  //GetMyTablRecord();
+                                });
+                              }
                             }
                           }
 
                           setState(() {
 
-                            getTicketListBasedOnTicketCategoryandBranch();
+                            getTicketList(2);
 
                           });
 
@@ -719,20 +729,20 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
 
                       if(FilterStatusName=="")DataColumn(
                         label: Text(
-                          'TicketType',
+                          'TicType',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
 
                       DataColumn(
                         label: Text(
-                          'Ticket No',
+                          'Tic No',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
                       DataColumn(
                         label: Text(
-                          'Branch Name',
+                          'Branch',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -776,20 +786,21 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
                       ),
                       DataColumn(
                         label: Text(
-                          'RequiredDate',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'Discription',
+                          'ReqDate',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
 
+
                       DataColumn(
                         label: Text(
                           'CreatedBy',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Description',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -876,6 +887,12 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
                             DataCell(Text(
                                 list.requiredDate.toString(),
                                 textAlign: TextAlign.center)),
+
+
+
+                            DataCell(Text(
+                                list.empName.toString(),
+                                textAlign: TextAlign.center)),
                             DataCell(Wrap(
                                 direction:
                                 Axis.vertical, //default
@@ -890,11 +907,6 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
                                       textAlign:
                                       TextAlign.center)
                                 ])),
-
-
-                            DataCell(Text(
-                                list.empName.toString(),
-                                textAlign: TextAlign.center)),
 
                             // DataCell(Wrap(
                             //     direction:
@@ -1342,8 +1354,10 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
       DepartmentName = prefs.getString('DepartmentName').toString();
       Location = prefs.getString('Location').toString();
       EmpGroup=prefs.getString('EmpGroup').toString();
+      branchCategory=prefs.getString('branchCategory')!;
+      vechileType=prefs.getString('vechileType')!;
 
-      getTicketList();
+      getTicketList(2);
 
       gettickettype().then((value) => getBranchList()).then((value) => getTicketStatusList()).then((value) => getTicketStatusfilterList());
     });
@@ -1396,6 +1410,7 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
           setState(() {
             stringlist2.clear();
             stringlist2.add("Select Ticket Type");
+            stringlist2.add("ALL");
             for (int i = 0; i < li4.result!.length; i++)
               stringlist2.add(li4.result![i].type.toString());
           });
@@ -1837,13 +1852,20 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
      }
    }
 
-  Future<http.Response> getTicketList() async {
+  Future<http.Response> getTicketList(int formID) async {
 
     print("getTicketList is called");
     var headers = {"Content-Type": "application/json"};
     var body = {
-      "BrachName": BranchName.toString(),
-      "Status":widget.getTicketType.toString()
+      "FormID": formID,
+      "TicketType": TicketType.toString(),
+      "Ticketcode": Ticketcode.toString(),
+      "BranchCode": branchID.toString(),
+      "BranchName1":BranchName.toString() ,
+      "TicketStatusCode":widget.getTicketType.toString(),
+      "TicketStatusName":widget.getTicketType.toString(),
+      "Extra1":branchCategory.toString(),
+      "Extra2":vechileType.toString(),
     };
 
     print(body);
@@ -1852,10 +1874,10 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
     });
     try {
       final response = await http.post(
-          Uri.parse(AppConstants.LIVE_URL + 'getTicketsBasedonBranch'),
+          Uri.parse(AppConstants.LIVE_URL + 'AdminFiltersCategory'),
           body: jsonEncode(body),
           headers: headers);
-      print(AppConstants.LIVE_URL + 'getTicketsBasedonBranch');
+      print(AppConstants.LIVE_URL + 'AdminFiltersCategory');
       print(response.body);
       setState(() {
         loading = false;
@@ -1876,7 +1898,7 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
 
         } else {
 
-          print(AppConstants.LIVE_URL + 'getTicketsBasedonBranch');
+          print(AppConstants.LIVE_URL + 'AdminFiltersCategory');
           print(body);
           print(response.body);
 
@@ -2557,7 +2579,7 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
                                  child: Text('OK',style: TextStyle(color: Colors.blue),textAlign: TextAlign.end,),
                                  onPressed: () {
                                    Navigator.of(context).pop();
-                                   getTicketList();
+                                   getTicketList(2);
 
                                  },
                                ),
@@ -2894,7 +2916,7 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
                                    AssignEmpName="";
                                    AssignEmpNameCode="";
                                    ItemVisible=false;
-                                   getTicketList();
+                                   getTicketList(2);
                                  },
                                ),
                              ),

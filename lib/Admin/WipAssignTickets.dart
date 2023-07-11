@@ -55,13 +55,17 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
 
    bool ItemVisible =false;
 
+   bool RejectRemarksVisible = false;
+
+   bool QuotationVisible =false;
+
   late  String UserName,UserID,branchID,BranchName,DepartmentCode,DepartmentName,Location,EmpGroup;
   late bool sessionLoggedIn;
 
   var dropdownValue2 = "Select Ticket Type";
   var stringlist2 = ["Select Ticket Type"];
 
-  String TicketType="";
+  String TicketType="ALL";
 
    String Ticketcode="";
 
@@ -86,9 +90,9 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
    var stringlist10 = ["Select Ticket Status"];
 
 
-   String BranchName1="";
+   String BranchName1="ALL";
 
-   String BranchCode="";
+   String BranchCode="Brnch-00";
 
 
 
@@ -96,8 +100,8 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
    String TicketStatus="";
 
 
-   String FilterStatusCode="";
-   String FilterStatusName="";
+   String FilterStatusCode="O";
+   String FilterStatusName="Open Tickets";
 
    String AssignDepartment="";
    String AssignDepartmentCode="";
@@ -142,6 +146,15 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
     locale: 'HI',
     symbol: "",
   );
+
+   TextEditingController _QuotationFieldController =
+   new TextEditingController();
+
+   TextEditingController RejectRemarksFieldController =
+   new TextEditingController();
+
+
+
   @override
   void initState() {
     getStringValuesSF();
@@ -167,7 +180,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                         icon: const Icon(Icons.save),
                         tooltip: 'Approve All',
                         onPressed: () {
-                          if (selectedlist.length == 0 || selectedlist.length == null) {
+                          if (selectedlist.length == 0 || selectedlist.length == null||selectedlist.isNotEmpty) {
                             showDialogbox(context, "Select Atleast one Ticket!!");
                           } else {
 
@@ -235,12 +248,42 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
 
                                                         setState(() {
                                                           ItemVisible=true;
+                                                          QuotationVisible=false;
+                                                          RejectRemarksVisible=false;
+                                                        });
+
+
+                                                      }else  if(TicketStatus=="Quotation"){
+
+
+                                                        setState(() {
+                                                          _QuotationFieldController.text = '';
+                                                          RejectRemarksFieldController.text='';
+                                                          ItemVisible=false;
+                                                          RejectRemarksVisible=false;
+                                                          QuotationVisible=true;
+                                                        });
+
+
+                                                      }else  if(TicketStatus=="Reject"){
+
+
+                                                        setState(() {
+                                                          _QuotationFieldController.text = '';
+                                                          RejectRemarksFieldController.text='';
+                                                          ItemVisible=false;
+                                                          QuotationVisible=false;
+                                                          RejectRemarksVisible=true;
                                                         });
 
 
                                                       }else{
                                                         setState(() {
                                                           ItemVisible=false;
+                                                          QuotationVisible=false;
+                                                          RejectRemarksVisible=false;
+                                                          _QuotationFieldController.text = '';
+                                                          RejectRemarksFieldController.text='';
                                                         });
                                                       }
 
@@ -250,6 +293,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                                     },
                                                     selectedItem: TicketStatus,
                                                   ),
+
 
                                                   Visibility(
                                                     visible: ItemVisible,
@@ -337,6 +381,68 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
 
                                                   ),
 
+                                                  Visibility(
+                                                    visible: QuotationVisible,
+                                                    child: Column(
+                                                      children: [
+                                                        Padding(
+                                                          padding: const EdgeInsets.all(8),
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                            children: [
+                                                              Text("Quotation", style: TextStyle(fontWeight:FontWeight.bold)),
+                                                            ],
+                                                          ),
+                                                        ),
+
+                                                        TextField(
+                                                          controller: _QuotationFieldController,
+                                                          decoration: InputDecoration(hintText: "Enter The Quote"),
+                                                          keyboardType: TextInputType.number,
+                                                        ),
+
+
+                                                      ],
+                                                    ),
+
+
+
+
+                                                  ),
+
+
+                                                  SizedBox(
+                                                      height: 15.0),
+
+                                                  Visibility(
+                                                    visible: RejectRemarksVisible,
+                                                    child: Column(
+                                                      children: [
+                                                        Padding(
+                                                          padding: const EdgeInsets.all(8),
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                            children: [
+                                                              Text("RejectRemarks", style: TextStyle(fontWeight:FontWeight.bold)),
+                                                            ],
+                                                          ),
+                                                        ),
+
+                                                        TextField(
+                                                          controller: RejectRemarksFieldController,
+                                                          decoration: InputDecoration(hintText: "Enter The RejectRemarks"),
+                                                          keyboardType: TextInputType.number,
+                                                        ),
+
+
+                                                      ],
+                                                    ),
+
+
+
+
+                                                  ),
+
                                                   SizedBox(
                                                       height: 15.0),
                                                   Row(
@@ -359,6 +465,8 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                                             AssignEmpName="";
                                                             AssignEmpNameCode="";
                                                             ItemVisible=false;
+                                                            QuotationVisible=false;
+                                                            RejectRemarksVisible=false;
                                                             Fluttertoast.showToast(
                                                                 msg:
                                                                 "Assign Cancelled!!",
@@ -450,11 +558,11 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                                                       selectedDatalist.add(selectedListModel(
                                                                           li2.result![k].docNo,
                                                                           li2.result![k].ticketNo,
-                                                                          li2.result![k].brachName,
+                                                                          li2.result![k].branchCode,
                                                                           TicketStatusCode,
                                                                           AssignEmpName,
                                                                           AssignEmpNameCode,
-                                                                          AssignDepartment,
+                                                                          '',
                                                                           '',
                                                                           UserID.toString()
                                                                       ));
@@ -471,6 +579,124 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                                               }
 
 
+
+                                                            }else if(TicketStatus=="Quotation"){
+
+
+
+                                                              if (TicketStatus.isEmpty) {
+                                                                Fluttertoast.showToast(
+                                                                    msg: "TicketStatus should not left Empty!!",
+                                                                    toastLength: Toast.LENGTH_LONG,
+                                                                    gravity: ToastGravity.SNACKBAR,
+                                                                    timeInSecForIosWeb: 1,
+                                                                    textColor: Colors.white,
+                                                                    backgroundColor: Colors.red,
+                                                                    fontSize: 16.0);
+                                                              }else if (_QuotationFieldController.text=="") {
+                                                                Fluttertoast.showToast(
+                                                                    msg: "Quoataion Amount should not left Empty!!",
+                                                                    toastLength: Toast.LENGTH_LONG,
+                                                                    gravity: ToastGravity.SNACKBAR,
+                                                                    timeInSecForIosWeb: 1,
+                                                                    textColor: Colors.white,
+                                                                    backgroundColor: Colors.red,
+                                                                    fontSize: 16.0);
+                                                              }else{
+
+                                                                print("Empty false");
+                                                                selectedDatalist.clear();
+
+                                                                for (int k = 0; k < li2.result!.length; k++) {
+                                                                  for (int j = 0; j < selectedlist.length; j++) {
+                                                                    if (selectedlist[j] ==
+                                                                        li2.result![k].docNo.toString()) {
+
+
+                                                                      selectedDatalist.add(selectedListModel(
+                                                                          li2.result![k].docNo,
+                                                                          li2.result![k].ticketNo,
+                                                                          li2.result![k].branchCode,
+                                                                          TicketStatusCode,
+                                                                          AssignEmpName,
+                                                                          AssignEmpNameCode,
+                                                                          _QuotationFieldController.text.toString(),
+                                                                          '',
+                                                                          UserID.toString()
+                                                                      ));
+
+                                                                    }
+                                                                  }
+                                                                }
+
+
+
+
+
+                                                                BulkinsertStatusTickets();
+                                                                Navigator.pop(context);
+
+
+                                                              }
+
+                                                            }else if(TicketStatus=="Reject"){
+
+
+
+                                                              if (TicketStatus.isEmpty) {
+                                                                Fluttertoast.showToast(
+                                                                    msg: "TicketStatus should not left Empty!!",
+                                                                    toastLength: Toast.LENGTH_LONG,
+                                                                    gravity: ToastGravity.SNACKBAR,
+                                                                    timeInSecForIosWeb: 1,
+                                                                    textColor: Colors.white,
+                                                                    backgroundColor: Colors.red,
+                                                                    fontSize: 16.0);
+                                                              }else if (RejectRemarksFieldController.text=="") {
+                                                                Fluttertoast.showToast(
+                                                                    msg: "Reject Remarks should not left Empty!!",
+                                                                    toastLength: Toast.LENGTH_LONG,
+                                                                    gravity: ToastGravity.SNACKBAR,
+                                                                    timeInSecForIosWeb: 1,
+                                                                    textColor: Colors.white,
+                                                                    backgroundColor: Colors.red,
+                                                                    fontSize: 16.0);
+                                                              }else{
+
+                                                                print("Empty false");
+                                                                selectedDatalist.clear();
+
+                                                                for (int k = 0; k < li2.result!.length; k++) {
+                                                                  for (int j = 0; j < selectedlist.length; j++) {
+                                                                    if (selectedlist[j] ==
+                                                                        li2.result![k].docNo.toString()) {
+
+
+                                                                      selectedDatalist.add(selectedListModel(
+                                                                          li2.result![k].docNo,
+                                                                          li2.result![k].ticketNo,
+                                                                          li2.result![k].branchCode,
+                                                                          TicketStatusCode,
+                                                                          AssignEmpName,
+                                                                          AssignEmpNameCode,
+                                                                          '',
+                                                                          RejectRemarksFieldController.text.toString(),
+                                                                          UserID.toString()
+                                                                      ));
+
+                                                                    }
+                                                                  }
+                                                                }
+
+
+
+
+
+                                                                BulkinsertStatusTickets();
+                                                                Navigator.pop(context);
+
+
+                                                              }
 
                                                             }else{
 
@@ -499,7 +725,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                                                       selectedDatalist.add(selectedListModel(
                                                                           li2.result![k].docNo,
                                                                           li2.result![k].ticketNo,
-                                                                          li2.result![k].brachName,
+                                                                          li2.result![k].branchCode,
                                                                           TicketStatusCode,
                                                                           '',
                                                                           '',
@@ -539,7 +765,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                                           ),
                                                           label:
                                                           Text(
-                                                            'Assign',
+                                                            'Submit',
                                                             style: TextStyle(
                                                                 color:
                                                                 Colors.white,
@@ -582,7 +808,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                         tooltip: 'Reject All',
                         onPressed: () {
 
-                          if (selectedlist.length == 0 || selectedlist.length == null) {
+                          if (selectedlist.length == 0 || selectedlist.length == null||selectedlist.isNotEmpty) {
                             showDialogbox(context, "Select Atleast one Ticket!!");
                           } else {
                              RejectAll(context);
@@ -647,35 +873,46 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                   items: stringlist2,
                   onChanged: (val) {
                     print(val);
-                    for (int kk = 0; kk < li4.result!.length; kk++) {
-                      if (li4.result![kk].type == val) {
-                        TicketType = li4.result![kk].type.toString();
-                        Ticketcode = li4.result![kk].typeCode.toString();
-                        setState(() {
-                          print(TicketType);
-                          print(Ticketcode);
 
-                          //GetMyTablRecord();
-                        });
+                    if(val=="ALL"){
+                      TicketType="ALL";
+                      Ticketcode="ALL";
+
+
+                    }else {
+                      for (int kk = 0; kk < li4.result!.length; kk++) {
+                        if (li4.result![kk].type == val) {
+                          TicketType = li4.result![kk].type.toString();
+                          Ticketcode = li4.result![kk].typeCode.toString();
+                          setState(() {
+                            print(TicketType);
+                            print(Ticketcode);
+
+                            //GetMyTablRecord();
+                          });
+                        }
                       }
                     }
 
                     setState(() {
-                     if (TicketType.isNotEmpty&&BranchName1.isEmpty&&FilterStatusName.isEmpty){
-                       print("TicketType.isNotEmpty");
-                       getTicketListBasedOnTicketCategory();
-                      } else if(BranchName1.isNotEmpty&&TicketType.isNotEmpty&&FilterStatusName.isEmpty){
-                       print("BranchName1.isNotEmpty&&FilterStatusName"
-                           ".isNotEmpty");
-                       getTicketListBasedOnTicketCategoryandBranch();
-
-                     }else {
-
-                       print("Else");
-                       getTicketList(FilterStatusCode);
 
 
-                      }
+                      AdminFilterAPI(1);
+                      // if (TicketType.isNotEmpty&&BranchName1.isEmpty&&FilterStatusName.isEmpty){
+                     //   print("TicketType.isNotEmpty");
+                     //   getTicketListBasedOnTicketCategory();
+                     //  } else if(BranchName1.isNotEmpty&&TicketType.isNotEmpty&&FilterStatusName.isEmpty){
+                     //   print("BranchName1.isNotEmpty&&FilterStatusName"
+                     //       ".isNotEmpty");
+                     //   getTicketListBasedOnTicketCategoryandBranch();
+                     //
+                     // }else {
+                     //
+                     //   print("Else");
+                     //   getTicketList(FilterStatusCode);
+                     //
+                     //
+                     //  }
                     });
 
 
@@ -706,14 +943,21 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                   items: stringlist5,
                   onChanged: (val) {
                     print(val);
-                    for (int kk = 0; kk < li5.result!.length; kk++) {
-                      if (li5.result![kk].branchName == val) {
-                        BranchName1 = li5.result![kk].branchName.toString();
-                        BranchCode = li5.result![kk].branchCode.toString();
-                        setState(() {
-                          print(BranchName1);
-                          //GetMyTablRecord();
-                        });
+
+                    if(val=="ALL"){
+                      BranchName1="ALL";
+                      BranchCode="ALL";
+
+                    }else {
+                      for (int kk = 0; kk < li5.result!.length; kk++) {
+                        if (li5.result![kk].branchName == val) {
+                          BranchName1 = li5.result![kk].branchName.toString();
+                          BranchCode = li5.result![kk].branchCode.toString();
+                          setState(() {
+                            print(BranchName1);
+                            //GetMyTablRecord();
+                          });
+                        }
                       }
                     }
 
@@ -722,14 +966,17 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                       selectedlist.clear();
 
 
-                      if (TicketType.isNotEmpty&&BranchName1.isNotEmpty) {
-                        print("TicketType.isNotEmpty");
-                        getTicketListBasedOnTicketCategoryandBranch();
-                      } else {
+                      AdminFilterAPI(1);
 
-                        getTicketList(FilterStatusCode);
 
-                      }
+                      // if (TicketType.isNotEmpty&&BranchName1.isNotEmpty) {
+                      //   print("TicketType.isNotEmpty");
+                      //   getTicketListBasedOnTicketCategoryandBranch();
+                      // } else {
+                      //
+                      //   getTicketList(FilterStatusCode);
+                      //
+                      // }
                     });
                   },
                   selectedItem: BranchName1,
@@ -778,29 +1025,30 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                           setState(() {
 
                             selectedlist.clear();
-                            if (TicketType.isEmpty) {
-                              Fluttertoast.showToast(
-                                  msg: "TicketType should not left Empty!!",
-                                  toastLength: Toast.LENGTH_LONG,
-                                  gravity: ToastGravity.SNACKBAR,
-                                  timeInSecForIosWeb: 1,
-                                  textColor: Colors.white,
-                                  backgroundColor: Colors.red,
-                                  fontSize: 16.0);
-                            } else  if (BranchName1.isEmpty) {
-                              Fluttertoast.showToast(
-                                  msg: "BranchName should not left Empty!!",
-                                  toastLength: Toast.LENGTH_LONG,
-                                  gravity: ToastGravity.SNACKBAR,
-                                  timeInSecForIosWeb: 1,
-                                  textColor: Colors.white,
-                                  backgroundColor: Colors.red,
-                                  fontSize: 16.0);
-                            } else {
-
-                              getTicketList(FilterStatusCode);
-
-                            }
+                            AdminFilterAPI(1);
+                            // if (TicketType.isEmpty) {
+                            //   Fluttertoast.showToast(
+                            //       msg: "TicketType should not left Empty!!",
+                            //       toastLength: Toast.LENGTH_LONG,
+                            //       gravity: ToastGravity.SNACKBAR,
+                            //       timeInSecForIosWeb: 1,
+                            //       textColor: Colors.white,
+                            //       backgroundColor: Colors.red,
+                            //       fontSize: 16.0);
+                            // } else  if (BranchName1.isEmpty) {
+                            //   Fluttertoast.showToast(
+                            //       msg: "BranchName should not left Empty!!",
+                            //       toastLength: Toast.LENGTH_LONG,
+                            //       gravity: ToastGravity.SNACKBAR,
+                            //       timeInSecForIosWeb: 1,
+                            //       textColor: Colors.white,
+                            //       backgroundColor: Colors.red,
+                            //       fontSize: 16.0);
+                            // } else {
+                            //
+                            //   getTicketList(FilterStatusCode);
+                            //
+                            // }
                           });
                         },
                         selectedItem: FilterStatusName,
@@ -905,7 +1153,11 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                     li2.result![k].startDate,
                                     li2.result![k].assignEmpcontactNo,
                                     li2.result![k].assetName,
-                                    li2.result![k].assetCode
+                                    li2.result![k].assetCode,
+                                    li2.result![k].quotation,
+                                    li2.result![k].vechileType,
+                                    li2.result![k].branchCategory,
+                                    li2.result![k].branchCategoryID
 
                                 ));
                           }
@@ -957,7 +1209,11 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                   li2.result![k].startDate,
                                   li2.result![k].assignEmpcontactNo,
                                   li2.result![k].assetName,
-                                  li2.result![k].assetCode
+                                  li2.result![k].assetCode,
+                                  li2.result![k].quotation,
+                                  li2.result![k].vechileType,
+                                  li2.result![k].branchCategory,
+                                  li2.result![k].branchCategoryID
                               ));
                           }
                         });
@@ -982,22 +1238,35 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
-                      if(FilterStatusName=="")DataColumn(
+                      DataColumn(
                         label: Text(
-                          'TicketType',
+                          'Tic Type',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
 
                       DataColumn(
                         label: Text(
-                          'Ticket No',
+                          'Tic No',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
                       DataColumn(
                         label: Text(
-                          'Branch Name',
+                          'Branch',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Category',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+
+                      DataColumn(
+                        label: Text(
+                          'Vechile Type',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -1052,18 +1321,19 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
-                      DataColumn(
+                      if(FilterStatusName=="Quotation")DataColumn(
                         label: Text(
-                          'RequiredDate',
+                          'Quot Amount',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
                       DataColumn(
                         label: Text(
-                          'Discription',
+                          'Req Date',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
+
                       DataColumn(
                         label: Text(
                           'Attachment',
@@ -1077,6 +1347,13 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                         ),
                       ),
 
+                      DataColumn(
+                        label: Text(
+                          'Description',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+
 
                       DataColumn(
                         label: Text(
@@ -1084,12 +1361,12 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
-                      DataColumn(
+                      /*DataColumn(
                         label: Text(
                           'Reject',
                           style: TextStyle(color: Colors.white),
                         ),
-                      ),
+                      ),*/
                     ],
                     rows: li3
                         .map(
@@ -1140,7 +1417,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                 ),
                               ),
                             ),
-                            if(FilterStatusName=="")DataCell(Text(
+                            DataCell(Text(
                                 list.category.toString(),
                                 textAlign: TextAlign.center)),
                             DataCell(Text(
@@ -1148,6 +1425,12 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                 textAlign: TextAlign.center)),
                             DataCell(Text(
                                 list.brachName.toString(),
+                                textAlign: TextAlign.center)),
+                            DataCell(Text(
+                                list.branchCategory.toString(),
+                                textAlign: TextAlign.center)),
+                            DataCell(Text(
+                                list.vechileType.toString(),
                                 textAlign: TextAlign.center)),
                             DataCell(Text(
                                 style: TextStyle(fontWeight:FontWeight.bold,color:list.priority.toString()=="High"?Colors.red:list.priority.toString()=="Medium"?Colors.orangeAccent:Colors.green,),
@@ -1201,23 +1484,13 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                             if(TicketType=="Assets")DataCell(Text(
                                 list.assetName.toString(),
                                 textAlign: TextAlign.center)),
+                            if(FilterStatusName=="Quotation")DataCell(Text(
+                                list.quotaion.toString(),
+                                textAlign: TextAlign.center)),
                             DataCell(Text(
                                 list.requiredDate.toString(),
                                 textAlign: TextAlign.center)),
-                            DataCell(Wrap(
-                                direction:
-                                Axis.vertical, //default
-                                alignment: WrapAlignment.center,
-                                children: [
-                                  Text(
-                                      (list.description.toString()),
-                                      style: TextStyle(
-                                          fontSize: 14.0,
-                                          fontWeight:
-                                          FontWeight.bold),
-                                      textAlign:
-                                      TextAlign.center)
-                                ])),
+
                             DataCell(list.attachFileName.toString()!=null
                                 &&
                                 list.attachFileName.toString().isNotEmpty?Column(
@@ -1347,6 +1620,20 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                 ):Container()
                               ],
                             )),
+                            DataCell(Wrap(
+                                direction:
+                                Axis.vertical, //default
+                                alignment: WrapAlignment.center,
+                                children: [
+                                  Text(
+                                      (list.description.toString()),
+                                      style: TextStyle(
+                                          fontSize: 14.0,
+                                          fontWeight:
+                                          FontWeight.bold),
+                                      textAlign:
+                                      TextAlign.center)
+                                ])),
 
                             // DataCell(Wrap(
                             //     direction:
@@ -1364,6 +1651,8 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                       icon: Icon(Icons.work_history_rounded),
                                       color: Colors.green,
                                       onPressed: () {
+
+
 
                                         showDialog(
                                             context: context,
@@ -1430,12 +1719,42 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
 
                                                                     setState(() {
                                                                       ItemVisible=true;
+                                                                      QuotationVisible=false;
+                                                                      RejectRemarksVisible=false;
+                                                                    });
+
+
+                                                                  }else  if(TicketStatus=="Quotation"){
+
+
+                                                                    setState(() {
+                                                                      _QuotationFieldController.text = '';
+                                                                      ItemVisible=false;
+                                                                      QuotationVisible=true;
+                                                                      RejectRemarksVisible=false;
+                                                                    });
+
+
+                                                                  }else  if(TicketStatus=="Reject"){
+
+
+                                                                    setState(() {
+                                                                      _QuotationFieldController.text = '';
+                                                                      RejectRemarksFieldController.text='';
+                                                                      ItemVisible=false;
+                                                                      QuotationVisible=false;
+                                                                      RejectRemarksVisible=true;
                                                                     });
 
 
                                                                   }else{
                                                                     setState(() {
                                                                       ItemVisible=false;
+                                                                      QuotationVisible=false;
+                                                                      RejectRemarksVisible=false;
+                                                                      RejectRemarksVisible=false;
+                                                                      _QuotationFieldController.text = '';
+                                                                      RejectRemarksFieldController.text='';
                                                                     });
                                                                   }
 
@@ -1532,6 +1851,68 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
 
                                                               ),
 
+                                                              Visibility(
+                                                                visible: QuotationVisible,
+                                                                child: Column(
+                                                                  children: [
+                                                                    Padding(
+                                                                      padding: const EdgeInsets.all(8),
+                                                                      child: Row(
+                                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                                        children: [
+                                                                          Text("Quotation", style: TextStyle(fontWeight:FontWeight.bold)),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+
+                                                                    TextField(
+                                                                      controller: _QuotationFieldController,
+                                                                      decoration: InputDecoration(hintText: "Enter The Quote"),
+                                                                      keyboardType: TextInputType.number,
+                                                                    ),
+
+
+                                                                  ],
+                                                                ),
+
+
+
+
+                                                              ),
+
+                                                              SizedBox(
+                                                                  height: 15.0),
+
+                                                              Visibility(
+                                                                visible: RejectRemarksVisible,
+                                                                child: Column(
+                                                                  children: [
+                                                                    Padding(
+                                                                      padding: const EdgeInsets.all(8),
+                                                                      child: Row(
+                                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                                        children: [
+                                                                          Text("RejectRemarks", style: TextStyle(fontWeight:FontWeight.bold)),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+
+                                                                    TextField(
+                                                                      controller: RejectRemarksFieldController,
+                                                                      decoration: InputDecoration(hintText: "Enter The RejectRemarks"),
+                                                                      keyboardType: TextInputType.text,
+                                                                    ),
+
+
+                                                                  ],
+                                                                ),
+
+
+
+
+                                                              ),
+
+
                                                               SizedBox(
                                                                   height: 15.0),
                                                               Row(
@@ -1545,15 +1926,15 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                                                         .icon(
                                                                       onPressed:
                                                                           () {
-                                                                             TicketStatusCode="";
-                                                                             TicketStatus="";
+                                                                        TicketStatusCode="";
+                                                                        TicketStatus="";
 
-                                                                             AssignDepartment="";
-                                                                             AssignDepartmentCode="";
+                                                                        AssignDepartment="";
+                                                                        AssignDepartmentCode="";
 
-                                                                             AssignEmpName="";
-                                                                             AssignEmpNameCode="";
-                                                                             ItemVisible=false;
+                                                                        AssignEmpName="";
+                                                                        AssignEmpNameCode="";
+                                                                        ItemVisible=false;
                                                                         Fluttertoast.showToast(
                                                                             msg:
                                                                             "Assign Cancelled!!",
@@ -1600,103 +1981,199 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                                                           () {
 
 
-                                                                            if(TicketStatus=="Assign"){
+                                                                        if(TicketStatus=="Assign"){
 
-                                                                              if (TicketStatus.isEmpty) {
-                                                                                Fluttertoast.showToast(
-                                                                                    msg: "TicketStatus should not left Empty!!",
-                                                                                    toastLength: Toast.LENGTH_LONG,
-                                                                                    gravity: ToastGravity.SNACKBAR,
-                                                                                    timeInSecForIosWeb: 1,
-                                                                                    textColor: Colors.white,
-                                                                                    backgroundColor: Colors.red,
-                                                                                    fontSize: 16.0);
-                                                                              }else  if (AssignDepartment.isEmpty) {
-                                                                                Fluttertoast.showToast(
-                                                                                    msg: "AssignDepartment should not left Empty!!",
-                                                                                    toastLength: Toast.LENGTH_LONG,
-                                                                                    gravity: ToastGravity.SNACKBAR,
-                                                                                    timeInSecForIosWeb: 1,
-                                                                                    textColor: Colors.white,
-                                                                                    backgroundColor: Colors.red,
-                                                                                    fontSize: 16.0);
-                                                                              }else  if (AssignEmpName.isEmpty) {
-                                                                                Fluttertoast.showToast(
-                                                                                    msg: "AssignEmpName should not left Empty!!",
-                                                                                    toastLength: Toast.LENGTH_LONG,
-                                                                                    gravity: ToastGravity.SNACKBAR,
-                                                                                    timeInSecForIosWeb: 1,
-                                                                                    textColor: Colors.white,
-                                                                                    backgroundColor: Colors.red,
-                                                                                    fontSize: 16.0);
-                                                                              }else{
+                                                                          if (TicketStatus.isEmpty) {
+                                                                            Fluttertoast.showToast(
+                                                                                msg: "TicketStatus should not left Empty!!",
+                                                                                toastLength: Toast.LENGTH_LONG,
+                                                                                gravity: ToastGravity.SNACKBAR,
+                                                                                timeInSecForIosWeb: 1,
+                                                                                textColor: Colors.white,
+                                                                                backgroundColor: Colors.red,
+                                                                                fontSize: 16.0);
+                                                                          }else  if (AssignDepartment.isEmpty) {
+                                                                            Fluttertoast.showToast(
+                                                                                msg: "AssignDepartment should not left Empty!!",
+                                                                                toastLength: Toast.LENGTH_LONG,
+                                                                                gravity: ToastGravity.SNACKBAR,
+                                                                                timeInSecForIosWeb: 1,
+                                                                                textColor: Colors.white,
+                                                                                backgroundColor: Colors.red,
+                                                                                fontSize: 16.0);
+                                                                          }else  if (AssignEmpName.isEmpty) {
+                                                                            Fluttertoast.showToast(
+                                                                                msg: "AssignEmpName should not left Empty!!",
+                                                                                toastLength: Toast.LENGTH_LONG,
+                                                                                gravity: ToastGravity.SNACKBAR,
+                                                                                timeInSecForIosWeb: 1,
+                                                                                textColor: Colors.white,
+                                                                                backgroundColor: Colors.red,
+                                                                                fontSize: 16.0);
+                                                                          }else{
 
-                                                                                print("Empty true");
-
-
-                                                                                selectedDatalist.clear();
+                                                                            print("Empty true");
 
 
-                                                                                      selectedDatalist.add(selectedListModel(
-                                                                                          int.tryParse(list.docNo.toString()),
-                                                                                          list.ticketNo,
-                                                                                          list.brachName,
-                                                                                          TicketStatusCode,
-                                                                                          AssignEmpName,
-                                                                                          AssignEmpNameCode,
-                                                                                          AssignDepartment,
-                                                                                          '',
-                                                                                          UserID.toString()
-                                                                                      ));
+                                                                            selectedDatalist.clear();
 
 
-                                                                                BulkinsertStatusTickets();
-                                                                                Navigator.pop(context);
+                                                                            selectedDatalist.add(selectedListModel(
+                                                                                int.tryParse(list.docNo.toString()),
+                                                                                list.ticketNo,
+                                                                                list.branchCode,
+                                                                                TicketStatusCode,
+                                                                                AssignEmpName,
+                                                                                AssignEmpNameCode,
+                                                                                '',
+                                                                                '',
+                                                                                UserID.toString()
+                                                                            ));
 
 
-                                                                              }
+                                                                            BulkinsertStatusTickets();
+                                                                            Navigator.pop(context);
 
 
-
-                                                                            }else{
+                                                                          }
 
 
 
-                                                                              if (TicketStatus.isEmpty) {
-                                                                                Fluttertoast.showToast(
-                                                                                    msg: "TicketStatus should not left Empty!!",
-                                                                                    toastLength: Toast.LENGTH_LONG,
-                                                                                    gravity: ToastGravity.SNACKBAR,
-                                                                                    timeInSecForIosWeb: 1,
-                                                                                    textColor: Colors.white,
-                                                                                    backgroundColor: Colors.red,
-                                                                                    fontSize: 16.0);
-                                                                              }else{
-
-                                                                                print("Empty false");
-                                                                                selectedDatalist.clear();
+                                                                        }else if(TicketStatus=="Quotation"){
 
 
-                                                                                selectedDatalist.add(selectedListModel(
-                                                                                    int.tryParse(list.docNo.toString()),
-                                                                                    list.ticketNo,
-                                                                                    list.brachName,
-                                                                                    TicketStatusCode,
-                                                                                    '',
-                                                                                    '',
-                                                                                    '',
-                                                                                    '',
-                                                                                    UserID.toString()
-                                                                                ));
+
+                                                                          if (TicketStatus.isEmpty) {
+                                                                            Fluttertoast.showToast(
+                                                                                msg: "TicketStatus should not left Empty!!",
+                                                                                toastLength: Toast.LENGTH_LONG,
+                                                                                gravity: ToastGravity.SNACKBAR,
+                                                                                timeInSecForIosWeb: 1,
+                                                                                textColor: Colors.white,
+                                                                                backgroundColor: Colors.red,
+                                                                                fontSize: 16.0);
+                                                                          }else if (_QuotationFieldController.text=="") {
+                                                                            Fluttertoast.showToast(
+                                                                                msg: "Quoataion Amount should not left Empty!!",
+                                                                                toastLength: Toast.LENGTH_LONG,
+                                                                                gravity: ToastGravity.SNACKBAR,
+                                                                                timeInSecForIosWeb: 1,
+                                                                                textColor: Colors.white,
+                                                                                backgroundColor: Colors.red,
+                                                                                fontSize: 16.0);
+                                                                          }else{
+
+                                                                            print("Empty false");
+                                                                            selectedDatalist.clear();
 
 
-                                                                                BulkinsertStatusTickets();
-                                                                                Navigator.pop(context);
+
+                                                                            selectedDatalist.add(selectedListModel(
+                                                                                int.tryParse(list.docNo.toString()),
+                                                                                list.ticketNo,
+                                                                                list.branchCode,
+                                                                                TicketStatusCode,
+                                                                                '',
+                                                                                '',
+                                                                                _QuotationFieldController.text.toString(),
+                                                                                '',
+                                                                                UserID.toString()
+                                                                            ));
 
 
-                                                                              }
+                                                                            BulkinsertStatusTickets();
+                                                                            Navigator.pop(context);
 
-                                                                            }
+
+                                                                          }
+
+                                                                        }
+                                                                        else if(TicketStatus=="Reject"){
+
+
+
+                                                                          if (TicketStatus.isEmpty) {
+                                                                            Fluttertoast.showToast(
+                                                                                msg: "TicketStatus should not left Empty!!",
+                                                                                toastLength: Toast.LENGTH_LONG,
+                                                                                gravity: ToastGravity.SNACKBAR,
+                                                                                timeInSecForIosWeb: 1,
+                                                                                textColor: Colors.white,
+                                                                                backgroundColor: Colors.red,
+                                                                                fontSize: 16.0);
+                                                                          }else if (RejectRemarksFieldController.text=="") {
+                                                                            Fluttertoast.showToast(
+                                                                                msg: "Reject Remarks should not left Empty!!",
+                                                                                toastLength: Toast.LENGTH_LONG,
+                                                                                gravity: ToastGravity.SNACKBAR,
+                                                                                timeInSecForIosWeb: 1,
+                                                                                textColor: Colors.white,
+                                                                                backgroundColor: Colors.red,
+                                                                                fontSize: 16.0);
+                                                                          }else{
+
+                                                                            print("Empty false");
+                                                                            selectedDatalist.clear();
+
+                                                                            selectedDatalist.add(selectedListModel(
+                                                                                int.tryParse(list.docNo.toString()),
+                                                                                list.ticketNo,
+                                                                                list.branchCode,
+                                                                                TicketStatusCode,
+                                                                                '',
+                                                                                '',
+                                                                                '',
+                                                                                RejectRemarksFieldController.text.toString(),
+                                                                                UserID.toString()
+                                                                            ));
+
+
+                                                                            BulkinsertStatusTickets();
+                                                                            Navigator.pop(context);
+
+
+                                                                          }
+
+                                                                        }
+                                                                        else{
+
+
+
+                                                                          if (TicketStatus.isEmpty) {
+                                                                            Fluttertoast.showToast(
+                                                                                msg: "TicketStatus should not left Empty!!",
+                                                                                toastLength: Toast.LENGTH_LONG,
+                                                                                gravity: ToastGravity.SNACKBAR,
+                                                                                timeInSecForIosWeb: 1,
+                                                                                textColor: Colors.white,
+                                                                                backgroundColor: Colors.red,
+                                                                                fontSize: 16.0);
+                                                                          }else{
+
+                                                                            print("Empty false");
+                                                                            selectedDatalist.clear();
+
+
+                                                                            selectedDatalist.add(selectedListModel(
+                                                                                int.tryParse(list.docNo.toString()),
+                                                                                list.ticketNo,
+                                                                                list.branchCode,
+                                                                                TicketStatusCode,
+                                                                                '',
+                                                                                '',
+                                                                                '',
+                                                                                '',
+                                                                                UserID.toString()
+                                                                            ));
+
+
+                                                                            BulkinsertStatusTickets();
+                                                                            Navigator.pop(context);
+
+
+                                                                          }
+
+                                                                        }
 
                                                                         // selectState =
                                                                         // 1;
@@ -1716,7 +2193,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                                                       ),
                                                                       label:
                                                                       Text(
-                                                                        'Assign',
+                                                                        'Submit',
                                                                         style: TextStyle(
                                                                             color:
                                                                             Colors.white,
@@ -1823,7 +2300,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                     )),
                               ),
                             ),
-                            DataCell(
+                            /*DataCell(
                               Center(
                                 child: Center(
                                     child: IconButton(
@@ -1910,7 +2387,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                       },
                                     )),
                               ),
-                            ),
+                            ),*/
                           ]),
                     )
                         .toList(),
@@ -1983,7 +2460,11 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                         li2.result![i].startDate,
                                         li2.result![i].assignEmpcontactNo,
                                       li2.result![i].assetName,
-                                      li2.result![i].assetCode
+                                      li2.result![i].assetCode,
+                                        li2.result![i].quotation,
+                                        li2.result![i].vechileType,
+                                        li2.result![i].branchCategory,
+                                        li2.result![i].branchCategoryID
 
                                     ));
                                   }
@@ -2055,7 +2536,11 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                         li2.result![i].startDate,
                                         li2.result![i].assignEmpcontactNo,
                                         li2.result![i].assetName,
-                                        li2.result![i].assetCode
+                                        li2.result![i].assetCode,
+                                        li2.result![i].quotation,
+                                        li2.result![i].vechileType,
+                                        li2.result![i].branchCategory,
+                                        li2.result![i].branchCategoryID
 
                                     ));
                                   }
@@ -2284,6 +2769,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
           setState(() {
             stringlist2.clear();
             stringlist2.add("Select Ticket Type");
+            stringlist2.add("ALL");
             for (int i = 0; i < li4.result!.length; i++)
               stringlist2.add(li4.result![i].type.toString());
           });
@@ -2816,7 +3302,11 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                 li2.result![k].startDate,
                 li2.result![k].assignEmpcontactNo,
                 li2.result![k].assetName,
-                li2.result![k].assetCode
+                li2.result![k].assetCode,
+                li2.result![k].quotation,
+                li2.result![k].vechileType,
+                li2.result![k].branchCategory,
+                li2.result![k].branchCategoryID
 
             ));
 
@@ -2888,163 +3378,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
   }
 
 
-   Future<http.Response> getTicketListBasedOnTicketCategory() async {
 
-     print("getTicketListBasedOnTicketCategory is called");
-     var headers = {"Content-Type": "application/json"};
-     var body = {
-       "TicketCategory": TicketType.toString(),
-     };
-
-     print(body);
-     setState(() {
-       loading = true;
-     });
-     try {
-       final response = await http.post(
-           Uri.parse(AppConstants.LIVE_URL + 'getOpenTicketsBasedOnCategory'),
-           body: jsonEncode(body),
-           headers: headers);
-       print(AppConstants.LIVE_URL + 'getOpenTicketsBasedOnCategory');
-       print(response.body);
-       setState(() {
-         loading = false;
-       });
-       if (response.statusCode == 200) {
-
-         var isdata = json.decode(response.body)["status"] == 0;
-         print(isdata);
-         if (isdata) {
-           ScaffoldMessenger.of(this.context)
-               .showSnackBar(SnackBar(content: Text("No Records Found!!")));
-           print('No Records Found!!');
-           // CustomerTicketsModel li2 =CustomerTicketsModel(result: []);
-
-           SumQty =0;
-
-           li2.result!.clear();
-
-         } else {
-
-           print(AppConstants.LIVE_URL + 'getWipcustTckttoAsignnew');
-           print(body);
-           print(response.body);
-
-           li2 = CustomerTicketsModel.fromJson(jsonDecode(response.body));
-
-           if (li2.result!.length % 20 == 0)
-             totalpages = (li2.result!.length / 20).floor();
-           else
-             totalpages = (li2.result!.length / 20).floor() + 1;
-           print(totalpages);
-
-           li3.removeRange(0, li3.length);
-
-           for (int k = 0; k < li2.result!.length; k++) {
-             li3.add(FilterList3(
-
-                 li2.result![k].createdDate,
-                 li2.result![k].docNo,
-                 li2.result![k].brachName,
-                 li2.result![k].branchCode,
-                 li2.result![k].issueCatrgory,
-                 li2.result![k].issueCategoryId,
-                 li2.result![k].itemName,
-                 li2.result![k].itemCode,
-                 li2.result![k].issueType,
-                 li2.result![k].requiredDate,
-                 li2.result![k].description,
-                 li2.result![k].attachFilePath,
-                 li2.result![k].attachFileName,
-                 li2.result![k].status,
-                 li2.result![k].closedDate,
-                 li2.result![k].empName,
-                 li2.result![k].empContactNo,
-                 li2.result![k].empMailid,
-                 li2.result![k].rejectRemarks,
-                 li2.result![k].createdAt,
-                 li2.result![k].updatedAt,
-                 li2.result![k].priority,
-                 li2.result![k].category,
-                 li2.result![k].modifiedDate,
-                 li2.result![k].assignStatus,
-                 li2.result![k].ticketNo,
-                 li2.result![k].assignEmpName,
-                 li2.result![k].assignEmpId,
-                 li2.result![k].assignEmpDept,
-                 li2.result![k].solutionProvided,
-                 li2.result![k].endDate,
-                 li2.result![k].startDate,
-                 li2.result![k].assignEmpcontactNo,
-                 li2.result![k].assetName,
-                 li2.result![k].assetCode
-
-             ));
-
-             li3.length==""?  SumQty =0:  SumQty =li3.length.toInt();
-
-           }
-
-
-           print("SumQty"+SumQty.toString());
-           setState(() {
-
-           });
-
-         }
-
-         /* if (jsonDecode(response.body)["status"].toString() == "0") {
-
-        }else if (json.decode(response.body)["status"] == "0" &&
-            jsonDecode(response.body)["result"].toString()=="No Data") {
-
-        } else if (json.decode(response.body)["status"] == 1 &&
-            jsonDecode(response.body)["result"].toString() == "[]") {
-
-        }else{
-
-          li5 = BranchMasterModel.fromJson(jsonDecode(response.body));
-
-          for(int i=0;i<li5.result!.length;i++);
-          print(li5.result!.length.toString());
-
-          setState(() {
-            stringlist5.clear();
-            stringlist5.add("Select Branch");
-            for (int i = 0; i < li5.result!.length; i++)
-              stringlist5.add(li5.result![i].branchName.toString());
-          });
-
-          setState(() {
-            loading = false;
-          });
-
-
-        }*/
-
-       } else {
-         showDialogbox(this.context, "Failed to Login API");
-       }
-       return response;
-     } on SocketException {
-       setState(() {
-         loading = false;
-         showDialog(
-             context: this.context,
-             builder: (_) => AlertDialog(
-                 backgroundColor: Colors.black,
-                 title: Text(
-                   "No Response!..",
-                   style: TextStyle(color: Colors.purple),
-                 ),
-                 content: Text(
-                   "Slow Server Response or Internet connection",
-                   style: TextStyle(color: Colors.white),
-                 )));
-       });
-       throw Exception('Internet is down');
-     }
-   }
 
 
    Future<http.Response> getTicketListBasedOnTicketCategoryandBranch() async {
@@ -3137,7 +3471,11 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                  li2.result![k].startDate,
                  li2.result![k].assignEmpcontactNo,
                  li2.result![k].assetName,
-                 li2.result![k].assetCode
+                 li2.result![k].assetCode,
+                 li2.result![k].quotation,
+                 li2.result![k].vechileType,
+                 li2.result![k].branchCategory,
+                 li2.result![k].branchCategoryID
 
              ));
 
@@ -3297,7 +3635,11 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                  li2.result![k].startDate,
                  li2.result![k].assignEmpcontactNo,
                  li2.result![k].assetName,
-                 li2.result![k].assetCode
+                 li2.result![k].assetCode,
+                 li2.result![k].quotation,
+                 li2.result![k].vechileType,
+                 li2.result![k].branchCategory,
+                 li2.result![k].branchCategoryID
 
              ));
 
@@ -3373,7 +3715,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
      var body = {
        "FormID": formID,
        "Solution": RemarksController.text.toString(),
-       "TicketNo": "",
+       "TicketNo": UserName.toString(),
        "CustName": BranchName.toString(),
        "UpdateLocation": "",
        "Docno":DocNo
@@ -3497,6 +3839,337 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
    }
 
 
+   Future<http.Response> getTicketListBasedOnTicketCategory() async {
+
+     print("getTicketListBasedOnTicketCategory is called");
+     var headers = {"Content-Type": "application/json"};
+     var body = {
+       "TicketCategory": TicketType.toString(),
+     };
+
+     print(body);
+     setState(() {
+       loading = true;
+     });
+     try {
+       final response = await http.post(
+           Uri.parse(AppConstants.LIVE_URL + 'getOpenTicketsBasedOnCategory'),
+           body: jsonEncode(body),
+           headers: headers);
+       print(AppConstants.LIVE_URL + 'getOpenTicketsBasedOnCategory');
+       print(response.body);
+       setState(() {
+         loading = false;
+       });
+       if (response.statusCode == 200) {
+
+         var isdata = json.decode(response.body)["status"] == 0;
+         print(isdata);
+         if (isdata) {
+           ScaffoldMessenger.of(this.context)
+               .showSnackBar(SnackBar(content: Text("No Records Found!!")));
+           print('No Records Found!!');
+           // CustomerTicketsModel li2 =CustomerTicketsModel(result: []);
+
+           SumQty =0;
+
+           li2.result!.clear();
+
+         } else {
+
+           print(AppConstants.LIVE_URL + 'getWipcustTckttoAsignnew');
+           print(body);
+           print(response.body);
+
+           li2 = CustomerTicketsModel.fromJson(jsonDecode(response.body));
+
+           if (li2.result!.length % 20 == 0)
+             totalpages = (li2.result!.length / 20).floor();
+           else
+             totalpages = (li2.result!.length / 20).floor() + 1;
+           print(totalpages);
+
+           li3.removeRange(0, li3.length);
+
+           for (int k = 0; k < li2.result!.length; k++) {
+             li3.add(FilterList3(
+
+                 li2.result![k].createdDate,
+                 li2.result![k].docNo,
+                 li2.result![k].brachName,
+                 li2.result![k].branchCode,
+                 li2.result![k].issueCatrgory,
+                 li2.result![k].issueCategoryId,
+                 li2.result![k].itemName,
+                 li2.result![k].itemCode,
+                 li2.result![k].issueType,
+                 li2.result![k].requiredDate,
+                 li2.result![k].description,
+                 li2.result![k].attachFilePath,
+                 li2.result![k].attachFileName,
+                 li2.result![k].status,
+                 li2.result![k].closedDate,
+                 li2.result![k].empName,
+                 li2.result![k].empContactNo,
+                 li2.result![k].empMailid,
+                 li2.result![k].rejectRemarks,
+                 li2.result![k].createdAt,
+                 li2.result![k].updatedAt,
+                 li2.result![k].priority,
+                 li2.result![k].category,
+                 li2.result![k].modifiedDate,
+                 li2.result![k].assignStatus,
+                 li2.result![k].ticketNo,
+                 li2.result![k].assignEmpName,
+                 li2.result![k].assignEmpId,
+                 li2.result![k].assignEmpDept,
+                 li2.result![k].solutionProvided,
+                 li2.result![k].endDate,
+                 li2.result![k].startDate,
+                 li2.result![k].assignEmpcontactNo,
+                 li2.result![k].assetName,
+                 li2.result![k].assetCode,
+                 li2.result![k].quotation,
+                 li2.result![k].vechileType,
+                 li2.result![k].branchCategory,
+                 li2.result![k].branchCategoryID
+
+             ));
+
+             li3.length==""?  SumQty =0:  SumQty =li3.length.toInt();
+
+           }
+
+
+           print("SumQty"+SumQty.toString());
+           setState(() {
+
+           });
+
+         }
+
+         /* if (jsonDecode(response.body)["status"].toString() == "0") {
+
+        }else if (json.decode(response.body)["status"] == "0" &&
+            jsonDecode(response.body)["result"].toString()=="No Data") {
+
+        } else if (json.decode(response.body)["status"] == 1 &&
+            jsonDecode(response.body)["result"].toString() == "[]") {
+
+        }else{
+
+          li5 = BranchMasterModel.fromJson(jsonDecode(response.body));
+
+          for(int i=0;i<li5.result!.length;i++);
+          print(li5.result!.length.toString());
+
+          setState(() {
+            stringlist5.clear();
+            stringlist5.add("Select Branch");
+            for (int i = 0; i < li5.result!.length; i++)
+              stringlist5.add(li5.result![i].branchName.toString());
+          });
+
+          setState(() {
+            loading = false;
+          });
+
+
+        }*/
+
+       } else {
+         showDialogbox(this.context, "Failed to Login API");
+       }
+       return response;
+     } on SocketException {
+       setState(() {
+         loading = false;
+         showDialog(
+             context: this.context,
+             builder: (_) => AlertDialog(
+                 backgroundColor: Colors.black,
+                 title: Text(
+                   "No Response!..",
+                   style: TextStyle(color: Colors.purple),
+                 ),
+                 content: Text(
+                   "Slow Server Response or Internet connection",
+                   style: TextStyle(color: Colors.white),
+                 )));
+       });
+       throw Exception('Internet is down');
+     }
+   }
+
+   Future<http.Response> AdminFilterAPI(int formID)  async {
+
+     print("AdminFilterAPI is called");
+     var headers = {"Content-Type": "application/json"};
+     var body = {
+       "FormID": formID,
+       "TicketType": TicketType.toString(),
+       "Ticketcode": Ticketcode.toString(),
+       "BranchCode": BranchCode.toString(),
+       "BranchName1":BranchName1.toString() ,
+       "TicketStatusCode":FilterStatusCode.toString(),
+       "TicketStatusName":FilterStatusName.toString(),
+       "Extra1":"",
+       "Extra2":"",
+     };
+
+     print(body);
+     setState(() {
+       loading = true;
+     });
+     try {
+       final response = await http.post(
+           Uri.parse(AppConstants.LIVE_URL + 'AdminFiltersCategory'),
+           body: jsonEncode(body),
+           headers: headers);
+       print(AppConstants.LIVE_URL + 'AdminFiltersCategory');
+       print(response.body);
+       setState(() {
+         loading = false;
+       });
+       if (response.statusCode == 200) {
+
+         var isdata = json.decode(response.body)["status"] == 0;
+         print(isdata);
+         if (isdata) {
+           ScaffoldMessenger.of(this.context)
+               .showSnackBar(SnackBar(content: Text("No Records Found!!")));
+           print('No Records Found!!');
+           // CustomerTicketsModel li2 =CustomerTicketsModel(result: []);
+
+           SumQty =0;
+
+           li2.result!.clear();
+
+         } else {
+
+           print(AppConstants.LIVE_URL + 'getWipcustTckttoAsignnew');
+           print(body);
+           print(response.body);
+
+           li2 = CustomerTicketsModel.fromJson(jsonDecode(response.body));
+
+           if (li2.result!.length % 20 == 0)
+             totalpages = (li2.result!.length / 20).floor();
+           else
+             totalpages = (li2.result!.length / 20).floor() + 1;
+           print(totalpages);
+
+           li3.removeRange(0, li3.length);
+
+           for (int k = 0; k < li2.result!.length; k++) {
+             li3.add(FilterList3(
+
+                 li2.result![k].createdDate,
+                 li2.result![k].docNo,
+                 li2.result![k].brachName,
+                 li2.result![k].branchCode,
+                 li2.result![k].issueCatrgory,
+                 li2.result![k].issueCategoryId,
+                 li2.result![k].itemName,
+                 li2.result![k].itemCode,
+                 li2.result![k].issueType,
+                 li2.result![k].requiredDate,
+                 li2.result![k].description,
+                 li2.result![k].attachFilePath,
+                 li2.result![k].attachFileName,
+                 li2.result![k].status,
+                 li2.result![k].closedDate,
+                 li2.result![k].empName,
+                 li2.result![k].empContactNo,
+                 li2.result![k].empMailid,
+                 li2.result![k].rejectRemarks,
+                 li2.result![k].createdAt,
+                 li2.result![k].updatedAt,
+                 li2.result![k].priority,
+                 li2.result![k].category,
+                 li2.result![k].modifiedDate,
+                 li2.result![k].assignStatus,
+                 li2.result![k].ticketNo,
+                 li2.result![k].assignEmpName,
+                 li2.result![k].assignEmpId,
+                 li2.result![k].assignEmpDept,
+                 li2.result![k].solutionProvided,
+                 li2.result![k].endDate,
+                 li2.result![k].startDate,
+                 li2.result![k].assignEmpcontactNo,
+                 li2.result![k].assetName,
+                 li2.result![k].assetCode,
+                 li2.result![k].quotation,
+                 li2.result![k].vechileType,
+                 li2.result![k].branchCategory,
+                 li2.result![k].branchCategoryID
+
+             ));
+
+             li3.length==""?  SumQty =0:  SumQty =li3.length.toInt();
+
+           }
+
+
+           print("SumQty"+SumQty.toString());
+           setState(() {
+
+           });
+
+         }
+
+         /* if (jsonDecode(response.body)["status"].toString() == "0") {
+
+        }else if (json.decode(response.body)["status"] == "0" &&
+            jsonDecode(response.body)["result"].toString()=="No Data") {
+
+        } else if (json.decode(response.body)["status"] == 1 &&
+            jsonDecode(response.body)["result"].toString() == "[]") {
+
+        }else{
+
+          li5 = BranchMasterModel.fromJson(jsonDecode(response.body));
+
+          for(int i=0;i<li5.result!.length;i++);
+          print(li5.result!.length.toString());
+
+          setState(() {
+            stringlist5.clear();
+            stringlist5.add("Select Branch");
+            for (int i = 0; i < li5.result!.length; i++)
+              stringlist5.add(li5.result![i].branchName.toString());
+          });
+
+          setState(() {
+            loading = false;
+          });
+
+
+        }*/
+
+       } else {
+         showDialogbox(this.context, "Failed to Login API");
+       }
+       return response;
+     } on SocketException {
+       setState(() {
+         loading = false;
+         showDialog(
+             context: this.context,
+             builder: (_) => AlertDialog(
+                 backgroundColor: Colors.black,
+                 title: Text(
+                   "No Response!..",
+                   style: TextStyle(color: Colors.purple),
+                 ),
+                 content: Text(
+                   "Slow Server Response or Internet connection",
+                   style: TextStyle(color: Colors.white),
+                 )));
+       });
+       throw Exception('Internet is down');
+     }
+   }
 
 
 
@@ -3598,7 +4271,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                             selectedDatalist.add(selectedListModel(
                                 li2.result![k].docNo,
                               li2.result![k].ticketNo,
-                              li2.result![k].brachName,
+                              li2.result![k].branchCode,
                               'A',
                               '',
                               '',
@@ -3671,7 +4344,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                           selectedDatalist.add(selectedListModel(
                               li2.result![k].docNo,
                               li2.result![k].ticketNo,
-                              li2.result![k].brachName,
+                              li2.result![k].branchCode,
                               'R',
                               '',
                               '',
@@ -3790,7 +4463,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                    AssignEmpName="";
                                    AssignEmpNameCode="";
                                    ItemVisible=false;
-                                   getTicketList(FilterStatusCode);
+                                   AdminFilterAPI(1);
                                  },
                                ),
                              ),
@@ -4029,6 +4702,10 @@ class FilterList3 {
   String? assignEmpcontactNo;
   String? assetName;
   String? assetCode;
+  String? quotaion;
+  String? vechileType;
+  String? branchCategory;
+  String? branchCategoryID;
   FilterList3(
       this.createdDate,
       this.docNo,
@@ -4064,7 +4741,11 @@ class FilterList3 {
       this.startDate,
       this.assignEmpcontactNo,
       this.assetName,
-      this.assetCode
+      this.assetCode,
+      this.quotaion,
+      this.vechileType,
+      this.branchCategory,
+      this.branchCategoryID
       );
 }
 

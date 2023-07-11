@@ -60,6 +60,10 @@ class Result {
   String? assignEmpcontactNo;
   String? assetName;
   String? assetCode;
+  String? quotation;
+  String? vechileType;
+  String? branchCategory;
+  String? branchCategoryID;
 
   Result(
       {this.createdDate,
@@ -96,7 +100,11 @@ class Result {
         this.startDate,
         this.assignEmpcontactNo,
         this.assetName,
-        this.assetCode
+        this.assetCode,
+        this.quotation,
+        this.vechileType,
+        this.branchCategory,
+        this.branchCategoryID
       });
 
   Result.fromJson(Map<String, dynamic> json) {
@@ -135,6 +143,10 @@ class Result {
     assignEmpcontactNo = json['AssignEmpcontactNo'];
     assetName = json['AssetName'];
     assetCode = json['AssetCode'];
+    quotation = json['quotation'];
+    vechileType = json['VechileType'];
+    branchCategory = json['BranchCategory'];
+    branchCategoryID = json['BranchCategoryID'];
   }
 
   Map<String, dynamic> toJson() {
@@ -174,6 +186,10 @@ class Result {
     data['AssignEmpcontactNo'] = this.assignEmpcontactNo;
     data['AssetName'] = this.assetName;
     data['AssetCode'] = this.assetCode;
+    data['quotation'] = this.quotation;
+    data['VechileType'] = this.vechileType;
+    data['BranchCategory'] = this.branchCategory;
+    data['BranchCategoryID'] = this.branchCategoryID;
     return data;
   }
 }

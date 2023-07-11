@@ -18,6 +18,7 @@ import '../ADMIN Models/ChartCountModel.dart';
 
 import '../AppConstants.dart';
 import '../LoginPage.dart';
+import '../SuperAdminReports/SuperAdminAllTicketsReports.dart';
 import '../SuperAdminReports/WipAssignTickets.dart';
 
 class AdminReportDashboard extends StatefulWidget {
@@ -74,7 +75,9 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
       WIP = 0,
       ThirdParty = 0,
       Quotation = 0,
-      ReSolved = 0;
+      ReSolved = 0,
+       ReOpen = 0,
+        ALL=0;
 
 
 
@@ -84,7 +87,8 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
     "WIP": "WIP legend",
     "ThirdParty": "Third Party legend",
     "Quotation": "Quotation legend",
-    "ReSolved": "ReSolved legend"
+    "ReSolved": "ReSolved legend",
+    "ReOpen": "ReOpen legend"
   };
   final colorList = <Color>[
     const Color(0xfffdcb6e),
@@ -92,7 +96,8 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
     const Color(0xfffd79a8),
     const Color(0xffe17055),
     const Color(0xff6c5ce7),
-    const Color(0xff60da19)
+    const Color(0xff60da19),
+    const Color(0xffda1929)
   ];
 
   final gradientList = <List<Color>>[
@@ -115,7 +120,11 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
     [
       const Color.fromRGBO(96, 218, 25, 1.0),
       const Color.fromRGBO(150, 211, 121, 1.0),
-    ]
+    ],
+    [
+    const Color.fromRGBO(218, 25, 41, 1.0),
+    const Color.fromRGBO(218, 22, 38, 0.8),
+  ]
   ];
 
 
@@ -144,7 +153,8 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
       "WIP": 0,
       "Third Party": 0,
       "Quotation": 0,
-      "ReSolved": 0
+      "ReSolved": 0,
+      "Re Open": 0
     };
 
     _tooltip = TooltipBehavior(enable: false);
@@ -184,7 +194,8 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
       const Color(0xfffd79a8),
       const Color(0xffe17055),
       const Color(0xff6c5ce7),
-      const Color(0xff60da19)
+      const Color(0xff60da19),
+      const Color(0xffda1929)
 
     ],
     stops: <double>[0.1, 0.3, 0.5, 0.7, 0.9],
@@ -389,7 +400,7 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: SfCartesianChart(
                                 primaryXAxis: CategoryAxis(),
-                                primaryYAxis: NumericAxis(minimum: 0, maximum: 50, interval: 10),
+                                primaryYAxis: NumericAxis(minimum: 0, maximum: 100, interval: 20),
                                 tooltipBehavior: _tooltip!,
                                 series: <ChartSeries<_ChartData, String>>[
                                   BarSeries<_ChartData, String>(
@@ -414,7 +425,7 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
                                   childAspectRatio: 1,
                                   // crossAxisSpacing: width / 20,
                                   // mainAxisSpacing: height / 20,
-                                  crossAxisCount: 3,
+                                  crossAxisCount: 4,
                                   children: <Widget>[
 
                                     GestureDetector(
@@ -848,6 +859,149 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
                                         ),
                                       ),
                                     ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        myController = TextEditingController()
+                                          ..text = "Re-opened";
+                                        print(myController);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AdminTicketReports(
+                                                      getScreenName:
+                                                      myController.text,
+                                                      getTicketType:
+                                                      "RO",
+                                                    )));
+                                      },
+                                      child: Card(
+                                        elevation: 5,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(10),
+                                        ),
+                                        child: Container(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                            children: [
+                                              Badge(
+                                                padding: EdgeInsets.all(8),
+                                                shape: BadgeShape.circle,
+                                                badgeColor: Colors.deepOrange,
+                                                showBadge:
+                                                ReOpen.toString() ==
+                                                    "0"
+                                                    ? false
+                                                    : true,
+                                                badgeContent: Text(
+                                                  ReOpen.toString(),
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                      FontWeight.bold),
+                                                ),
+                                                child: Image.asset(
+                                                    "assets/images/reopenn.png",
+                                                    fit: BoxFit.fill,
+                                                    height: 70,
+                                                    width: 70),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Container(
+                                                  padding: EdgeInsets.all(3),
+                                                  width: double.infinity,
+                                                  child: Center(
+                                                    child: Text(
+                                                      "Re-opened",
+                                                      textAlign:
+                                                      TextAlign.center,
+                                                      style: TextStyle(
+                                                          color: Color(
+                                                              0xFF002D58),
+                                                          fontSize: 15),
+                                                    ),
+                                                  )),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+                                    GestureDetector(
+                                      onTap: () {
+                                        myController = TextEditingController()
+                                          ..text = "ALL";
+                                        print(myController);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SuperAdminAllTicketReports(
+                                                      getScreenName:
+                                                      myController.text,
+                                                      getTicketType:
+                                                      "ALL",
+                                                    )));
+                                      },
+                                      child: Card(
+                                        elevation: 5,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(10),
+                                        ),
+                                        child: Container(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                            children: [
+                                              Badge(
+                                                padding: EdgeInsets.all(8),
+                                                shape: BadgeShape.circle,
+                                                badgeColor: Colors.deepOrange,
+                                                showBadge:
+                                                ALL.toString() ==
+                                                    "0"
+                                                    ? false
+                                                    : true,
+                                                badgeContent: Text(
+                                                  ALL.toString(),
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                      FontWeight.bold),
+                                                ),
+                                                child: Image.asset(
+                                                    "assets/images/alltic.png",
+                                                    fit: BoxFit.fill,
+                                                    height: 80,
+                                                    width: 80),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Container(
+                                                  padding: EdgeInsets.all(3),
+                                                  width: double.infinity,
+                                                  child: Center(
+                                                    child: Text(
+                                                      "All Tickets",
+                                                      textAlign:
+                                                      TextAlign.center,
+                                                      style: TextStyle(
+                                                          color: Color(
+                                                              0xFF002D58),
+                                                          fontSize: 15),
+                                                    ),
+                                                  )),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
 
                                   ],
                                 ),
@@ -1154,6 +1308,7 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
           ThirdParty = int.parse(li4.result![3].count.toString());
           Quotation = int.parse(li4.result![4].count.toString());
           ReSolved = int.parse(li4.result![5].count.toString());
+          ReOpen=int.parse(li4.result![6].count.toString());
 
 
           data = [
@@ -1163,6 +1318,7 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
             _ChartData('Third Party', double.parse(ThirdParty.toString())),
             _ChartData('Quotation', double.parse(Quotation.toString())),
             _ChartData('ReSolved', double.parse(ReSolved.toString())),
+            _ChartData('ReOpen', double.parse(ReOpen.toString())),
           ];
           _tooltip = TooltipBehavior(enable: true);
 
@@ -1174,7 +1330,8 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
             "WIP": double.parse(WIP.toString()),
             "Third Party": double.parse(ThirdParty.toString()),
             "Quotation": double.parse(Quotation.toString()),
-            "ReSolved": double.parse(ReSolved.toString())
+            "ReSolved": double.parse(ReSolved.toString()),
+            "ReOpen": double.parse(ReOpen.toString())
           };
 
 

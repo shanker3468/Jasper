@@ -160,6 +160,9 @@ class LoginPageState extends State<LoginPage> {
           await prefs.setString("DepartmentName", loginModel.result![0].department.toString());
           await prefs.setString("Location", loginModel.result![0].location.toString());
           await prefs.setString("EmpGroup", loginModel.result![0].empGroup.toString());
+          await prefs.setString("VechileType", loginModel.result![0].vechileType.toString());
+          await prefs.setString("branchCategory", loginModel.result![0].branchCategory.toString());
+          await prefs.setString("vechileType", loginModel.result![0].vechileType.toString());
           await prefs.setBool("LoggedIn", true);
 
           print("Acdmin?User="+loginModel.result![0].adminUser.toString());

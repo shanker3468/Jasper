@@ -185,7 +185,9 @@ class EmployeeDetailsReportState extends State<EmployeeDetailsReport> {
                                         li6.result![i].location,
                                         li6.result![i].empStatus,
                                         li6.result![i].deviceID,
-                                        li6.result![i].empGroup
+                                        li6.result![i].empGroup,
+                                        li6.result![i].branchCategory,
+                                        li6.result![i].vechileType
                                       ),
                                   );
 
@@ -275,6 +277,82 @@ class EmployeeDetailsReportState extends State<EmployeeDetailsReport> {
                                             alignment: WrapAlignment.center,
                                             children: [
                                               Text("Emp Name",
+                                                  softWrap: true,
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                      FontWeight.bold),
+                                                  textAlign: TextAlign.center),
+                                            ],
+                                          ),
+                                        ),
+                                        numeric: false,
+                                      ),
+                                      DataColumn(
+                                        label: Center(
+                                          child: Wrap(
+                                            direction: Axis.vertical, //default
+                                            alignment: WrapAlignment.center,
+                                            children: [
+                                              Text("Branch",
+                                                  softWrap: true,
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                      FontWeight.bold),
+                                                  textAlign: TextAlign.center),
+                                            ],
+                                          ),
+                                        ),
+                                        numeric: false,
+                                      ),
+                                      DataColumn(
+                                        label: Center(
+                                          child: Wrap(
+                                            direction: Axis.vertical, //default
+                                            alignment: WrapAlignment.center,
+                                            children: [
+                                              Text("Branch code",
+                                                  softWrap: true,
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                      FontWeight.bold),
+                                                  textAlign: TextAlign.center),
+                                            ],
+                                          ),
+                                        ),
+                                        numeric: false,
+                                      ),
+                                      DataColumn(
+                                        label: Center(
+                                          child: Wrap(
+                                            direction: Axis.vertical, //default
+                                            alignment: WrapAlignment.center,
+                                            children: [
+                                              Text("Branch Type",
+                                                  softWrap: true,
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                      FontWeight.bold),
+                                                  textAlign: TextAlign.center),
+                                            ],
+                                          ),
+                                        ),
+                                        numeric: false,
+                                      ),
+                                      DataColumn(
+                                        label: Center(
+                                          child: Wrap(
+                                            direction: Axis.vertical, //default
+                                            alignment: WrapAlignment.center,
+                                            children: [
+                                              Text("Vechile Type",
                                                   softWrap: true,
                                                   style: TextStyle(
                                                       fontSize: 12,
@@ -933,82 +1011,123 @@ class EmployeeDetailsReportState extends State<EmployeeDetailsReport> {
                                               //}
                                             }),
                                             DataCell(
-                                                Center(
-                                                    child: Center(
-                                                  child: Wrap(
-                                                      direction: Axis
-                                                          .vertical, //default
-                                                      alignment:
-                                                          WrapAlignment.center,
-                                                      children: [
-                                                        Text(
-                                                          list.empID.toString(),
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                        )
-                                                      ]),
-                                                )),
+                                                Wrap(
+                                                direction: Axis
+                                                    .vertical, //default
+                                                alignment:
+                                                    WrapAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    list.empID.toString(),
+                                                    textAlign:
+                                                        TextAlign.center,
+                                                  )
+                                                ]),
                                                 onTap: () {}),
-                                            DataCell(Center(
-                                                child: Center(
-                                                  child: Wrap(
-                                                      direction:
-                                                      Axis.vertical, //default
-                                                      alignment:
-                                                      WrapAlignment.center,
-                                                      children: [
-                                                        Text(
-                                                          list.firstName.toString(),
-                                                          textAlign:
-                                                          TextAlign.center,
-                                                        )
-                                                      ]),
-                                                ))),
-                                            DataCell(Center(
-                                                child: Center(
-                                                  child: Wrap(
-                                                      direction:
-                                                      Axis.vertical, //default
-                                                      alignment:
-                                                      WrapAlignment.center,
-                                                      children: [
-                                                        Text(
-                                                          list.empStatus=="A"?"Active":"InActive".toString(),
-                                                          textAlign:
-                                                          TextAlign.center,
-                                                        )
-                                                      ]),
-                                                ))),
-                                            DataCell(Center(
-                                                child: Center(
-                                                  child: Wrap(
-                                                      direction:
-                                                      Axis.vertical, //default
-                                                      alignment:
-                                                      WrapAlignment.center,
-                                                      children: [
-                                                        Text(
-                                                          list.mobUserID.toString(),
-                                                          textAlign:
-                                                          TextAlign.center,
-                                                        )
-                                                      ]),
-                                                ))),
-                                            DataCell(Center(
-                                                child: Center(
-                                              child: Wrap(
-                                                  direction:
-                                                      Axis.vertical, //default
-                                                  alignment:
-                                                      WrapAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      list.mobUserPassword.toString(),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    )
-                                                  ]),
-                                            ))),
+                                            DataCell(Wrap(
+                                                direction:
+                                                Axis.vertical, //default
+                                                alignment:
+                                                WrapAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    list.firstName.toString(),
+                                                    textAlign:
+                                                    TextAlign.center,
+                                                  )
+                                                ])),
+                                            DataCell(Wrap(
+                                                direction:
+                                                Axis.vertical, //default
+                                                alignment:
+                                                WrapAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    list.branchName.toString(),
+                                                    textAlign:
+                                                    TextAlign.center,
+                                                  )
+                                                ])),
+                                            DataCell(Wrap(
+                                                direction:
+                                                Axis.vertical, //default
+                                                alignment:
+                                                WrapAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    list.branchCode.toString(),
+                                                    textAlign:
+                                                    TextAlign.center,
+                                                  )
+                                                ])),
+                                            DataCell(Wrap(
+                                                direction:
+                                                Axis.vertical, //default
+                                                alignment:
+                                                WrapAlignment.center,
+                                                children: [
+                                                  list.branchCategory!=null?Text(
+                                                    list.branchCategory.toString(),
+                                                    textAlign:
+                                                    TextAlign.center,
+                                                  ):Text(
+                                                    "",
+                                                    textAlign:
+                                                    TextAlign.center,
+                                                  )
+                                                ])),
+                                            DataCell(Wrap(
+                                                direction:
+                                                Axis.vertical, //default
+                                                alignment:
+                                                WrapAlignment.center,
+                                                children: [
+                                                  list.vechileType!=null?Text(
+                                                   list.vechileType.toString(),
+                                                    textAlign:
+                                                    TextAlign.center,
+                                                  ):Text(
+                                                    "",
+                                                    textAlign:
+                                                    TextAlign.center,
+                                                  )
+                                                ])),
+                                            DataCell(Wrap(
+                                                direction:
+                                                Axis.vertical, //default
+                                                alignment:
+                                                WrapAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    list.empStatus=="A"?"Active":"InActive".toString(),
+                                                    textAlign:
+                                                    TextAlign.center,
+                                                  )
+                                                ])),
+                                            DataCell(Wrap(
+                                                direction:
+                                                Axis.vertical, //default
+                                                alignment:
+                                                WrapAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    list.mobUserID.toString(),
+                                                    textAlign:
+                                                    TextAlign.center,
+                                                  )
+                                                ])),
+                                            DataCell(Wrap(
+                                            direction:
+                                                Axis.vertical, //default
+                                            alignment:
+                                                WrapAlignment.center,
+                                            children: [
+                                              Text(
+                                                list.mobUserPassword.toString(),
+                                                textAlign:
+                                                    TextAlign.center,
+                                              )
+                                            ])),
                                             DataCell(
                                               Wrap(
                                                   direction:
@@ -1148,7 +1267,10 @@ class EmployeeDetailsReportState extends State<EmployeeDetailsReport> {
                   li6.result![i].location,
                   li6.result![i].empStatus,
                   li6.result![i].deviceID,
-                  li6.result![i].empGroup),
+                  li6.result![i].empGroup,
+                  li6.result![i].branchCategory,
+                  li6.result![i].vechileType
+              )
             );
 
             li8.length != 0 ? Count = li8.length.toString() : Count = "0";
@@ -1344,6 +1466,8 @@ class itemsearch {
   String? empStatus;
   String? deviceID;
   String? empGroup;
+  String? branchCategory;
+  String? vechileType;
 
   itemsearch(
       this.docNo,
@@ -1364,6 +1488,9 @@ class itemsearch {
       this.location,
       this.empStatus,
       this.deviceID,
-      this.empGroup
+      this.empGroup,
+      this.branchCategory,
+      this.vechileType
+
   );
 }

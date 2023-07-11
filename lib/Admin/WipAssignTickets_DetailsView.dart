@@ -77,6 +77,8 @@ class _WipAssignTicketsDetailsViewState extends State<WipAssignTicketsDetailsVie
   TextEditingController AgeingDays = new TextEditingController();
   TextEditingController AssignEmpName = new TextEditingController();
   TextEditingController AssignEmpContactNo = new TextEditingController();
+  TextEditingController TicketStatus = new TextEditingController();
+  TextEditingController Quotation = new TextEditingController();
 
   var format = NumberFormat.currency(
     locale: 'HI',
@@ -104,6 +106,8 @@ class _WipAssignTicketsDetailsViewState extends State<WipAssignTicketsDetailsVie
     AssignEmpName.text=widget.list2[widget.id].assignEmpName.toString();
     AssignEmpContactNo.text=widget.list2[widget.id].assignEmpcontactNo.toString();
     IssueCategory.text=widget.list2[widget.id].issueType.toString();
+    TicketStatus.text=widget.list2[widget.id].status.toString()=="T"?"ThirdParty":widget.list2[widget.id].status.toString()=="Q"?"Quotation":widget.list2[widget.id].status.toString()=="O"?"Open Tickets":widget.list2[widget.id].status.toString()=="P"?"Work IN Progress":widget.list2[widget.id].status.toString()=="S"?"Resolved":widget.list2[widget.id].status.toString()=="R"?"Reject":widget.list2[widget.id].status.toString()=="RO"?"Re-Open":"Approved";
+    Quotation.text=widget.list2[widget.id].quotaion.toString();
     AgeingDays.text=    widget.list2[widget.id].status!=
         "C"
         ? '${DateTime.now().difference(DateFormat("yyyy-MM-dd").parse(widget.list2[widget.id].createdDate.toString())).inDays.toString()}'
@@ -291,6 +295,58 @@ class _WipAssignTicketsDetailsViewState extends State<WipAssignTicketsDetailsVie
 
 
                       ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(
+                  height: 5,
+                ),
+
+
+                Container(
+                  height: height / 12,
+                  child: Row(
+                    children: [
+                      //new Expanded(flex: 1, child: new Text("Scan Pallet")),
+                      new Expanded(
+                        flex: 5,
+                        child: Container(
+                          color: Colors.white,
+                          child: new TextField(
+                            controller: TicketStatus,
+                            enabled: false,
+                            decoration: InputDecoration(
+                              labelText: "Ticket Status",
+                              border: OutlineInputBorder(
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(0))),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Quotation.text!="null"||Quotation.text!="null"?Expanded(
+                        flex: 5,
+                        child: Container(
+                          color: Colors.white,
+                          child: new TextField(
+                            controller: Quotation,
+                            enabled: false,
+                            decoration: InputDecoration(
+                              labelText: "Quotation",
+                              border: OutlineInputBorder(
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(0))),
+                            ),
+                          ),
+
+                        ),
+
+
+                      ):Container(),
                     ],
                   ),
                 ),

@@ -425,7 +425,7 @@ class AdminReportDashboardState extends State<AdminReportDashboard> {
                                   childAspectRatio: 1,
                                   // crossAxisSpacing: width / 20,
                                   // mainAxisSpacing: height / 20,
-                                  crossAxisCount: 4,
+                                  crossAxisCount: 3,
                                   children: <Widget>[
 
                                     GestureDetector(

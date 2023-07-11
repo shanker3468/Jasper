@@ -883,7 +883,7 @@ class Approved_Assign_TicketsState extends State<Approved_Assign_Tickets> {
                       ),
                       DataColumn(
                         label: Text(
-                          'IssueCategory',
+                          'Category',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),

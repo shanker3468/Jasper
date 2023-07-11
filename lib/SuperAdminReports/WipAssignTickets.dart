@@ -933,7 +933,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                       ),
                       DataColumn(
                         label: Text(
-                          'IssueCategory',
+                          'Category',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),

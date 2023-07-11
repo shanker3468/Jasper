@@ -939,7 +939,7 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
                       ),
                       DataColumn(
                         label: Text(
-                          'IssueCategory',
+                          'Category',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),

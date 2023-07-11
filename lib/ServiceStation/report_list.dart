@@ -710,7 +710,7 @@ class ReportListState extends State<ReportList> {
                                                                       children: [
                                                                         TextSpan(
                                                                           text:
-                                                                          'Created Date :',
+                                                                          'Crt Date : ',
                                                                           style: TextStyle(
                                                                               fontSize:
                                                                               SH /
@@ -722,7 +722,7 @@ class ReportListState extends State<ReportList> {
                                                                                   .bold),
                                                                         ),
                                                                         TextSpan(
-                                                                          text: DateFormat("dd-MM-yyyy").format(DateTime.parse(custTicketStatuslist.result![index].createdDate.toString())).toString(),
+                                                                          text: DateFormat("dd-MM-yyyy").format(DateTime.parse( custTicketStatuslist.result![index].createdDate.toString())).toString(),
                                                                           style: TextStyle(
                                                                               fontSize:
                                                                               SH /
@@ -746,7 +746,7 @@ class ReportListState extends State<ReportList> {
                                                                       children: [
                                                                         TextSpan(
                                                                           text:
-                                                                          'RequiredDate :',
+                                                                          'Req Date : ',
                                                                           style: TextStyle(
                                                                               fontSize: SH /
                                                                                   60,
@@ -831,7 +831,7 @@ class ReportListState extends State<ReportList> {
                                                                       children: [
                                                                         TextSpan(
                                                                           text:
-                                                                          'Ageing Days :',
+                                                                          'Ageing :',
                                                                           style: TextStyle(
                                                                               fontSize:
                                                                               SH /
@@ -1016,7 +1016,7 @@ class ReportListState extends State<ReportList> {
                                                         custTicketStatuslist.result![index].itemName.toString().isNotEmpty?const SizedBox(
                                                           height: 5,
                                                         ):Container(),
-                                                        custTicketStatuslist.result![index].quotation.toString()!="null"||custTicketStatuslist.result![index].quotation!.isNotEmpty||custTicketStatuslist.result![index].quotation.toString()!=""?Row(
+                                                        custTicketStatuslist.result![index].quotation.toString()!="null"||custTicketStatuslist.result![index].quotation.toString()!=null?Row(
                                                           mainAxisAlignment:
                                                           MainAxisAlignment
                                                               .spaceBetween,
@@ -1029,7 +1029,7 @@ class ReportListState extends State<ReportList> {
                                                                       children: [
                                                                         TextSpan(
                                                                           text:
-                                                                          'quotation:',
+                                                                          'Quotation :',
                                                                           style: TextStyle(
                                                                               fontSize: SH /
                                                                                   60,
@@ -1078,7 +1078,7 @@ class ReportListState extends State<ReportList> {
                                                                       children: [
                                                                         TextSpan(
                                                                           text:
-                                                                          'IssueCatrgory:',
+                                                                          'IssueCategory :',
                                                                           style: TextStyle(
                                                                               fontSize: SH /
                                                                                   60,
@@ -1128,7 +1128,7 @@ class ReportListState extends State<ReportList> {
                                                                       children: [
                                                                         TextSpan(
                                                                           text:
-                                                                          'IssueType:',
+                                                                          'IssueType :',
                                                                           style: TextStyle(
                                                                               fontSize: SH /
                                                                                   60,
@@ -1171,7 +1171,7 @@ class ReportListState extends State<ReportList> {
                                                               children: [
                                                                 TextSpan(
                                                                   text:
-                                                                      'Ticket Description: ',
+                                                                      'Ticket Description : ',
                                                                   style: TextStyle(
                                                                       fontSize:
                                                                           SH /
@@ -1234,7 +1234,7 @@ class ReportListState extends State<ReportList> {
                                                                         children: [
                                                                           TextSpan(
                                                                             text:
-                                                                                'Assigned Emp:',
+                                                                                'Assigned Emp :',
                                                                             style: TextStyle(
                                                                                 fontSize: SH / 60,
                                                                                 color: Colors.black,

@@ -466,7 +466,7 @@ class Assign_TicketsState extends State<Assign_Tickets> {
                       ),
                       DataColumn(
                         label: Text(
-                          'IssueCategory',
+                          'Category',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),

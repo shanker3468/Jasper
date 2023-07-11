@@ -1289,7 +1289,7 @@ class BranchAdminWIP_Assign_TicketsState extends State<BranchAdminWIP_Assign_Tic
                   scrollDirection: Axis.horizontal,
                   child: li2.result!.length>0
                       ? DataTable(
-                    columnSpacing: 20.0,
+                    columnSpacing: 10.0,
                     headingRowColor:
                     MaterialStateProperty.all(Colors.blue),
                     sortColumnIndex: _currentSortColumn,
@@ -1328,7 +1328,7 @@ class BranchAdminWIP_Assign_TicketsState extends State<BranchAdminWIP_Assign_Tic
                       ),
                       DataColumn(
                         label: Text(
-                          'Issuetype',
+                          'Issue',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),

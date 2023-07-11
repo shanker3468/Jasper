@@ -110,8 +110,8 @@ class _SuperAdminDashBoardState extends State<SuperAdminDashBoard> {
         var isdata = json.decode(response.body)["status"] == 0;
         print(isdata);
         if (isdata) {
-          ScaffoldMessenger.of(this.context)
-              .showSnackBar(SnackBar(content: Text("No Records Found!!")));
+          // ScaffoldMessenger.of(this.context)
+          //     .showSnackBar(SnackBar(content: Text("No Records Found!!")));
           print('No Records Found!!');
           // CustomerTicketsModel li2 =CustomerTicketsModel(result: []);
 

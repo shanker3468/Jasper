@@ -1226,7 +1226,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                   scrollDirection: Axis.horizontal,
                   child: li2.result!.length>0
                       ? DataTable(
-                    columnSpacing: 20.0,
+                    columnSpacing: 10.0,
                     headingRowColor:
                     MaterialStateProperty.all(Colors.blue),
                     sortColumnIndex: _currentSortColumn,
@@ -1266,7 +1266,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
 
                       DataColumn(
                         label: Text(
-                          'Vechile Type',
+                          'Vehicle',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -1278,7 +1278,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                       ),
                       DataColumn(
                         label: Text(
-                          'Issuetype',
+                          'Issue',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -1576,7 +1576,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                     size: 18,
                                   ),
                                   label: Text(
-                                    'Attachment',
+                                    '',
                                     style: TextStyle(color: Colors.white, fontSize: 10),
                                   ),
                                   style: TextButton.styleFrom(

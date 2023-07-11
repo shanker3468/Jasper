@@ -429,7 +429,7 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                   childAspectRatio: 1,
                                   // crossAxisSpacing: width / 20,
                                   // mainAxisSpacing: height / 20,
-                                  crossAxisCount: 4,
+                                  crossAxisCount: 3,
                                   children: <Widget>[
 
                                       GestureDetector(

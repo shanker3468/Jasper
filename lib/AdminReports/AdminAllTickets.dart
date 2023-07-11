@@ -761,7 +761,7 @@ class BranchAdminAllTicketReportsState extends State<BranchAdminAllTicketReports
                       ),
                       DataColumn(
                         label: Text(
-                          'IssueCategory',
+                          'Category',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),

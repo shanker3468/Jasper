@@ -81,6 +81,8 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
       Quotation = 0,
       ReSolved = 0,
         ReOpen = 0,
+      Reject=0,
+      Closed=0,
         ALL = 0;
 
 
@@ -92,7 +94,9 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
     "ThirdParty": "Third Party legend",
     "Quotation": "Quotation legend",
     "ReSolved": "ReSolved legend",
-    "ReOpen": "ReOpen legend"
+    "ReOpen": "ReOpen legend",
+    "Reject": "Reject legend",
+    "Closed": "Closed legend"
   };
   final colorList = <Color>[
     const Color(0xfffdcb6e),
@@ -101,7 +105,9 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
     const Color(0xffe17055),
     const Color(0xff6c5ce7),
     const Color(0xff60da19),
-    const Color(0xffda1929)
+    const Color(0xffda1929),
+    const Color(0xff947a7a),
+    const Color(0xff227527)
   ];
 
   final gradientList = <List<Color>>[
@@ -128,6 +134,14 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
     [
       const Color.fromRGBO(218, 25, 41, 1.0),
       const Color.fromRGBO(218, 22, 38, 0.8),
+    ],
+    [
+      const Color.fromRGBO(124, 124, 124, 1.0),
+      const Color.fromRGBO(216, 218, 234, 1.0),
+    ],
+    [
+      const Color.fromRGBO(34, 112, 38, 1.0),
+      const Color.fromRGBO(150, 211, 121, 0.7294117647058823),
     ]
   ];
 
@@ -158,7 +172,9 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
       "Third Party": 0,
       "Quotation": 0,
       "ReSolved": 0,
-      "Re Open": 0
+      "Re Open": 0,
+      "Reject": 0,
+      "Closed":0
     };
 
     _tooltip = TooltipBehavior(enable: false);
@@ -199,7 +215,8 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
       const Color(0xffe17055),
       const Color(0xff6c5ce7),
       const Color(0xff60da19),
-      const Color(0xffda1929)
+      const Color(0xffda1929),
+      const Color(0xff947a7a)
 
     ],
     stops: <double>[0.1, 0.3, 0.5, 0.7, 0.9],
@@ -221,6 +238,7 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
+            backgroundColor:Colors.indigo.shade800 ,
             // centerTitle: true,
             // backgroundColor: Colors.blue,
             // elevation: 0.0,
@@ -233,7 +251,7 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
             //   ),
             // ),
             title: Text(
-              'ADMIN PORTAL',
+              'ADMIN REPORTS',
               style: TextStyle(color: Colors.white, fontSize: 18),
             ),
             // leading: Padding(
@@ -274,7 +292,7 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                 height: height / 1,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Colors.blue.shade500, Colors.blue.shade300],
+                    colors: [Colors.indigo.shade800, Colors.indigo.shade300],
                     stops: [0.1, 1.0],
                   ),
                 ),
@@ -347,7 +365,7 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                     margin: EdgeInsets.only(top: 100),
                     height: height,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Colors.black12,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(40),
                         topRight: Radius.circular(40),
@@ -366,7 +384,7 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                     "Menu",
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Color(0xD0073E6C),
+                                        color: Colors.white,
                                         fontSize: 20),
                                   ),
                                 ),
@@ -429,13 +447,13 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                   childAspectRatio: 1,
                                   // crossAxisSpacing: width / 20,
                                   // mainAxisSpacing: height / 20,
-                                  crossAxisCount: 3,
+                                  crossAxisCount: 4,
                                   children: <Widget>[
 
                                       GestureDetector(
                                         onTap: () {
                                           myController = TextEditingController()
-                                            ..text = "Open Tickets";
+                                            ..text = "Open";
                                           print(myController);
                                           Navigator.push(
                                               context,
@@ -449,7 +467,7 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                                       )));
                                         },
                                         child: Card(
-                                          elevation: 5,
+                                          elevation: 15,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(10),
@@ -474,14 +492,11 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                                         fontWeight:
                                                             FontWeight.bold),
                                                   ),
-                                                  child: Padding(
-                                                    padding: EdgeInsets.all(5),
-                                                    child: Image.asset(
-                                                        "assets/images/OpenTicket.png",
-                                                        fit: BoxFit.fill,
-                                                        height: 60,
-                                                        width: 60),
-                                                  ),
+                                                  child: Image.asset(
+                                                      "assets/images/OpenTicket.png",
+                                                      fit: BoxFit.fill,
+                                                      height: 40,
+                                                      width: 40),
                                                 ),
                                                 SizedBox(
                                                   height: 7,
@@ -491,7 +506,7 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                                     width: double.infinity,
                                                     child: Center(
                                                       child: Text(
-                                                        "Open Tickets",
+                                                        "Open",
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: TextStyle(
@@ -522,7 +537,7 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                                     )));
                                       },
                                       child: Card(
-                                        elevation: 5,
+                                        elevation: 15,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                           BorderRadius.circular(10),
@@ -551,11 +566,11 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                                 child: Image.asset(
                                                     "assets/images/app.png",
                                                     fit: BoxFit.fill,
-                                                    height: 70,
-                                                    width: 70),
+                                                    height: 40,
+                                                    width: 40),
                                               ),
                                               SizedBox(
-                                                height: 10,
+                                                height: 7,
                                               ),
                                               Container(
                                                   padding: EdgeInsets.all(3),
@@ -594,7 +609,7 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                                       )));
                                         },
                                         child: Card(
-                                          elevation: 5,
+                                          elevation: 15,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(10),
@@ -623,11 +638,11 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                                   child: Image.asset(
                                                       "assets/images/WorkInProgress.png",
                                                       fit: BoxFit.fill,
-                                                      height: 70,
-                                                      width: 70),
+                                                      height: 40,
+                                                      width: 40),
                                                 ),
                                                 SizedBox(
-                                                  height: 10,
+                                                  height: 7,
                                                 ),
                                                 Container(
                                                     padding: EdgeInsets.all(3),
@@ -666,7 +681,7 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                                       )));
                                         },
                                         child: Card(
-                                          elevation: 5,
+                                          elevation: 15,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(10),
@@ -694,11 +709,11 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                                   child: Image.asset(
                                                       "assets/images/ThirdParty.png",
                                                       fit: BoxFit.fill,
-                                                      height: 70,
-                                                      width: 70),
+                                                      height: 40,
+                                                      width: 40),
                                                 ),
                                                 SizedBox(
-                                                  height: 10,
+                                                  height: 7,
                                                 ),
                                                 Container(
                                                   padding: EdgeInsets.all(3),
@@ -738,7 +753,7 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                                       )));
                                         },
                                         child: Card(
-                                          elevation: 5,
+                                          elevation: 15,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(10),
@@ -766,11 +781,11 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                                   child: Image.asset(
                                                       "assets/images/Quotation.jpg",
                                                       fit: BoxFit.fill,
-                                                      height: 70,
-                                                      width: 70),
+                                                      height: 40,
+                                                      width: 40),
                                                 ),
                                                 SizedBox(
-                                                  height: 10,
+                                                  height: 7,
                                                 ),
                                                 Container(
                                                     padding: EdgeInsets.all(3),
@@ -809,7 +824,7 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                                       )));
                                         },
                                         child: Card(
-                                          elevation: 5,
+                                          elevation: 15,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(10),
@@ -838,11 +853,11 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                                   child: Image.asset(
                                                       "assets/images/SollutionProvided.png",
                                                       fit: BoxFit.fill,
-                                                      height: 70,
-                                                      width: 70),
+                                                      height: 40,
+                                                      width: 40),
                                                 ),
                                                 SizedBox(
-                                                  height: 10,
+                                                  height: 7,
                                                 ),
                                                 Container(
                                                     padding: EdgeInsets.all(3),
@@ -880,7 +895,7 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                                     )));
                                       },
                                       child: Card(
-                                        elevation: 5,
+                                        elevation: 15,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                           BorderRadius.circular(10),
@@ -909,11 +924,11 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                                 child: Image.asset(
                                                     "assets/images/reopenn.png",
                                                     fit: BoxFit.fill,
-                                                    height: 70,
-                                                    width: 70),
+                                                    height: 40,
+                                                    width: 40),
                                               ),
                                               SizedBox(
-                                                height: 10,
+                                                height: 7,
                                               ),
                                               Container(
                                                   padding: EdgeInsets.all(3),
@@ -921,6 +936,148 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                                   child: Center(
                                                     child: Text(
                                                       "Re-opened",
+                                                      textAlign:
+                                                      TextAlign.center,
+                                                      style: TextStyle(
+                                                          color: Color(
+                                                              0xFF002D58),
+                                                          fontSize: 15),
+                                                    ),
+                                                  )),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        myController = TextEditingController()
+                                          ..text = "Rejected";
+                                        print(myController);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    BranchAdminTicketReports(
+                                                      getScreenName:
+                                                      myController.text,
+                                                      getTicketType:
+                                                      "R",
+                                                    )));
+                                      },
+                                      child: Card(
+                                        elevation: 15,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(10),
+                                        ),
+                                        child: Container(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                            children: [
+                                              Badge(
+                                                padding: EdgeInsets.all(8),
+                                                shape: BadgeShape.circle,
+                                                badgeColor: Colors.deepOrange,
+                                                showBadge:
+                                                Reject.toString() ==
+                                                    "0"
+                                                    ? false
+                                                    : true,
+                                                badgeContent: Text(
+                                                  Reject.toString(),
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                      FontWeight.bold),
+                                                ),
+                                                child: Image.asset(
+                                                    "assets/images/rejectpng.png",
+                                                    fit: BoxFit.fill,
+                                                    height: 40,
+                                                    width: 40),
+                                              ),
+                                              SizedBox(
+                                                height: 7,
+                                              ),
+                                              Container(
+                                                  padding: EdgeInsets.all(3),
+                                                  width: double.infinity,
+                                                  child: Center(
+                                                    child: Text(
+                                                      "Rejected",
+                                                      textAlign:
+                                                      TextAlign.center,
+                                                      style: TextStyle(
+                                                          color: Color(
+                                                              0xFF002D58),
+                                                          fontSize: 15),
+                                                    ),
+                                                  )),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        myController = TextEditingController()
+                                          ..text = "Closed";
+                                        print(myController);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    BranchAdminTicketReports(
+                                                      getScreenName:
+                                                      myController.text,
+                                                      getTicketType:
+                                                      "C",
+                                                    )));
+                                      },
+                                      child: Card(
+                                        elevation: 15,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(10),
+                                        ),
+                                        child: Container(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                            children: [
+                                              Badge(
+                                                padding: EdgeInsets.all(8),
+                                                shape: BadgeShape.circle,
+                                                badgeColor: Colors.deepOrange,
+                                                showBadge:
+                                                Closed.toString() ==
+                                                    "0"
+                                                    ? false
+                                                    : true,
+                                                badgeContent: Text(
+                                                  Closed.toString(),
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                      FontWeight.bold),
+                                                ),
+                                                child: Image.asset(
+                                                    "assets/images/sign.png",
+                                                    fit: BoxFit.fill,
+                                                    height: 40,
+                                                    width: 40),
+                                              ),
+                                              SizedBox(
+                                                height: 7,
+                                              ),
+                                              Container(
+                                                  padding: EdgeInsets.all(3),
+                                                  width: double.infinity,
+                                                  child: Center(
+                                                    child: Text(
+                                                      "Closed",
                                                       textAlign:
                                                       TextAlign.center,
                                                       style: TextStyle(
@@ -951,7 +1108,7 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                                     )));
                                       },
                                       child: Card(
-                                        elevation: 5,
+                                        elevation: 10,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                           BorderRadius.circular(10),
@@ -965,11 +1122,11 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                             Image.asset(
                                                     "assets/images/alltic.png",
                                                     fit: BoxFit.fill,
-                                                    height: 70,
-                                                    width: 70),
+                                                    height: 40,
+                                                    width: 40),
 
                                               SizedBox(
-                                                height: 10,
+                                                height: 7,
                                               ),
                                               Container(
                                                   padding: EdgeInsets.all(3),
@@ -1298,6 +1455,7 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
           Quotation = int.parse(li4.result![4].count.toString());
           ReSolved = int.parse(li4.result![5].count.toString());
           ReOpen=int.parse(li4.result![6].count.toString());
+          Reject=int.parse(li4.result![7].count.toString());
 
 
           data = [
@@ -1308,6 +1466,8 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
             _ChartData('Quotation', double.parse(Quotation.toString())),
             _ChartData('ReSolved', double.parse(ReSolved.toString())),
             _ChartData('ReOpen', double.parse(ReOpen.toString())),
+            _ChartData('Reject', double.parse(Reject.toString())),
+            _ChartData('Closed', double.parse(Closed.toString())),
           ];
           _tooltip = TooltipBehavior(enable: true);
 
@@ -1320,7 +1480,9 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
             "Third Party": double.parse(ThirdParty.toString()),
             "Quotation": double.parse(Quotation.toString()),
             "ReSolved": double.parse(ReSolved.toString()),
-            "ReOpen": double.parse(ReOpen.toString())
+            "ReOpen": double.parse(ReOpen.toString()),
+            "Reject": double.parse(Reject.toString()),
+            "Closed": double.parse(Closed.toString())
           };
 
 

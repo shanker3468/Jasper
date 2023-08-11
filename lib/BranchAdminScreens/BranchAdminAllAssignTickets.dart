@@ -467,26 +467,26 @@ class BranchAdminAllAssign_TicketsState extends State<BranchAdminAllAssign_Ticke
                       ),
                       DataColumn(
                         label: Text(
-                          'BranchName',
+                          'Branch',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
 
                       DataColumn(
                         label: Text(
-                          'Attachment',
+                          '@',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
                       DataColumn(
                         label: Text(
-                          'CreatedBy',
+                          'Created',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
                       DataColumn(
                         label: Text(
-                          'Emp Contact Number',
+                          'Contact',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),

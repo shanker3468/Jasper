@@ -528,7 +528,7 @@ class _SuperAdminDashBoardState extends State<SuperAdminDashBoard> {
                                                     borderRadius: BorderRadius.all(
                                                         Radius.circular(50))),
                                                 child: Text(
-                                                  "Weekly Updation Report",
+                                                  "Weekly Report",
                                                   style: TextStyle(
                                                       color: String_Values.primarycolor),
                                                 ),

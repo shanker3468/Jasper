@@ -289,7 +289,7 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
          rowIndex: i,
          columnIndex: colIndex7,
        ))
-         ..value = colValue.priority;
+         ..value = colValue.priority=='High'?"H":colValue.priority=='Medium'?"M":"L";
        i++;
      });
 
@@ -457,7 +457,9 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
                  li2.result![k].endDate,
                  li2.result![k].startDate,
                  li2.result![k].assignEmpcontactNo,
-                 li2.result![k].quotation
+                 li2.result![k].quotation,
+                 li2.result![k].issueTypeSortName,
+                 li2.result![k].branchCategorySortName
 
              ));
 
@@ -835,7 +837,9 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
                                     li2.result![k].endDate,
                                     li2.result![k].startDate,
                                     li2.result![k].assignEmpcontactNo,
-                                    li2.result![k].quotation
+                                    li2.result![k].quotation,
+                                    li2.result![k].issueTypeSortName,
+                                    li2.result![k].branchCategorySortName
 
                                 ));
                           }
@@ -886,7 +890,9 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
                                   li2.result![k].endDate,
                                   li2.result![k].startDate,
                                   li2.result![k].assignEmpcontactNo,
-                                  li2.result![k].quotation
+                                  li2.result![k].quotation,
+                                  li2.result![k].issueTypeSortName,
+                                  li2.result![k].branchCategorySortName
                               ));
                           }
                         });
@@ -908,20 +914,20 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
 
                       if(FilterStatusName=="")DataColumn(
                         label: Text(
-                          'Tic Type',
+                          'Type',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
                       DataColumn(
                         label: Text(
-                          'Tic Status',
+                          'Status',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
 
                       DataColumn(
                         label: Text(
-                          'Tic No',
+                          'No',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -951,7 +957,7 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
                       ),
                       if(FilterStatusName=="Work IN Progress")DataColumn(
                         label: Text(
-                          'AssignEmpContactNo',
+                          'EmpContactNo',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -971,14 +977,14 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
                       ),
                       DataColumn(
                         label: Text(
-                          'ReqDate',
+                          'Req Date',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
 
                       DataColumn(
                         label: Text(
-                          'CreatedBy',
+                          'Created',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -1028,7 +1034,7 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
                                 textAlign: TextAlign.center)),
                             DataCell(Text(
                                 style: TextStyle(fontWeight:FontWeight.bold,color:list.priority.toString()=="High"?Colors.red:list.priority.toString()=="Medium"?Colors.orangeAccent:Colors.green,),
-                                list.priority.toString(),
+                                list.priority.toString()=="High"?"H":list.priority.toString()=="Medium"?"M":"L",
                                 textAlign: TextAlign.center)),
                             DataCell(Text(
                                 list.issueCatrgory.toString(),
@@ -1178,7 +1184,9 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
                                         li2.result![i].endDate,
                                         li2.result![i].startDate,
                                         li2.result![i].assignEmpcontactNo,
-                                        li2.result![i].quotation
+                                        li2.result![i].quotation,
+                                        li2.result![i].issueTypeSortName,
+                                        li2.result![i].branchCategorySortName
 
                                     ));
                                   }
@@ -1249,7 +1257,9 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
                                         li2.result![i].endDate,
                                         li2.result![i].startDate,
                                         li2.result![i].assignEmpcontactNo,
-                                        li2.result![i].quotation
+                                        li2.result![i].quotation,
+                                        li2.result![i].issueTypeSortName,
+                                        li2.result![i].branchCategorySortName
 
                                     ));
                                   }
@@ -2130,7 +2140,9 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
                 li2.result![k].endDate,
                 li2.result![k].startDate,
                 li2.result![k].assignEmpcontactNo,
-                li2.result![k].quotation
+                li2.result![k].quotation,
+                li2.result![k].issueTypeSortName,
+                li2.result![k].branchCategorySortName
 
             ));
 
@@ -2291,7 +2303,9 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
                  li2.result![k].endDate,
                  li2.result![k].startDate,
                  li2.result![k].assignEmpcontactNo,
-                 li2.result![k].quotation
+                 li2.result![k].quotation,
+                 li2.result![k].issueTypeSortName,
+                 li2.result![k].branchCategorySortName
 
              ));
 
@@ -2451,7 +2465,9 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
                  li2.result![k].endDate,
                  li2.result![k].startDate,
                  li2.result![k].assignEmpcontactNo,
-                 li2.result![k].quotation
+                 li2.result![k].quotation,
+                 li2.result![k].issueTypeSortName,
+                 li2.result![k].branchCategorySortName
 
              ));
 
@@ -2609,7 +2625,9 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
                  li2.result![k].endDate,
                  li2.result![k].startDate,
                  li2.result![k].assignEmpcontactNo,
-                 li2.result![k].quotation
+                 li2.result![k].quotation,
+                 li2.result![k].issueTypeSortName,
+                 li2.result![k].branchCategorySortName
 
              ));
 
@@ -3340,6 +3358,8 @@ class FilterList2 {
   String? startDate;
   String? assignEmpcontactNo;
   String? quotation;
+  String? issueTypeSortName;
+  String? branchCategorySortName;
 
   FilterList2(
       this.createdDate,
@@ -3375,7 +3395,9 @@ class FilterList2 {
       this.endDate,
       this.startDate,
       this.assignEmpcontactNo,
-      this.quotation
+      this.quotation,
+  this.issueTypeSortName,
+  this.branchCategorySortName
       );
 }
 

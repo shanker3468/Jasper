@@ -136,7 +136,7 @@ class ReportListState extends State<ReportList> {
                                                 print('Yes');
                                                 Dialogs.materialDialog(
                                                   msg:
-                                                      'Do you want Accept And Rejact',
+                                                      'Do you want Accept And Reject',
                                                   title: "TIC NO-" +
                                                       custTicketStatuslist
                                                           .result![index]
@@ -1164,6 +1164,58 @@ class ReportListState extends State<ReportList> {
                                                         custTicketStatuslist.result![index].issueType.toString().isNotEmpty? SizedBox(
                                                           height: 5,
                                                         ):Container(),
+                                                        widget.ticketType == "D"?Container(
+                                                            width: SW,
+                                                            child: RichText(
+                                                                text: TextSpan(
+                                                                  children: [
+                                                                    TextSpan(
+                                                                      text:
+                                                                      'Delete Reason : ',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                          SH /
+                                                                              60,
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                    ),
+                                                                    TextSpan(
+                                                                      text:
+                                                                      '\n  ${custTicketStatuslist.result![index].deleteReason.toString()}',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                          SH /
+                                                                              60,
+                                                                          color: Colors
+                                                                              .black),
+                                                                    ),
+                                                                  ],
+                                                                ))
+
+                                                          /*Text(
+                                                            "Ticket Description: \n" +
+                                                                custTicketStatuslist
+                                                                    .result[index]
+                                                                    .description
+                                                                    .toString(),
+                                                            maxLines: 15,
+                                                            overflow: TextOverflow.ellipsis,
+                                                            softWrap: true,
+                                                            style: TextStyle(
+                                                                fontSize: SH / 60,
+                                                                fontWeight:
+                                                                    FontWeight.bold),
+                                                          ),*/
+                                                        ):Container(),
+                                                        widget.ticketType == "D"
+                                                            ? const SizedBox(
+                                                          height: 5,
+                                                        ):const SizedBox(
+                                                          height: 0,
+                                                        ),
                                                         Container(
                                                             width: SW,
                                                             child: RichText(
@@ -1771,8 +1823,10 @@ class ReportListState extends State<ReportList> {
       "Solution": rejectionController.text,
       "TicketNo": alterTicketNo,
       "CustName": "",
-      "UpdateLocation": "",
+      "UpdateLocation": deleteController.text,
       "Docno":0,
+
+
     };
     print(body);
     print(jsonEncode(body));
@@ -1814,6 +1868,8 @@ class ReportListState extends State<ReportList> {
                   : Fluttertoast.showToast(
                       msg: "Ticket Reopen successfully!!",
                       backgroundColor: Colors.green);
+
+          cutTicketStatusData();
 
           Navigator.pop(context);
           if (formid == 4) {

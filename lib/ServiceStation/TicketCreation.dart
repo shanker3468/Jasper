@@ -116,7 +116,7 @@ class TicketCreationState extends State<TicketCreation> {
   var pickedFile;
   List<String> files = [];
   late FilePickerResult result;
-  late FocusNode myFocusNode;
+   late FocusNode myFocusNode;
 
 
 
@@ -152,8 +152,6 @@ class TicketCreationState extends State<TicketCreation> {
     getAssetCategory();
 
     getticketNo().then((value) => gettickettype().then((value) => getIssueCategory()).then((value) => getIssuetype()));
-
-
 
 
     super.initState();
@@ -1047,13 +1045,14 @@ class TicketCreationState extends State<TicketCreation> {
                                 onTap: () {
                                   setState(() {
                                     _selectDate(context);
-                                    //   myFocusNode.unfocus();
+                                       myFocusNode.unfocus();
                                   });
                                 },
                                 child: TextField(
+                                  focusNode: FocusScopeNode(),
                                     controller: datecontroler,
-                                    enabled: true,
-                                    //  focusNode: myFocusNode,
+                                    enabled: false,
+                                    // focusNode: myFocusNode,
                                     autofocus: false,
                                     decoration: InputDecoration(
                                       border: OutlineInputBorder(

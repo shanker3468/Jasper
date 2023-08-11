@@ -289,7 +289,7 @@ class BranchAdminAllTicketReportsState extends State<BranchAdminAllTicketReports
          rowIndex: i,
          columnIndex: colIndex7,
        ))
-         ..value = colValue.priority;
+         ..value = colValue.priority=='High'?"H":colValue.priority=='Medium'?"M":"L";
        i++;
      });
 
@@ -730,20 +730,20 @@ class BranchAdminAllTicketReportsState extends State<BranchAdminAllTicketReports
 
                       if(FilterStatusName=="")DataColumn(
                         label: Text(
-                          'Tic Type',
+                          'Type',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
                       DataColumn(
                         label: Text(
-                          'Tic Status',
+                          'Status',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
 
                       DataColumn(
                         label: Text(
-                          'Tic No',
+                          'No',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -773,7 +773,7 @@ class BranchAdminAllTicketReportsState extends State<BranchAdminAllTicketReports
                       ),
                       if(FilterStatusName=="Work IN Progress")DataColumn(
                         label: Text(
-                          'AssignEmpContactNo',
+                          'EmpContactNo',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -793,7 +793,7 @@ class BranchAdminAllTicketReportsState extends State<BranchAdminAllTicketReports
                       ),
                       DataColumn(
                         label: Text(
-                          'ReqDate',
+                          'Req Date',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -806,7 +806,7 @@ class BranchAdminAllTicketReportsState extends State<BranchAdminAllTicketReports
 
                       DataColumn(
                         label: Text(
-                          'CreatedBy',
+                          'Created',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -855,7 +855,7 @@ class BranchAdminAllTicketReportsState extends State<BranchAdminAllTicketReports
                                 textAlign: TextAlign.center)),
                             DataCell(Text(
                                 style: TextStyle(fontWeight:FontWeight.bold,color:list.priority.toString()=="High"?Colors.red:list.priority.toString()=="Medium"?Colors.orangeAccent:Colors.green,),
-                                list.priority.toString(),
+                                list.priority.toString()=="High"?"H":list.priority.toString()=="Medium"?"M":"L",
                                 textAlign: TextAlign.center)),
                             DataCell(Text(
                                 list.issueCatrgory.toString(),

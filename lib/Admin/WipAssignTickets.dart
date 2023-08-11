@@ -1120,6 +1120,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                 li3.add(FilterList3(
 
                                     li2.result![k].createdDate,
+                                    li2.result![k].createdDate1,
                                     li2.result![k].docNo,
                                     li2.result![k].brachName,
                                     li2.result![k].branchCode,
@@ -1157,7 +1158,9 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                     li2.result![k].quotation,
                                     li2.result![k].vechileType,
                                     li2.result![k].branchCategory,
-                                    li2.result![k].branchCategoryID
+                                    li2.result![k].branchCategoryID,
+                                    li2.result![k].issueTypeSortName,
+                                    li2.result![k].branchCategorySortName
 
                                 ));
                           }
@@ -1176,6 +1179,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                             for (int k = 0; k < li2.result!.length; k++)
                               li3.add(FilterList3(
                                   li2.result![k].createdDate,
+                                  li2.result![k].createdDate1,
                                   li2.result![k].docNo,
                                   li2.result![k].brachName,
                                   li2.result![k].branchCode,
@@ -1213,7 +1217,9 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                   li2.result![k].quotation,
                                   li2.result![k].vechileType,
                                   li2.result![k].branchCategory,
-                                  li2.result![k].branchCategoryID
+                                  li2.result![k].branchCategoryID,
+                                  li2.result![k].issueTypeSortName,
+                                  li2.result![k].branchCategorySortName
                               ));
                           }
                         });
@@ -1233,21 +1239,19 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                     sortAscending: _isAscending,
                     columns: <DataColumn>[
                       DataColumn(
-                        label: Text(
-                          'View',
-                          style: TextStyle(color: Colors.white),
-                        ),
+                        label: Icon(Icons
+                            .remove_red_eye_outlined,color: Colors.white),
                       ),
                       DataColumn(
                         label: Text(
-                          'Tic Type',
+                          'Type',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
 
                       DataColumn(
                         label: Text(
-                          'Tic No',
+                          'No',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -1323,7 +1327,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                       ),
                       if(FilterStatusName=="Quotation")DataColumn(
                         label: Text(
-                          'Quot Amount',
+                          'Amount',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -1336,13 +1340,13 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
 
                       DataColumn(
                         label: Text(
-                          'Attachment',
+                          '@',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
                       DataColumn(
                         label: Text(
-                          'CreatedBy',
+                          'Created',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -1427,17 +1431,17 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                 list.brachName.toString(),
                                 textAlign: TextAlign.center)),
                             DataCell(Text(
-                                list.branchCategory.toString(),
+                                list.branchCategorySortName.toString(),
                                 textAlign: TextAlign.center)),
                             DataCell(Text(
                                 list.vechileType.toString(),
                                 textAlign: TextAlign.center)),
                             DataCell(Text(
                                 style: TextStyle(fontWeight:FontWeight.bold,color:list.priority.toString()=="High"?Colors.red:list.priority.toString()=="Medium"?Colors.orangeAccent:Colors.green,),
-                                list.priority.toString(),
+                                list.priority.toString()=="High"?"H":list.priority.toString()=="Medium"?"M":"L",
                                 textAlign: TextAlign.center)),
                             DataCell(Text(
-                                list.issueType.toString(),
+                                list.issueTypeSortName.toString(),
                                 textAlign: TextAlign.center)),
                             if(FilterStatusName=="Work IN Progress")DataCell(Text(
                                 list.assignEmpName.toString(),
@@ -1678,7 +1682,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                                             children: <Widget>[
                                                               Text("Do You Want to Proceed ?"),
                                                               SizedBox(height: 5,),
-                                                              FilterStatusName.isNotEmpty?Text("TicketStatus="+FilterStatusName.toString(),style: TextStyle(fontWeight:FontWeight.bold),):Text(list.status!.toLowerCase().toString()=='o'?"TicketStatus=Open".toString():list.status!.toLowerCase().toString()=='p'?"TicketStatus=Work IN Progress":"TicketStatus=Work IN Progress"),
+                                                              FilterStatusName.isNotEmpty?Text("CurrentStatus="+FilterStatusName.toString(),style: TextStyle(fontWeight:FontWeight.bold),):Text(list.status!.toLowerCase().toString()=='o'?"TicketStatus=Open".toString():list.status!.toLowerCase().toString()=='p'?"TicketStatus=Work IN Progress":"TicketStatus=Work IN Progress"),
 
 
 
@@ -2427,6 +2431,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                     li3.add(FilterList3(
 
                                         li2.result![i].createdDate,
+                                        li2.result![i].createdDate1,
                                         li2.result![i].docNo,
                                         li2.result![i].brachName,
                                         li2.result![i].branchCode,
@@ -2464,7 +2469,9 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                         li2.result![i].quotation,
                                         li2.result![i].vechileType,
                                         li2.result![i].branchCategory,
-                                        li2.result![i].branchCategoryID
+                                        li2.result![i].branchCategoryID,
+                                        li2.result![i].issueTypeSortName,
+                                        li2.result![i].branchCategorySortName
 
                                     ));
                                   }
@@ -2503,6 +2510,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
 
 
                                         li2.result![i].createdDate,
+                                        li2.result![i].createdDate1,
                                         li2.result![i].docNo,
                                         li2.result![i].brachName,
                                         li2.result![i].branchCode,
@@ -2540,7 +2548,9 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                         li2.result![i].quotation,
                                         li2.result![i].vechileType,
                                         li2.result![i].branchCategory,
-                                        li2.result![i].branchCategoryID
+                                        li2.result![i].branchCategoryID,
+                                        li2.result![i].issueTypeSortName,
+                                        li2.result![i].branchCategorySortName
 
                                     ));
                                   }
@@ -3269,6 +3279,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
             li3.add(FilterList3(
 
                 li2.result![k].createdDate,
+                li2.result![k].createdDate1,
                 li2.result![k].docNo,
                 li2.result![k].brachName,
                 li2.result![k].branchCode,
@@ -3306,7 +3317,9 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                 li2.result![k].quotation,
                 li2.result![k].vechileType,
                 li2.result![k].branchCategory,
-                li2.result![k].branchCategoryID
+                li2.result![k].branchCategoryID,
+                li2.result![k].issueTypeSortName,
+                li2.result![k].branchCategorySortName
 
             ));
 
@@ -3438,6 +3451,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
              li3.add(FilterList3(
 
                  li2.result![k].createdDate,
+                 li2.result![k].createdDate1,
                  li2.result![k].docNo,
                  li2.result![k].brachName,
                  li2.result![k].branchCode,
@@ -3475,7 +3489,9 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                  li2.result![k].quotation,
                  li2.result![k].vechileType,
                  li2.result![k].branchCategory,
-                 li2.result![k].branchCategoryID
+                 li2.result![k].branchCategoryID,
+                 li2.result![k].issueTypeSortName,
+                 li2.result![k].branchCategorySortName
 
              ));
 
@@ -3602,6 +3618,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
              li3.add(FilterList3(
 
                  li2.result![k].createdDate,
+                 li2.result![k].createdDate1,
                  li2.result![k].docNo,
                  li2.result![k].brachName,
                  li2.result![k].branchCode,
@@ -3639,7 +3656,9 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                  li2.result![k].quotation,
                  li2.result![k].vechileType,
                  li2.result![k].branchCategory,
-                 li2.result![k].branchCategoryID
+                 li2.result![k].branchCategoryID,
+                 li2.result![k].issueTypeSortName,
+                 li2.result![k].branchCategorySortName
 
              ));
 
@@ -3895,6 +3914,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
              li3.add(FilterList3(
 
                  li2.result![k].createdDate,
+                 li2.result![k].createdDate1,
                  li2.result![k].docNo,
                  li2.result![k].brachName,
                  li2.result![k].branchCode,
@@ -3932,7 +3952,9 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                  li2.result![k].quotation,
                  li2.result![k].vechileType,
                  li2.result![k].branchCategory,
-                 li2.result![k].branchCategoryID
+                 li2.result![k].branchCategoryID,
+                 li2.result![k].issueTypeSortName,
+                 li2.result![k].branchCategorySortName
 
              ));
 
@@ -4065,6 +4087,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
              li3.add(FilterList3(
 
                  li2.result![k].createdDate,
+                 li2.result![k].createdDate1,
                  li2.result![k].docNo,
                  li2.result![k].brachName,
                  li2.result![k].branchCode,
@@ -4102,7 +4125,9 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                  li2.result![k].quotation,
                  li2.result![k].vechileType,
                  li2.result![k].branchCategory,
-                 li2.result![k].branchCategoryID
+                 li2.result![k].branchCategoryID,
+                 li2.result![k].issueTypeSortName,
+                 li2.result![k].branchCategorySortName
 
              ));
 
@@ -4668,6 +4693,7 @@ class selectedListModel {
 
 class FilterList3 {
   String? createdDate;
+  String? createdDate1;
   int? docNo;
   String? brachName;
   String? branchCode;
@@ -4706,8 +4732,11 @@ class FilterList3 {
   String? vechileType;
   String? branchCategory;
   String? branchCategoryID;
+  String? issueTypeSortName;
+  String? branchCategorySortName;
   FilterList3(
       this.createdDate,
+      this.createdDate1,
       this.docNo,
       this.brachName,
       this.branchCode,
@@ -4745,7 +4774,9 @@ class FilterList3 {
       this.quotaion,
       this.vechileType,
       this.branchCategory,
-      this.branchCategoryID
+      this.branchCategoryID,
+      this.issueTypeSortName,
+      this.branchCategorySortName
       );
 }
 

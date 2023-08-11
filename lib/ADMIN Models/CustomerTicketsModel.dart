@@ -26,6 +26,7 @@ class CustomerTicketsModel {
 
 class Result {
   String? createdDate;
+  String? createdDate1;
   int? docNo;
   String? brachName;
   String? branchCode;
@@ -64,9 +65,12 @@ class Result {
   String? vechileType;
   String? branchCategory;
   String? branchCategoryID;
+  String? issueTypeSortName;
+  String? branchCategorySortName;
 
   Result(
       {this.createdDate,
+        this.createdDate1,
         this.docNo,
         this.brachName,
         this.branchCode,
@@ -104,11 +108,14 @@ class Result {
         this.quotation,
         this.vechileType,
         this.branchCategory,
-        this.branchCategoryID
+        this.branchCategoryID,
+        this.issueTypeSortName,
+        this.branchCategorySortName
       });
 
   Result.fromJson(Map<String, dynamic> json) {
     createdDate = json['CreatedDate'];
+    createdDate1 = json['CreatedDate1'];
     docNo = json['DocNo'];
     brachName = json['BrachName'];
     branchCode = json['BranchCode'];
@@ -147,11 +154,14 @@ class Result {
     vechileType = json['VechileType'];
     branchCategory = json['BranchCategory'];
     branchCategoryID = json['BranchCategoryID'];
+    issueTypeSortName = json['IssueTypeSortName'];
+    branchCategorySortName = json['BranchCategorySortName'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['CreatedDate'] = this.createdDate;
+    data['CreatedDate1'] = this.createdDate1;
     data['DocNo'] = this.docNo;
     data['BrachName'] = this.brachName;
     data['BranchCode'] = this.branchCode;
@@ -190,6 +200,8 @@ class Result {
     data['VechileType'] = this.vechileType;
     data['BranchCategory'] = this.branchCategory;
     data['BranchCategoryID'] = this.branchCategoryID;
+    data['IssueTypeSortName'] = this.issueTypeSortName;
+    data['BranchCategorySortName'] = this.branchCategorySortName;
     return data;
   }
 }

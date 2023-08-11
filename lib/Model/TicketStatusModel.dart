@@ -63,6 +63,7 @@ class Result {
   String? assetName;
   String? assetCode;
   String? quotation;
+  String? deleteReason;
 
   Result(
       {this.docNo,
@@ -102,7 +103,8 @@ class Result {
         this.empID,
         this.assetName,
         this.assetCode,
-        this.quotation
+        this.quotation,
+        this.deleteReason
       });
 
   Result.fromJson(Map<String, dynamic> json) {
@@ -144,6 +146,7 @@ class Result {
     assetName = json['AssetName'];
     assetCode = json['AssetCode'];
     quotation = json['quotation'];
+    deleteReason = json['DeleteReason'];
   }
 
   Map<String, dynamic> toJson() {
@@ -186,6 +189,7 @@ class Result {
     data['AssetName'] = this.assetName;
     data['AssetCode'] = this.assetCode;
     data['quotation'] = this.quotation;
+    data['DeleteReason'] = this.deleteReason;
     return data;
   }
 }

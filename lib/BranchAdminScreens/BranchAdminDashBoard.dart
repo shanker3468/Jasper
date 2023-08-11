@@ -508,7 +508,7 @@ class _BranchAdminDashBoardState extends State<BranchAdminDashBoard> {
                                                     borderRadius: BorderRadius.all(
                                                         Radius.circular(50))),
                                                 child: Text(
-                                                  "Weekly Updation Report",
+                                                  "Weekly Report",
                                                   style: TextStyle(
                                                       color: String_Values.primarycolor),
                                                 ),

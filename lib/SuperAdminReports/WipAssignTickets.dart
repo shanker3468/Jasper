@@ -88,6 +88,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
    var stringlist10 = ["Select Ticket Status"];
 
 
+
    String BranchName1="ALL";
 
    String BranchCode="Brnch-00";
@@ -289,7 +290,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
          rowIndex: i,
          columnIndex: colIndex7,
        ))
-         ..value = colValue.priority;
+         ..value = colValue.priority=='High'?"H":colValue.priority=='Medium'?"M":"L";
        i++;
      });
 
@@ -908,14 +909,14 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
 
                       if(FilterStatusName=="")DataColumn(
                         label: Text(
-                          'TicType',
+                          'Type',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
 
                       DataColumn(
                         label: Text(
-                          'Tic No',
+                          'No',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -945,7 +946,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                       ),
                       if(FilterStatusName=="Work IN Progress")DataColumn(
                         label: Text(
-                          'AssignEmpContactNo',
+                          'EmpContactNo',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -965,14 +966,14 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                       ),
                       DataColumn(
                         label: Text(
-                          'ReqDate',
+                          'Req Date',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
 
                       DataColumn(
                         label: Text(
-                          'CreatedBy',
+                          'Created',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -1018,7 +1019,7 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                                 textAlign: TextAlign.center)),
                             DataCell(Text(
                                 style: TextStyle(fontWeight:FontWeight.bold,color:list.priority.toString()=="High"?Colors.red:list.priority.toString()=="Medium"?Colors.orangeAccent:Colors.green,),
-                                list.priority.toString(),
+                                list.priority.toString()=="High"?"H":list.priority.toString()=="Medium"?"M":"L",
                                 textAlign: TextAlign.center)),
                             DataCell(Text(
                                 list.issueCatrgory.toString(),

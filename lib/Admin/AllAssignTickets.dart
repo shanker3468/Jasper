@@ -80,10 +80,10 @@ class AllAssign_TicketsState extends State<AllAssign_Tickets> {
    String BranchCode="ALL";
 
 
-  int _currentSortColumn = 0;
-  bool _isAscending = true;
+  bool _isAscending = true;  int _currentSortColumn = 0;
 
-  int selectedIndex = 0;
+
+   int selectedIndex = 0;
   bool loading = false;
 
 
@@ -468,38 +468,38 @@ class AllAssign_TicketsState extends State<AllAssign_Tickets> {
                           ),
                           DataColumn(
                             label: Text(
-                              'BranchName',
+                              'Branch',
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
                           DataColumn(
                             label: Text(
-                              'BranchCategory',
+                              'Category',
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
                           DataColumn(
                             label: Text(
-                              'Vechile Type',
+                              'Type',
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
 
                           DataColumn(
                             label: Text(
-                              'Attachment',
+                              '@',
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
                           DataColumn(
                             label: Text(
-                              'CreatedBy',
+                              'Created',
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
                           DataColumn(
                             label: Text(
-                              'Emp Contact Number',
+                              'Contact',
                               style: TextStyle(color: Colors.white),
                             ),
                           ),

@@ -289,7 +289,7 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
          rowIndex: i,
          columnIndex: colIndex7,
        ))
-         ..value = colValue.priority;
+         ..value = colValue.priority=='High'?"H":colValue.priority=='Medium'?"M":"L";
        i++;
      });
 
@@ -729,14 +729,14 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
 
                       if(FilterStatusName=="")DataColumn(
                         label: Text(
-                          'TicType',
+                          'Type',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
 
                       DataColumn(
                         label: Text(
-                          'Tic No',
+                          'No',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -766,7 +766,7 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
                       ),
                       if(FilterStatusName=="Work IN Progress")DataColumn(
                         label: Text(
-                          'AssignEmpContactNo',
+                          'EmpContactNo',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -786,7 +786,7 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
                       ),
                       DataColumn(
                         label: Text(
-                          'ReqDate',
+                          'Req Date',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -794,13 +794,19 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
 
                       DataColumn(
                         label: Text(
-                          'CreatedBy',
+                          'Created',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
                       DataColumn(
                         label: Text(
                           'Description',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      if(widget.getTicketType=="R")DataColumn(
+                        label: Text(
+                          'Reject Reason',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -840,7 +846,7 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
                                 textAlign: TextAlign.center)),
                             DataCell(Text(
                                 style: TextStyle(fontWeight:FontWeight.bold,color:list.priority.toString()=="High"?Colors.red:list.priority.toString()=="Medium"?Colors.orangeAccent:Colors.green,),
-                                list.priority.toString(),
+                                list.priority.toString()=="High"?"H":list.priority.toString()=="Medium"?"M":"L",
                                 textAlign: TextAlign.center)),
                             DataCell(Text(
                                 list.issueCatrgory.toString(),
@@ -908,15 +914,15 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
                                       TextAlign.center)
                                 ])),
 
-                            // DataCell(Wrap(
-                            //     direction:
-                            //         Axis.vertical, //default
-                            //     alignment: WrapAlignment.center,
-                            //     children: [
-                            //       Text(list.Location.toString(),
-                            //           textAlign:
-                            //               TextAlign.center)
-                            //     ])),
+                            if(widget.getTicketType=="R")DataCell(Wrap(
+                                direction:
+                                    Axis.vertical, //default
+                                alignment: WrapAlignment.center,
+                                children: [
+                                  Text(list.rejectRemarks.toString(),
+                                      textAlign:
+                                          TextAlign.center)
+                                ])),
 
                           ]),
                     )

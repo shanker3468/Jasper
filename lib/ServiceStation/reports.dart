@@ -71,13 +71,13 @@ class _ReportsDashBoardState extends State<ReportsDashBoard> {
               color: Colors.white,
               child: ListView(
                 children: [
-                  babyCard("open Tickets", "O", openTickets),
-                  babyCard("ReOpen Tickets", "RO", reopenTickets),
-                  babyCard("Approved Tickets", "A", ApprovedTickets),
+                  babyCard("Open Tickets", "O", openTickets),
+                  babyCard("WIP Tickets", "P", wipTickets),
                   babyCard("Third Party", "T", ThirdPartyTickets),
                   babyCard("Quotation", "Q", QuotationTickets),
-                  babyCard("WIP Tickets", "P", wipTickets),
+                  babyCard("Approved Tickets", "A", ApprovedTickets),
                   babyCard("Resolved Tickets", "S", solProvidTickets),
+                  babyCard("ReOpened Tickets", "RO", reopenTickets),
                   babyCard("Reject Tickets", "R", rejectTickets),
                   babyCard("Deleted Tickets", "D", deleteTickets),
                   babyCard("Closed Tickets", "C", closedTickets),

@@ -73,7 +73,9 @@ class _WipAssignTicketsDetailsViewState extends State<WipAssignTicketsDetailsVie
   TextEditingController Edt_DelDate = new TextEditingController();
   TextEditingController Edt_PaymentTerms = new TextEditingController();
   TextEditingController Remarks = new TextEditingController();
+  TextEditingController RejectReason = new TextEditingController();
   TextEditingController IssueCategory = new TextEditingController();
+  TextEditingController Category = new TextEditingController();
   TextEditingController AgeingDays = new TextEditingController();
   TextEditingController AssignEmpName = new TextEditingController();
   TextEditingController AssignEmpContactNo = new TextEditingController();
@@ -101,17 +103,17 @@ class _WipAssignTicketsDetailsViewState extends State<WipAssignTicketsDetailsVie
     BranchName1.text=widget.list2[widget.id].brachName.toString();
     Priority.text=widget.list2[widget.id].priority.toString();
     Remarks.text=widget.list2[widget.id].description.toString();
+    RejectReason.text=widget.list2[widget.id].rejectRemarks.toString();
     EmpName.text=widget.list2[widget.id].empName.toString();
     EmpContactNo.text=widget.list2[widget.id].empContactNo.toString();
     AssignEmpName.text=widget.list2[widget.id].assignEmpName.toString();
     AssignEmpContactNo.text=widget.list2[widget.id].assignEmpcontactNo.toString();
     IssueCategory.text=widget.list2[widget.id].issueType.toString();
+    Category.text=widget.list2[widget.id].createdDate1.toString();
     TicketStatus.text=widget.list2[widget.id].status.toString()=="T"?"ThirdParty":widget.list2[widget.id].status.toString()=="Q"?"Quotation":widget.list2[widget.id].status.toString()=="O"?"Open Tickets":widget.list2[widget.id].status.toString()=="P"?"Work IN Progress":widget.list2[widget.id].status.toString()=="S"?"Resolved":widget.list2[widget.id].status.toString()=="R"?"Reject":widget.list2[widget.id].status.toString()=="RO"?"Re-Open":"Approved";
     Quotation.text=widget.list2[widget.id].quotaion.toString();
-    AgeingDays.text=    widget.list2[widget.id].status!=
-        "C"
-        ? '${DateTime.now().difference(DateFormat("yyyy-MM-dd").parse(widget.list2[widget.id].createdDate.toString())).inDays.toString()}'
-        : '${DateFormat("yyyy-MM-dd").parse(widget.list2[widget.id].createdDate.toString()).difference(DateFormat("yyyy-MM-dd").parse(widget.list2[widget.id].createdDate.toString())).inDays.toString()}';
+    AgeingDays.text=widget.list2[widget.id].status!="C"? '${DateTime.now().difference(DateFormat("yyyy-MM-dd").parse(widget.list2[widget.id].createdDate.toString())).inDays.toString()}'
+        : '${DateFormat("yyyy-MM-dd").parse(widget.list2[widget.id].createdDate.toString()).difference(DateFormat("yyyy-MM-dd").parse(widget.list2[widget.id].closedDate.toString())).inDays.toString()}';
 
 
 
@@ -124,6 +126,7 @@ class _WipAssignTicketsDetailsViewState extends State<WipAssignTicketsDetailsVie
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
+
     return Scaffold(
         appBar: AppBar(
 
@@ -134,6 +137,8 @@ class _WipAssignTicketsDetailsViewState extends State<WipAssignTicketsDetailsVie
                 icon: const Icon(Icons.save),
                 tooltip: 'Approve',
                 onPressed: () {
+
+\
 
 
                   _displayTextInputDialog1(
@@ -262,10 +267,10 @@ class _WipAssignTicketsDetailsViewState extends State<WipAssignTicketsDetailsVie
                         child: Container(
                           color: Colors.white,
                           child: new TextField(
-                            controller: IssueCategory,
+                            controller: Category,
                             enabled: false,
                             decoration: InputDecoration(
-                              labelText: "Issue Type",
+                              labelText: "Created Date",
                               border: OutlineInputBorder(
                                   borderRadius:
                                   BorderRadius.all(Radius.circular(0))),
@@ -764,6 +769,34 @@ class _WipAssignTicketsDetailsViewState extends State<WipAssignTicketsDetailsVie
                 ),
                 SizedBox(
                   height: 5,
+                ),
+                RejectReason.text.isNotEmpty?Container(
+                  height: height / 12,
+                  child: Row(
+                    children: [
+                      //new Expanded(flex: 1, child: new Text("Scan Pallet")),
+                      new Expanded(
+                        flex: 5,
+                        child: Container(
+                          color: Colors.white,
+                          child: new TextField(
+                            controller: RejectReason,
+                            enabled: false,
+                            onSubmitted: (value) {},
+                            decoration: InputDecoration(
+                              labelText: "Reject Reason",
+                              border: OutlineInputBorder(
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(0))),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ):Container(),
+                SizedBox(
+                  height: 10,
                 ),
 
                 Container(

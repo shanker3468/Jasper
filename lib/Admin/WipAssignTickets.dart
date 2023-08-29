@@ -46,7 +46,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
    AssignEmpDepartmentModel li11=AssignEmpDepartmentModel(result :[]);
    TicketStatusFilterModel li13 =TicketStatusFilterModel(result :[]);
    AssignEmpListBasedOnDepartmentModel li12=AssignEmpListBasedOnDepartmentModel(result :[]);
-  List<FilterList3> li3 = [];
+  List<FilterList2> li3 = [];
   TextEditingController searchcontroller = new TextEditingController();
   TextEditingController RemarksController =new TextEditingController();
   String _searchResult = '';
@@ -1117,7 +1117,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                       .contains(value)
 
                               )
-                                li3.add(FilterList3(
+                                li3.add(FilterList2(
 
                                     li2.result![k].createdDate,
                                     li2.result![k].createdDate1,
@@ -1177,7 +1177,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                           if (li2 != null) {
                             li3.clear();
                             for (int k = 0; k < li2.result!.length; k++)
-                              li3.add(FilterList3(
+                              li3.add(FilterList2(
                                   li2.result![k].createdDate,
                                   li2.result![k].createdDate1,
                                   li2.result![k].docNo,
@@ -2428,7 +2428,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                   for (int i = (page * 20) - 19;
                                   i < page * 20;
                                   i++) {
-                                    li3.add(FilterList3(
+                                    li3.add(FilterList2(
 
                                         li2.result![i].createdDate,
                                         li2.result![i].createdDate1,
@@ -2506,7 +2506,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
                                   for (int i = (page * 20) - 19;
                                   i < page * 20;
                                   i++) {
-                                    li3.add(FilterList3(
+                                    li3.add(FilterList2(
 
 
                                         li2.result![i].createdDate,
@@ -3276,7 +3276,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
           li3.removeRange(0, li3.length);
 
           for (int k = 0; k < li2.result!.length; k++) {
-            li3.add(FilterList3(
+            li3.add(FilterList2(
 
                 li2.result![k].createdDate,
                 li2.result![k].createdDate1,
@@ -3448,7 +3448,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
            li3.removeRange(0, li3.length);
 
            for (int k = 0; k < li2.result!.length; k++) {
-             li3.add(FilterList3(
+             li3.add(FilterList2(
 
                  li2.result![k].createdDate,
                  li2.result![k].createdDate1,
@@ -3615,7 +3615,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
            li3.removeRange(0, li3.length);
 
            for (int k = 0; k < li2.result!.length; k++) {
-             li3.add(FilterList3(
+             li3.add(FilterList2(
 
                  li2.result![k].createdDate,
                  li2.result![k].createdDate1,
@@ -3911,7 +3911,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
            li3.removeRange(0, li3.length);
 
            for (int k = 0; k < li2.result!.length; k++) {
-             li3.add(FilterList3(
+             li3.add(FilterList2(
 
                  li2.result![k].createdDate,
                  li2.result![k].createdDate1,
@@ -4084,7 +4084,7 @@ class WIP_Assign_TicketsState extends State<WIP_Assign_Tickets> {
            li3.removeRange(0, li3.length);
 
            for (int k = 0; k < li2.result!.length; k++) {
-             li3.add(FilterList3(
+             li3.add(FilterList2(
 
                  li2.result![k].createdDate,
                  li2.result![k].createdDate1,
@@ -4691,7 +4691,7 @@ class selectedListModel {
   }
 }
 
-class FilterList3 {
+class FilterList2 {
   String? createdDate;
   String? createdDate1;
   int? docNo;
@@ -4734,7 +4734,7 @@ class FilterList3 {
   String? branchCategoryID;
   String? issueTypeSortName;
   String? branchCategorySortName;
-  FilterList3(
+  FilterList2(
       this.createdDate,
       this.createdDate1,
       this.docNo,

@@ -24,6 +24,7 @@ import '../ADMIN Models/TicketStatusModel.dart';
 import '../AppConstants.dart';
 import '../Model/TicketTypeModel.dart';
 import '../String_Values.dart';
+import '../SuperAdminReports/Utility.dart';
 
 
 
@@ -736,17 +737,18 @@ class BranchAdminAllTicketReportsState extends State<BranchAdminAllTicketReports
                       ),
                       DataColumn(
                         label: Text(
+                          'No',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
                           'Status',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
 
-                      DataColumn(
-                        label: Text(
-                          'No',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
+
                       DataColumn(
                         label: Text(
                           'Branch',
@@ -841,15 +843,39 @@ class BranchAdminAllTicketReportsState extends State<BranchAdminAllTicketReports
                           // },
                           cells: [
 
-                            if(FilterStatusName=="")DataCell(Text(
-                                list.category.toString(),
-                                textAlign: TextAlign.center)),
+                            if(FilterStatusName=="")DataCell(Row(
+                              children: [
+                                Text(
+                                    list.category.toString(),
+                                    textAlign: TextAlign.center),
+                                list.category.toString=="Utility"?InkWell(
+                                    onTap: () async {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (builder) =>
+                                                  UtilityReportDetailsView(
+                                                      draftno:
+                                                      int.parse(list.ticketNo.toString()),TicketType:list.category.toString(),id:li3.indexOf(list), Branch1:list.brachName.toString()
+                                                    /*callback:
+                                                                              getpendingapprovallist*/
+                                                  )));
+
+                                    },
+                                    child: Icon(
+                                      Icons.call,
+                                      color: Colors.green,
+                                    )):Container()
+                              ],
+                            )),
                             DataCell(Text(
                                 list.ticketNo.toString(),
                                 textAlign: TextAlign.center)),
+
                             DataCell(Text(
                                 list.status!.toLowerCase().toString()=='t'?"ThirdParty".toString():list.status!.toLowerCase().toString()=='q'?"Quotation":list.status!.toLowerCase().toString()=='o'?"Open":list.status!.toLowerCase().toString()=='p'?"Work IN Progress":list.status!.toLowerCase().toString()=='r'?"Reject":list.status!.toLowerCase().toString()=='a'?"Approved":list.status!.toLowerCase().toString()=='c'?"Closed":"Re-Open",
                                 textAlign: TextAlign.center)),
+
                             DataCell(Text(
                                 list.brachName.toString(),
                                 textAlign: TextAlign.center)),

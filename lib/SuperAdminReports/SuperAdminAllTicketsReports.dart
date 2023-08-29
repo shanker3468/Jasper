@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:jasper/SuperAdminReports/Utility.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -24,6 +25,7 @@ import '../ADMIN Models/TicketStatusModel.dart';
 import '../AppConstants.dart';
 import '../Model/TicketTypeModel.dart';
 import '../String_Values.dart';
+
 
 
 
@@ -48,7 +50,7 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
    AssignEmpDepartmentModel li11=AssignEmpDepartmentModel(result :[]);
    TicketStatusFilterModel li13 =TicketStatusFilterModel(result :[]);
    AssignEmpListBasedOnDepartmentModel li12=AssignEmpListBasedOnDepartmentModel(result :[]);
-  List<FilterList2> li3 = [];
+  List<FilterList2> li22 = [];
   TextEditingController searchcontroller = new TextEditingController();
   TextEditingController RemarksController =new TextEditingController();
   String _searchResult = '';
@@ -417,10 +419,10 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
              totalpages = (li2.result!.length / 20).floor() + 1;
            print(totalpages);
 
-           li3.removeRange(0, li3.length);
+           li22.removeRange(0, li22.length);
 
            for (int k = 0; k < li2.result!.length; k++) {
-             li3.add(FilterList2(
+             li22.add(FilterList2(
 
 
 
@@ -463,7 +465,7 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
 
              ));
 
-             li3.length==""?  SumQty =0:  SumQty =li3.length.toInt();
+             li22.length==""?  SumQty =0:  SumQty =li22.length.toInt();
 
            }
 
@@ -766,7 +768,7 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
                         setState(() {
                           _searchResult = value;
                           if (li2 != null) {
-                            li3.clear();
+                            li22.clear();
                             for (int k = 0; k < li2.result!.length; k++)
                               if (li2.result![k].docNo
                                   .toString()
@@ -802,7 +804,7 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
                                       .contains(value)
 
                               )
-                                li3.add(FilterList2(
+                                li22.add(FilterList2(
 
                                     li2.result![k].createdDate,
                                     li2.result![k].docNo,
@@ -854,9 +856,9 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
                           searchcontroller.text = "";
 
                           if (li2 != null) {
-                            li3.clear();
+                            li22.clear();
                             for (int k = 0; k < li2.result!.length; k++)
-                              li3.add(FilterList2(
+                              li22.add(FilterList2(
                                   li2.result![k].createdDate,
                                   li2.result![k].docNo,
                                   li2.result![k].brachName,
@@ -920,17 +922,18 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
                       ),
                       DataColumn(
                         label: Text(
+                          'No',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
                           'Status',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
 
-                      DataColumn(
-                        label: Text(
-                          'No',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
+
                       DataColumn(
                         label: Text(
                           'Branch',
@@ -998,7 +1001,7 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
 
 
                     ],
-                    rows: li3
+                    rows: li22
                         .map(
                           (list) => DataRow(
                           // selected: selectedlist.contains(
@@ -1019,15 +1022,38 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
                           // },
                           cells: [
 
-                            if(FilterStatusName=="")DataCell(Text(
-                                list.category.toString(),
+                            if(FilterStatusName=="")DataCell(Row(
+                              children: [
+                                Text(
+                                    list.category.toString(),
+                                    textAlign: TextAlign.center),
+                                list.category=="Utility"?InkWell(
+                                    onTap: () async {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (builder) =>
+                                                  UtilityReportDetailsView(
+                                                      draftno:
+                                                      int.parse(list.ticketNo.toString()),TicketType:list.category.toString(),id:li22.indexOf(list), Branch1:list.brachName.toString()
+                                                    /*callback:
+                                                                              getpendingapprovallist*/
+                                                  )));
+
+                                    },
+                                    child: Icon(
+                                      Icons.arrow_forward_outlined,
+                                      color: Colors.green,
+                                    )):Container()
+                              ],
+                            )),
+                            DataCell(Text(
+                                list.ticketNo.toString(),
                                 textAlign: TextAlign.center)),
                             DataCell(Text(
                                 list.status!.toLowerCase().toString()=='t'?"ThirdParty".toString():list.status!.toLowerCase().toString()=='q'?"Quotation":list.status!.toLowerCase().toString()=='o'?"Open":list.status!.toLowerCase().toString()=='p'?"Work IN Progress":list.status!.toLowerCase().toString()=='r'?"Reject":list.status!.toLowerCase().toString()=='a'?"Approved":list.status!.toLowerCase().toString()=='c'?"Closed":"Re-Open",
                                 textAlign: TextAlign.center)),
-                            DataCell(Text(
-                                list.ticketNo.toString(),
-                                textAlign: TextAlign.center)),
+
 
                             DataCell(Text(
                                 list.brachName.toString(),
@@ -1145,11 +1171,11 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
                               if (page > 1)
                                 setState(() {
                                   page--;
-                                  li3.removeRange(0, li3.length);
+                                  li22.removeRange(0, li22.length);
                                   for (int i = (page * 20) - 19;
                                   i < page * 20;
                                   i++) {
-                                    li3.add(FilterList2(
+                                    li22.add(FilterList2(
 
                                         li2.result![i].createdDate,
                                         li2.result![i].docNo,
@@ -1193,7 +1219,7 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
                                 });
                             },
                           ),
-                          int.parse(li3.length.toString()) == 0
+                          int.parse(li22.length.toString()) == 0
                               ? Text("0 to 0 of 0")
                               : int.parse(li2.result!.length.toString()) >
                               (page * 20)
@@ -1217,11 +1243,11 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
                                     li2.result!.length.toString()) >
                                     (page * 20)) {
                                   page++;
-                                  li3.removeRange(0, li3.length);
+                                  li22.removeRange(0, li22.length);
                                   for (int i = (page * 20) - 19;
                                   i < page * 20;
                                   i++) {
-                                    li3.add(FilterList2(
+                                    li22.add(FilterList2(
 
 
                                         li2.result![i].createdDate,
@@ -2102,10 +2128,10 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
             totalpages = (li2.result!.length / 20).floor() + 1;
           print(totalpages);
 
-          li3.removeRange(0, li3.length);
+          li22.removeRange(0, li22.length);
 
           for (int k = 0; k < li2.result!.length; k++) {
-            li3.add(FilterList2(
+            li22.add(FilterList2(
 
                 li2.result![k].createdDate,
                 li2.result![k].docNo,
@@ -2146,7 +2172,7 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
 
             ));
 
-           li3.length==""?  SumQty =0:  SumQty =li3.length.toInt();
+           li22.length==""?  SumQty =0:  SumQty =li22.length.toInt();
 
           }
 
@@ -2265,10 +2291,10 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
              totalpages = (li2.result!.length / 20).floor() + 1;
            print(totalpages);
 
-           li3.removeRange(0, li3.length);
+           li22.removeRange(0, li22.length);
 
            for (int k = 0; k < li2.result!.length; k++) {
-             li3.add(FilterList2(
+             li22.add(FilterList2(
 
                  li2.result![k].createdDate,
                  li2.result![k].docNo,
@@ -2309,7 +2335,7 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
 
              ));
 
-             li3.length==""?  SumQty =0:  SumQty =li3.length.toInt();
+             li22.length==""?  SumQty =0:  SumQty =li22.length.toInt();
 
            }
 
@@ -2427,10 +2453,10 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
              totalpages = (li2.result!.length / 20).floor() + 1;
            print(totalpages);
 
-           li3.removeRange(0, li3.length);
+           li22.removeRange(0, li22.length);
 
            for (int k = 0; k < li2.result!.length; k++) {
-             li3.add(FilterList2(
+             li22.add(FilterList2(
 
                  li2.result![k].createdDate,
                  li2.result![k].docNo,
@@ -2471,7 +2497,7 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
 
              ));
 
-             li3.length==""?  SumQty =0:  SumQty =li3.length.toInt();
+             li22.length==""?  SumQty =0:  SumQty =li22.length.toInt();
 
            }
 
@@ -2587,10 +2613,10 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
              totalpages = (li2.result!.length / 20).floor() + 1;
            print(totalpages);
 
-           li3.removeRange(0, li3.length);
+           li22.removeRange(0, li22.length);
 
            for (int k = 0; k < li2.result!.length; k++) {
-             li3.add(FilterList2(
+             li22.add(FilterList2(
 
                  li2.result![k].createdDate,
                  li2.result![k].docNo,
@@ -2631,7 +2657,7 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
 
              ));
 
-             li3.length==""?  SumQty =0:  SumQty =li3.length.toInt();
+             li22.length==""?  SumQty =0:  SumQty =li22.length.toInt();
 
            }
 
@@ -2851,9 +2877,9 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
   onSortColum(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
       if (ascending) {
-        li3.sort((a, b) => a.docNo!.compareTo(int.parse(b.docNo.toString())));
+        li22.sort((a, b) => a.docNo!.compareTo(int.parse(b.docNo.toString())));
       } else {
-        li3.sort((a, b) => b.docNo!.compareTo(int.parse(a.docNo.toString())));
+        li22.sort((a, b) => b.docNo!.compareTo(int.parse(a.docNo.toString())));
       }
     }
   }

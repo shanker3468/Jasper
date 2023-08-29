@@ -21,6 +21,7 @@ import '../Model/IssueTypeModel.dart';
 import '../Model/ItemCategoryModel.dart';
 import '../Model/ItemListModel.dart';
 import '../Model/TicketTypeModel.dart';
+import 'UtilityChooseFinal.dart';
 
 class TicketCreation extends StatefulWidget {
   const TicketCreation({Key? key}) : super(key: key);
@@ -36,6 +37,7 @@ class TicketCreationState extends State<TicketCreation> {
   bool ItemVisible =false;
 
   bool IssueCategory= false;
+  bool Attachment =false;
 
   bool AssetVisible =false;
 
@@ -47,7 +49,9 @@ class TicketCreationState extends State<TicketCreation> {
 
   late IssueCategoryModel li3;
 
-  late IssueTypeModel li4;
+
+
+  late IssueTypeModel  li4 =IssueTypeModel(result: []);
 
   late TicketTypeModel li2;
 
@@ -268,6 +272,7 @@ class TicketCreationState extends State<TicketCreation> {
         setState(() {
           ItemVisible=true;
           AssetVisible=false;
+          Attachment=true;
 
         });
 
@@ -279,6 +284,7 @@ class TicketCreationState extends State<TicketCreation> {
         setState(() {
           ItemVisible=false;
           AssetVisible=true;
+          Attachment=true;
         });
 
 
@@ -287,6 +293,7 @@ class TicketCreationState extends State<TicketCreation> {
         setState(() {
           ItemVisible=false;
           AssetVisible=false;
+          Attachment=true;
         });
       }
 
@@ -1112,6 +1119,7 @@ class TicketCreationState extends State<TicketCreation> {
                               ItemVisible=true;
                               IssueCategory=false;
                               AssetVisible=false;
+                              Attachment=true;
                             });
 
 
@@ -1122,12 +1130,30 @@ class TicketCreationState extends State<TicketCreation> {
                               ItemVisible=false;
                               IssueCategory=false;
                               AssetVisible=true;
+                              Attachment=true;
+                            });
+                          }else if (Ticketcode=="T04"){
+
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => UtilityItemChoose(
+
+                                    )));
+
+
+                            setState(() {
+                              ItemVisible=false;
+                              IssueCategory=false;
+                              AssetVisible=false;
+                              Attachment=false;
                             });
                           }else{
                             setState(() {
                               ItemVisible=false;
                               IssueCategory=true;
                               AssetVisible=false;
+                              Attachment=true;
                             });
                           }
 
@@ -1578,18 +1604,23 @@ class TicketCreationState extends State<TicketCreation> {
                         ),
                       ),
 
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text("Attached Files", style: TextStyle(fontWeight:FontWeight.bold)),
+                      Visibility(
+                        visible: Attachment,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text("Attached Files", style: TextStyle(fontWeight:FontWeight.bold)),
 
-                          ],
+                            ],
+                          ),
                         ),
                       ),
 
-                      Container(
+                      Visibility(
+                        visible: Attachment,
+                          child:Container(
                         child: Row(
                           children: [
                             GestureDetector(
@@ -1718,7 +1749,7 @@ class TicketCreationState extends State<TicketCreation> {
 
                           ],
                         ),
-                      ),
+                      )),
                       SizedBox(
                         height: 10,
                       ),

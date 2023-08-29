@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -13,6 +14,8 @@ import 'dart:convert';
 
 import '../Admin/AssignTickets.dart';
 import '../AppConstants.dart';
+import '../Model/UtilityItemDetailsModel.dart';
+import '../ServiceStation/TicketCreation.dart';
 import 'BranchAdminWipAssignTickets.dart';
 
 
@@ -45,6 +48,8 @@ class _BranchAdminWipAssignTicketsDetailsViewState extends State<BranchAdminWipA
 
   TextEditingController searchcontroller = new TextEditingController();
   TextEditingController textFieldController = new TextEditingController();
+
+  late UtilityItemDetailsModel  li4 =UtilityItemDetailsModel(result: []);
 
 
   String _searchResult = '';
@@ -95,6 +100,13 @@ class _BranchAdminWipAssignTicketsDetailsViewState extends State<BranchAdminWipA
     print(widget.TicketType);
 
     print("CCC"+widget.list2[widget.id].createdDate1.toString());
+
+    if(widget.list2[widget.id].category.toString()=="Utility"){
+
+      getUtilityItemDetails();
+
+    }
+
     getStringValuesSF();
 
     Edt_PoNo.text=widget.list2[widget.id].ticketNo.toString();
@@ -125,6 +137,86 @@ class _BranchAdminWipAssignTicketsDetailsViewState extends State<BranchAdminWipA
 
 
     super.initState();
+  }
+
+  Future<http.Response> getUtilityItemDetails() async {
+
+    print("getUtilityItemDetails is called");
+    var headers = {"Content-Type": "application/json"};
+    var body = {
+      "FormID": 27,
+      "UserID": widget.list2[widget.id].ticketNo.toString(),
+      "Password": "",
+      "Branch": "",
+      "DataBase":""
+    };
+
+    print(body);
+    setState(() {
+      loading = true;
+    });
+    try {
+      final response = await http.post(
+          Uri.parse(AppConstants.LIVE_URL + 'JasperLogin'),
+          body: jsonEncode(body),
+          headers: headers);
+      print(AppConstants.LIVE_URL + 'JasperLogin');
+      print(response.body);
+      setState(() {
+        loading = false;
+      });
+      if (response.statusCode == 200) {
+
+        if (jsonDecode(response.body)["status"].toString() == "0") {
+          li4.result!.clear();
+
+        }else if (json.decode(response.body)["status"] == "0" &&
+            jsonDecode(response.body)["result"].toString() == []) {
+          li4.result!.clear();
+
+        } else if (json.decode(response.body)["status"] == 1 &&
+            jsonDecode(response.body)["result"].toString() == "[]") {
+          li4.result!.clear();
+
+
+        }else{
+
+          li4 = UtilityItemDetailsModel  .fromJson(jsonDecode(response.body));
+
+
+          setState(() {
+
+          });
+
+          setState(() {
+            loading = false;
+          });
+
+
+        }
+
+      } else {
+        showDialogbox(context, "Failed to Login API");
+      }
+      return response;
+    } on SocketException {
+      setState(() {
+        loading = false;
+        showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+                backgroundColor: Colors.black,
+                title: Text(
+                  "No Response!..",
+                  style: TextStyle(color: Colors.purple),
+                ),
+                content: Text(
+                  "Slow Server Response or Internet connection",
+                  style: TextStyle(color: Colors.white),
+                )));
+      });
+      throw Exception('Internet is down');
+    }
   }
 
   @override
@@ -828,6 +920,107 @@ class _BranchAdminWipAssignTicketsDetailsViewState extends State<BranchAdminWipA
                 SizedBox(
                   height: 10,
                 ),
+
+                li4.result!.isNotEmpty?Material(
+                  elevation: 20,
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.all(5.0),
+                      scrollDirection: Axis.horizontal,
+                      child: li4.result!.isNotEmpty
+                          ? DataTable(
+                        columnSpacing: 5.0,
+                        headingRowColor:
+                        MaterialStateProperty.all(Colors.blue.shade900),
+
+                        columns: <DataColumn>[
+                          DataColumn(
+                            label: Text(
+                              'Sno',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'ItemCode',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'ItemName',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'UOM',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Qty',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'createdBy',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+
+
+
+                        ],
+                        rows: li4.result!
+                            .map(
+                              (list) => DataRow(
+
+                              color:MaterialStateColor.resolveWith((states) => Colors.white24),
+
+                              cells: [
+                                DataCell(Wrap(
+                                    direction: Axis.vertical, //default
+                                    alignment: WrapAlignment.start,
+                                    children: [
+                                      Text((li4.result!.indexOf(list)+
+                                          1)
+                                          .toString(),
+                                          textAlign: TextAlign.start)
+                                    ])),
+                                DataCell(Text(
+
+                                    list.itemCode.toString(),
+                                    textAlign: TextAlign.center)),
+                                DataCell(Text(
+
+                                    list.itemName.toString(),
+                                    textAlign: TextAlign.center)),
+                                DataCell(Text(
+                                    list.uOM.toString(),
+                                    textAlign: TextAlign.center)),
+                                DataCell(Text(
+                                    list.qty.toString(),
+                                    textAlign: TextAlign.center)),
+                                DataCell(Text(
+                                    list.createdBy.toString(),
+                                    textAlign: TextAlign.center)),
+
+                              ]),
+                        )
+                            .toList(),
+                      )
+                          : Container(
+                        child: Center(
+                          child: Text('No Data'),
+                        ),
+                      ),
+                    ),
+                  ),
+                ):Container(),
 
                 /*SingleChildScrollView(
                   scrollDirection: Axis.vertical,

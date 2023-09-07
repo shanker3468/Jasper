@@ -657,7 +657,8 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
                                     li2.result![k].solutionProvided,
                                     li2.result![k].endDate,
                                     li2.result![k].startDate,
-                                    li2.result![k].assignEmpcontactNo
+                                    li2.result![k].assignEmpcontactNo,
+                                    li2.result![k].quotation
 
                                 ));
                           }
@@ -707,7 +708,8 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
                                   li2.result![k].solutionProvided,
                                   li2.result![k].endDate,
                                   li2.result![k].startDate,
-                                  li2.result![k].assignEmpcontactNo
+                                  li2.result![k].assignEmpcontactNo,
+                                  li2.result![k].quotation
                               ));
                           }
                         });
@@ -749,6 +751,12 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
                       DataColumn(
                         label: Text(
                           'Priority',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      if(widget.getTicketType=="Q")DataColumn(
+                        label: Text(
+                          'Quot Amount',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -848,6 +856,9 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
                                 style: TextStyle(fontWeight:FontWeight.bold,color:list.priority.toString()=="High"?Colors.red:list.priority.toString()=="Medium"?Colors.orangeAccent:Colors.green,),
                                 list.priority.toString()=="High"?"H":list.priority.toString()=="Medium"?"M":"L",
                                 textAlign: TextAlign.center)),
+                            if(widget.getTicketType=="Q")DataCell(Text(
+                                  list.quotation.toString(),
+                                  textAlign: TextAlign.center)),
                             DataCell(Text(
                                 list.issueCatrgory.toString(),
                                 textAlign: TextAlign.center)),
@@ -924,6 +935,8 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
                                           TextAlign.center)
                                 ])),
 
+
+
                           ]),
                     )
                         .toList(),
@@ -994,7 +1007,8 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
                                         li2.result![i].solutionProvided,
                                         li2.result![i].endDate,
                                         li2.result![i].startDate,
-                                        li2.result![i].assignEmpcontactNo
+                                        li2.result![i].assignEmpcontactNo,
+                                        li2.result![i].quotation
 
                                     ));
                                   }
@@ -1064,7 +1078,8 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
                                         li2.result![i].solutionProvided,
                                         li2.result![i].endDate,
                                         li2.result![i].startDate,
-                                        li2.result![i].assignEmpcontactNo
+                                        li2.result![i].assignEmpcontactNo,
+                                        li2.result![i].quotation
 
                                     ));
                                   }
@@ -1953,7 +1968,8 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
                 li2.result![k].solutionProvided,
                 li2.result![k].endDate,
                 li2.result![k].startDate,
-                li2.result![k].assignEmpcontactNo
+                li2.result![k].assignEmpcontactNo,
+                li2.result![k].quotation
 
             ));
 
@@ -2113,7 +2129,8 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
                  li2.result![k].solutionProvided,
                  li2.result![k].endDate,
                  li2.result![k].startDate,
-                 li2.result![k].assignEmpcontactNo
+                 li2.result![k].assignEmpcontactNo,
+                 li2.result![k].quotation
 
              ));
 
@@ -2272,7 +2289,8 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
                  li2.result![k].solutionProvided,
                  li2.result![k].endDate,
                  li2.result![k].startDate,
-                 li2.result![k].assignEmpcontactNo
+                 li2.result![k].assignEmpcontactNo,
+                 li2.result![k].quotation
 
              ));
 
@@ -2429,7 +2447,8 @@ class BranchAdminTicketReportsState extends State<BranchAdminTicketReports> {
                  li2.result![k].solutionProvided,
                  li2.result![k].endDate,
                  li2.result![k].startDate,
-                 li2.result![k].assignEmpcontactNo
+                 li2.result![k].assignEmpcontactNo,
+                 li2.result![k].quotation
 
              ));
 
@@ -3159,6 +3178,7 @@ class FilterList2 {
   String? endDate;
   String? startDate;
   String? assignEmpcontactNo;
+  String? quotation;
   FilterList2(
       this.createdDate,
       this.docNo,
@@ -3192,7 +3212,8 @@ class FilterList2 {
       this.solutionProvided,
       this.endDate,
       this.startDate,
-      this.assignEmpcontactNo
+      this.assignEmpcontactNo,
+      this.quotation
       );
 }
 

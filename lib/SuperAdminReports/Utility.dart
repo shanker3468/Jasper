@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -270,6 +271,12 @@ class _UtilityReportDetailsViewState extends State<UtilityReportDetailsView> {
                         ),
                         DataColumn(
                           label: Text(
+                            'Category',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
                             'ItemCode',
                             style: TextStyle(color: Colors.white),
                           ),
@@ -289,6 +296,12 @@ class _UtilityReportDetailsViewState extends State<UtilityReportDetailsView> {
                         DataColumn(
                           label: Text(
                             'Qty',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Apprvd Qty',
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
@@ -320,6 +333,10 @@ class _UtilityReportDetailsViewState extends State<UtilityReportDetailsView> {
                                   ])),
                               DataCell(Text(
 
+                                  list.itemCategory.toString(),
+                                  textAlign: TextAlign.center)),
+                              DataCell(Text(
+
                                   list.itemCode.toString(),
                                   textAlign: TextAlign.center)),
                               DataCell(Text(
@@ -330,7 +347,10 @@ class _UtilityReportDetailsViewState extends State<UtilityReportDetailsView> {
                                   list.uOM.toString(),
                                   textAlign: TextAlign.center)),
                               DataCell(Text(
-                                  list.qty.toString(),
+                                  double.parse(list.qty.toString()).round().toString(),
+                                  textAlign: TextAlign.center)),
+                              DataCell(Text(
+                                  list.approvedQty.toString(),
                                   textAlign: TextAlign.center)),
                               DataCell(Text(
                                   list.createdBy.toString(),
@@ -853,6 +873,8 @@ class FilterList2 {
   String? branchCategoryID;
   String? issueTypeSortName;
   String? branchCategorySortName;
+  String? itemCategory;
+
   FilterList2(
       this.createdDate,
       this.createdDate1,
@@ -895,6 +917,7 @@ class FilterList2 {
       this.branchCategory,
       this.branchCategoryID,
       this.issueTypeSortName,
-      this.branchCategorySortName
+      this.branchCategorySortName,
+      this.itemCategory
       );
 }

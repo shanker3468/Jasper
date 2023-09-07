@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -94,6 +95,9 @@ class _BranchAdminWipAssignTicketsDetailsViewState extends State<BranchAdminWipA
     locale: 'HI',
     symbol: "",
   );
+
+  List<SendDetailsList> sendlinelist=[];
+
   @override
   void initState() {
     print(widget.draftno);
@@ -137,6 +141,12 @@ class _BranchAdminWipAssignTicketsDetailsViewState extends State<BranchAdminWipA
 
 
     super.initState();
+  }
+
+  linecount(index){
+    setState(() {
+      li4.result![index].approvedQty = li4.result![index].approvedQty.toString();
+    });
   }
 
   Future<http.Response> getUtilityItemDetails() async {
@@ -943,6 +953,12 @@ class _BranchAdminWipAssignTicketsDetailsViewState extends State<BranchAdminWipA
                           ),
                           DataColumn(
                             label: Text(
+                              'Category',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
                               'ItemCode',
                               style: TextStyle(color: Colors.white),
                             ),
@@ -962,6 +978,12 @@ class _BranchAdminWipAssignTicketsDetailsViewState extends State<BranchAdminWipA
                           DataColumn(
                             label: Text(
                               'Qty',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Apprd Qty',
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
@@ -993,6 +1015,10 @@ class _BranchAdminWipAssignTicketsDetailsViewState extends State<BranchAdminWipA
                                     ])),
                                 DataCell(Text(
 
+                                    list.itemCategory.toString(),
+                                    textAlign: TextAlign.center)),
+                                DataCell(Text(
+
                                     list.itemCode.toString(),
                                     textAlign: TextAlign.center)),
                                 DataCell(Text(
@@ -1003,8 +1029,59 @@ class _BranchAdminWipAssignTicketsDetailsViewState extends State<BranchAdminWipA
                                     list.uOM.toString(),
                                     textAlign: TextAlign.center)),
                                 DataCell(Text(
-                                    list.qty.toString(),
+                                    double.parse(list.qty.toString()).round().toString(),
                                     textAlign: TextAlign.center)),
+                                DataCell(
+                                    Text(list.approvedQty.toString(),),
+                                    showEditIcon: widget.list2[widget.id].status.toString()=="O"?true:false,
+
+                                    onTap: (){
+                                      var enterMobileNo=list.approvedQty.toString();
+                                      widget.list2[widget.id].status.toString()=="O"?showDialog(
+                                        context:context,
+                                        builder: (BuildContext contex1) =>
+                                            AlertDialog(
+                                              content:TextFormField(
+                                                keyboardType:TextInputType.number,
+                                                maxLength:10,
+                                                autofocus:true,
+                                                onChanged:(vvv) {
+                                                  setState(() {
+                                                    enterMobileNo = vvv;
+                                                  });
+                                                },
+                                              ),
+                                              title: const Text("Enter Qty"),
+                                              actions: <Widget>[
+                                                Column(
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            setState(() {
+
+                                                              list.approvedQty = enterMobileNo.toString();
+                                                              linecount(li4.result!.indexOf(list));
+
+                                                              Navigator.pop(contex1,'Ok',);
+                                                            });
+                                                          },
+                                                          child: const Text("Ok"),
+                                                        ),
+                                                        TextButton(
+                                                          onPressed: () => Navigator.pop(contex1, 'Cancel'),
+                                                          child: const Text('Cancel'),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                      ):Container();
+                                    }
+                                ),
                                 DataCell(Text(
                                     list.createdBy.toString(),
                                     textAlign: TextAlign.center)),
@@ -1149,6 +1226,50 @@ class _BranchAdminWipAssignTicketsDetailsViewState extends State<BranchAdminWipA
             ),
           ),
         ),
+      persistentFooterButtons: [
+        widget.list2[widget.id].status.toString()=="O"?Container(
+          width: MediaQuery.of(context).size.width / 2.5,
+          height: MediaQuery.of(context).size.height / 16,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Colors.red),
+          child: TextButton.icon(
+            onPressed: () {
+              Navigator.pop(context);
+              print('Cancel button clicked');
+            },
+            icon: Icon(
+              Icons.cancel_outlined,
+              color: Colors.white,
+            ),
+            label: Text(
+              'Cancel',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ):Container(),
+        widget.list2[widget.id].status.toString()=="O"?Container(
+          width: MediaQuery.of(context).size.width / 2.5,
+          height: MediaQuery.of(context).size.height / 16,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Colors.green),
+          child: TextButton.icon(
+            onPressed: () {
+
+              UpdateUtilityQty();
+            },
+            icon: Icon(
+              Icons.save,
+              color: Colors.white,
+            ),
+            label: Text(
+              'Update',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ):Container(),
+      ],
       );
 
   }
@@ -1254,6 +1375,7 @@ class _BranchAdminWipAssignTicketsDetailsViewState extends State<BranchAdminWipA
       DepartmentName = prefs.getString('DepartmentName').toString();
       Location = prefs.getString('Location').toString();
       EmpGroup=prefs.getString('EmpGroup').toString();
+
 
 
     });
@@ -1503,6 +1625,51 @@ class _BranchAdminWipAssignTicketsDetailsViewState extends State<BranchAdminWipA
     }
   }
 
+  Future UpdateUtilityQty() async {
+    setState(() {
+      loading = true;
+
+    });
+    sendlinelist.clear();
+    for(int i = 0 ;i < li4.result!.length;i++){
+      sendlinelist.add(
+        SendDetailsList(
+            li4.result![i].approvedQty.toString(),
+            UserID.toString(),
+            li4.result![i].ticketNo.toString(),
+            li4.result![i].sno.toString()
+        ),);
+    }
+    var header = {"Content-Type": "application/json"};
+    var responce = await http.post(
+        Uri.parse('${AppConstants.LIVE_URL}UpdateUtilityDetails'),
+        body: jsonEncode(sendlinelist),
+        //body: json.encode(body),
+        headers: header);
+    log('${AppConstants.LIVE_URL}UpdateUtilityDetails');
+    log(responce.body);
+    if (responce.statusCode == 200) {
+      setState(() {
+        loading =false;
+        AwesomeDialog(
+            context: context,
+            dialogType: DialogType.SUCCES,
+            animType: AnimType.SCALE,
+            headerAnimationLoop: true,
+            title: "Utility items",
+            desc: 'Utility Items Updated Successfully'.toString(),
+            btnOkOnPress: () {
+              Navigator.pop(context);
+            },
+            btnOkIcon: Icons.cancel,
+            btnOkColor: Colors.greenAccent)
+            .show();
+      });
+    } else {
+      log("Somthing Worng Kindly Check Network...");
+    }
+  }
+
 
 
  /* Future<http.Response> updateindentlist(
@@ -1642,5 +1809,37 @@ class _BranchAdminWipAssignTicketsDetailsViewState extends State<BranchAdminWipA
     }).toList());
   }
 }*/
+
+class SendDetailsList {
+
+  var Price;
+  var ApprovedBy;
+  var TicketNo;
+  var Sno;
+
+
+  SendDetailsList(
+      this.Price,
+      this.ApprovedBy,
+      this.TicketNo,
+      this.Sno,
+      );
+
+  SendDetailsList.fromJson(Map<String, dynamic> json) {
+    Price = json['Price'];
+    ApprovedBy = json['ApprovedBy'];
+    TicketNo = json['TicketNo'];
+    Sno = json['Sno'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['Price'] = Price;
+    data['ApprovedBy'] = ApprovedBy;
+    data['TicketNo'] = TicketNo;
+    data['Sno'] = Sno;
+    return data;
+  }
+}
 
 

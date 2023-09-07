@@ -35,6 +35,10 @@ class Result {
   String? qty;
   String? price;
   String? createdBy;
+  String? approvedQty;
+  String? approvedBy;
+  String? itemCategory;
+
 
   Result(
       {this.docNo,
@@ -46,7 +50,11 @@ class Result {
         this.uOM,
         this.qty,
         this.price,
-        this.createdBy});
+        this.createdBy,
+        this.approvedQty,
+        this.approvedBy,
+        this.itemCategory
+      });
 
   Result.fromJson(Map<String, dynamic> json) {
     docNo = json['DocNo'];
@@ -59,6 +67,10 @@ class Result {
     qty = json['Qty'];
     price = json['Price'];
     createdBy = json['createdBy'];
+    approvedQty = json['ApprovedQty'];
+    approvedBy = json['ApprovedBy'];
+    itemCategory = json['ItemCategory'];
+
   }
 
   Map<String, dynamic> toJson() {
@@ -73,6 +85,9 @@ class Result {
     data['Qty'] = this.qty;
     data['Price'] = this.price;
     data['createdBy'] = this.createdBy;
+    data['ApprovedQty'] = this.approvedQty;
+    data['ApprovedBy'] = this.approvedBy;
+    data['ItemCategory'] = this.itemCategory;
     return data;
   }
 }

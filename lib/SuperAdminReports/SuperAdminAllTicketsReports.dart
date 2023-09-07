@@ -43,6 +43,18 @@ class SuperAdminAllTicketReports extends StatefulWidget {
 class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> {
  // ApprovalPendingModel li2;
 
+
+
+  String selectedDate1 = "";
+  String selectedDate = 'Tap to select date';
+
+  String selectedDate2 = "";
+  String selectedDate22 = 'Tap to select date';
+
+  TextEditingController ToDateSpinner = new TextEditingController();
+  TextEditingController FromDateSpinner = new TextEditingController();
+
+
    TicketTypeModel li4=TicketTypeModel(result: []);
    CustomerTicketsModel li2 =CustomerTicketsModel(result: []);
   BranchMasterModel li5=BranchMasterModel(result: []);
@@ -371,8 +383,8 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
        "Ticketcode": Ticketcode.toString(),
        "BranchCode": BranchCode.toString(),
        "BranchName1":BranchName1.toString() ,
-       "TicketStatusCode":widget.getTicketType.toString(),
-       "TicketStatusName":widget.getTicketType.toString(),
+       "TicketStatusCode":selectedDate.toString(),
+       "TicketStatusName":selectedDate2.toString(),
        "Extra1":"",
        "Extra2":"",
      };
@@ -534,9 +546,76 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
   void initState() {
     getStringValuesSF();
     super.initState();
+
+
+    selectedDate = DateFormat("yyyyMMdd").format(DateTime.now()).toString();
+    selectedDate1 = DateFormat("dd-MM-yyyy").format(DateTime.now()).toString();
+
+    selectedDate2 = DateFormat("yyyyMMdd").format(DateTime.now()).toString();
+    selectedDate22 = DateFormat("dd-MM-yyyy").format(DateTime.now()).toString();
+
+    ToDateSpinner.text = selectedDate22;
+    FromDateSpinner.text = selectedDate1;
     // if(widget.status=="2"){
     //   getTicketList1();
     // }
+  }
+
+
+  Future<void> _selectDate1(BuildContext context) async {
+    final DateTime? d = await showDatePicker(
+      //we wait for the dialog to return
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+    );
+    if (d != null) //if the user has selected a date
+      setState(() {
+        // we format the selected date and assign it to the state variable
+        selectedDate2 = new DateFormat("yyyyMMdd").format(d);
+
+        selectedDate22 = new DateFormat("dd-MM-yyyy").format(d);
+
+        ToDateSpinner.text = selectedDate22 =
+            new DateFormat("dd-MM-yyyy").format(d);
+        ;
+        if (ToDateSpinner.text.isNotEmpty) {
+          AdminFilterAPI(4);
+        } else {
+
+
+        }
+      });
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? d = await showDatePicker(
+      //we wait for the dialog to return
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+    );
+    if (d != null) //if the user has selected a date
+      setState(() {
+        // we format the selected date and assign it to the state variable
+        selectedDate = new DateFormat("yyyyMMdd").format(d);
+
+        selectedDate1 = new DateFormat("dd-MM-yyyy").format(d);
+
+        ToDateSpinner.text = selectedDate22 =
+            new DateFormat("dd-MM-yyyy").format(d);
+        FromDateSpinner.text = selectedDate1 =
+            new DateFormat("dd-MM-yyyy").format(d);
+        ;
+        if (ToDateSpinner.text.isNotEmpty) {
+          AdminFilterAPI(4);
+        } else {
+
+
+        }
+      });
   }
 
   @override
@@ -561,7 +640,71 @@ class SuperAdminAllTicketReportsState extends State<SuperAdminAllTicketReports> 
             child: Column(
               children: [
 
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                        child:  InkWell(
+                          onTap: () {
+                            _selectDate(context);
+                          },
+                          child: Container(
+                            margin: EdgeInsets.all(2),
+                            color: Colors.white,
+                            child: new TextField(
+                              enabled: false,
+                              keyboardType: TextInputType.number,
+                              controller: FromDateSpinner,
+                              decoration: InputDecoration(
+                                labelText: " Start Date",
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(0))),
+                                suffixIcon: Padding(
+                                    padding:
+                                    const EdgeInsets
+                                        .all(10),
+                                    child:
+                                    Icon(Icons.search)),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            _selectDate1(context);
+                          },
+                          child: Container(
+                            margin: EdgeInsets.all(2),
+                            color: Colors.white,
+                            child: new TextField(
+                              enabled: false,
+                              keyboardType: TextInputType.number,
+                              controller: ToDateSpinner,
+                              decoration: InputDecoration(
+                                labelText: " End Date",
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(0))),
+                                suffixIcon: Padding(
+                                    padding:
+                                    const EdgeInsets
+                                        .all(10),
+                                    child:
+                                    Icon(Icons.search)),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
 
+                    ],
+                  ),
+                ),
 
                 Padding(
                   padding: const EdgeInsets.all(8),

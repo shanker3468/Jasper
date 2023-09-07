@@ -18,8 +18,10 @@ import '../ADMIN Models/ChartCountModel.dart';
 import '../ADMIN Models/ChartCountModel.dart';
 import '../AdminReports/AdminWipAssignTickets.dart';
 
+import '../AdminReports/BranchAdminAllUtilityitemsReports.dart';
 import '../AppConstants.dart';
 import '../LoginPage.dart';
+import '../SuperAdminReports/SuperAdminAllUtilityitemsReports.dart';
 
 class BranchAdminReportDashboard extends StatefulWidget {
   BranchAdminReportDashboard({Key? key}) : super(key: key);
@@ -1134,6 +1136,78 @@ class BranchAdminReportDashboardState extends State<BranchAdminReportDashboard> 
                                                   child: Center(
                                                     child: Text(
                                                       "All Tickets",
+                                                      textAlign:
+                                                      TextAlign.center,
+                                                      style: TextStyle(
+                                                          color: Color(
+                                                              0xFF002D58),
+                                                          fontSize: 15),
+                                                    ),
+                                                  )),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+                                    GestureDetector(
+                                      onTap: () {
+                                        myController = TextEditingController()
+                                          ..text = "Utility";
+                                        print(myController);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    BranchAdminAllUtilityitemsTicketReports(
+                                                      getScreenName:
+                                                      myController.text,
+                                                      getTicketType:
+                                                      "Utility",
+                                                    )));
+                                      },
+                                      child: Card(
+                                        elevation: 15,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(10),
+                                        ),
+                                        child: Container(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                            children: [
+                                              Badge(
+                                                padding: EdgeInsets.all(8),
+                                                shape: BadgeShape.circle,
+                                                badgeColor: Colors.deepOrange,
+                                                showBadge:
+                                                ALL.toString() ==
+                                                    "0"
+                                                    ? false
+                                                    : true,
+                                                badgeContent: Text(
+                                                  ALL.toString(),
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                      FontWeight.bold),
+                                                ),
+                                                child: Image.asset(
+                                                    "assets/images/Utility.png",
+                                                    fit: BoxFit.fill,
+                                                    height: 40,
+                                                    width: 40),
+                                              ),
+                                              SizedBox(
+                                                height: 7,
+                                              ),
+                                              Container(
+                                                  padding: EdgeInsets.all(3),
+                                                  width: double.infinity,
+                                                  child: Center(
+                                                    child: Text(
+                                                      "Utility Tickets",
                                                       textAlign:
                                                       TextAlign.center,
                                                       style: TextStyle(

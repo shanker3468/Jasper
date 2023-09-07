@@ -21,6 +21,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../AppConstants.dart';
 import '../Model/EditTicketModel.dart';
 import '../Model/TicketStatusModel.dart';
+import '../SuperAdminReports/Utility.dart';
 import 'reports.dart';
 
 class ReportList extends StatefulWidget {
@@ -72,6 +73,8 @@ class ReportListState extends State<ReportList> {
   void initState() {
     // TODO: implement initState
     getStringValuesSF();
+
+    print(widget.ticketType.toString());
     super.initState();
   }
 
@@ -315,7 +318,9 @@ class ReportListState extends State<ReportList> {
                                                   ],
                                                 );
                                               } else if (widget.ticketType ==
-                                                  "O") {
+                                                  "O"&& custTicketStatuslist
+                                                  .result![index].category.toString()!="Utility"
+                                                  ) {
                                                 print('Yes');
                                                 Dialogs.materialDialog(
                                                   msg:
@@ -502,8 +507,29 @@ class ReportListState extends State<ReportList> {
                                                     ),
                                                   ],
                                                 );
-                                              } else {
+                                              }
+                                              // else if (custTicketStatuslist
+                                              //     .result![index].category.toString()=="Utility"
+                                              // ) {
+                                              //
+                                              //   Navigator.push(
+                                              //       context,
+                                              //       MaterialPageRoute(
+                                              //           builder: (builder) =>
+                                              //               UtilityReportDetailsView(
+                                              //                   draftno:
+                                              //                   int.parse(custTicketStatuslist
+                                              //                       .result![index].ticketNo.toString()),TicketType:custTicketStatuslist
+                                              //                   .result![index].category.toString(),id:int.parse("1"), Branch1:custTicketStatuslist
+                                              //                   .result![index].brachName.toString()
+                                              //                 /*callback:
+                                              //                                 getpendingapprovallist*/
+                                              //               )));
+                                              // }
+
+                                              else {
                                                 print('No....');
+
                                               }
                                             },
                                             child: Container(
@@ -784,36 +810,65 @@ class ReportListState extends State<ReportList> {
                                                         Row(
                                                           mainAxisAlignment:
                                                           MainAxisAlignment
-                                                              .spaceAround,
+                                                              .start,
                                                           children: [
                                                             Container(
                                                                 width: SW / 2.5,
-                                                                child: RichText(
-                                                                    text:
-                                                                    TextSpan(
-                                                                      children: [
+                                                                child: Row(
+                                                                  children: [
+                                                                    RichText(
+                                                                        text:
                                                                         TextSpan(
-                                                                          text:
-                                                                          'Ticket Type :',
-                                                                          style: TextStyle(
-                                                                              fontSize: SH /
-                                                                                  60,
-                                                                              color: Colors
-                                                                                  .black,
-                                                                              fontWeight:
-                                                                              FontWeight.bold),
-                                                                        ),
-                                                                        TextSpan(
-                                                                          text:
-                                                                          '  ${custTicketStatuslist.result![index].category.toString()}',
-                                                                          style: TextStyle(
-                                                                              fontSize: SH /
-                                                                                  60,
-                                                                              color:
-                                                                              Colors.black),
-                                                                        ),
-                                                                      ],
-                                                                    ))
+                                                                          children: [
+                                                                            TextSpan(
+                                                                              text:
+                                                                              'Ticket Type :',
+                                                                              style: TextStyle(
+                                                                                  fontSize: SH /
+                                                                                      60,
+                                                                                  color: Colors
+                                                                                      .black,
+                                                                                  fontWeight:
+                                                                                  FontWeight.bold),
+                                                                            ),
+                                                                            TextSpan(
+                                                                              text:
+                                                                              '  ${custTicketStatuslist.result![index].category.toString()}',
+                                                                              style: TextStyle(
+                                                                                  fontSize: SH /
+                                                                                      60,
+                                                                                  color:
+                                                                                  Colors.black),
+                                                                            ),
+
+
+                                                                          ],
+                                                                        )),
+                                                                    custTicketStatuslist.result![index].category.toString()=="Utility"?InkWell(
+                                                                        onTap: () async {
+                                                                          Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(
+                                                                                  builder: (builder) =>
+                                                                                      UtilityReportDetailsView(
+                                                                                          draftno:
+                                                                                          int.parse(custTicketStatuslist
+                                                                                              .result![index].ticketNo.toString()),TicketType:custTicketStatuslist
+                                                                                          .result![index].category.toString(),id:int.parse("1"), Branch1:custTicketStatuslist
+                                                                                          .result![index].brachName.toString()
+                                                                                        /*callback:
+                                                                              getpendingapprovallist*/
+                                                                                      )));
+                                                                          //      var url = 'tel:${list.assignEmpcontactNo.toString()}';
+
+                                                                          //  await launch(url);
+                                                                        },
+                                                                        child: Icon(
+                                                                          Icons.arrow_forward,
+                                                                          color: Colors.green,
+                                                                        )):Container(),
+                                                                  ],
+                                                                )
                                                               /*Text(
                                                                 "RequiredDate : ${custTicketStatuslist.result[index].requiredDate.toString()}",
                                                                 overflow:
@@ -823,6 +878,8 @@ class ReportListState extends State<ReportList> {
                                                                     fontSize: SH / 60),
                                                               ),*/
                                                             ),
+
+
                                                             Container(
                                                               width: SW / 2.5,
                                                                 child: RichText(

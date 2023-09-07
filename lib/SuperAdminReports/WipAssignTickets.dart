@@ -932,6 +932,12 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
+                      if(widget.getTicketType=="Q")DataColumn(
+                        label: Text(
+                          'Quot Amount',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
                       DataColumn(
                         label: Text(
                           'Category',
@@ -983,6 +989,12 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
+                      if(widget.getTicketType=="R")DataColumn(
+                        label: Text(
+                          'Reject Reason',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
 
 
 
@@ -1020,6 +1032,9 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                             DataCell(Text(
                                 style: TextStyle(fontWeight:FontWeight.bold,color:list.priority.toString()=="High"?Colors.red:list.priority.toString()=="Medium"?Colors.orangeAccent:Colors.green,),
                                 list.priority.toString()=="High"?"H":list.priority.toString()=="Medium"?"M":"L",
+                                textAlign: TextAlign.center)),
+                            if(widget.getTicketType=="Q")DataCell(Text(
+                                list.quotation.toString(),
                                 textAlign: TextAlign.center)),
                             DataCell(Text(
                                 list.issueCatrgory.toString(),
@@ -1086,6 +1101,9 @@ class AdminTicketReportsState extends State<AdminTicketReports> {
                                       textAlign:
                                       TextAlign.center)
                                 ])),
+                            if(widget.getTicketType=="R")DataCell(Text(
+                                list.rejectRemarks.toString(),
+                                textAlign: TextAlign.center)),
 
                             // DataCell(Wrap(
                             //     direction:
